@@ -1,0 +1,184 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
+    
+    // Check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Check if the user owns the resource
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Validate page count (10, 15, or 20)
+    function isValidPageCount(pageCount) {
+      return pageCount in [10, 15, 20];
+    }
+    
+    // Validate image style
+    function isValidImageStyle(style) {
+      return style in ['coloring', 'cartoon', 'anime', 'watercolor'];
+    }
+    
+    // Validate book status
+    function isValidBookStatus(status) {
+      return status in ['draft', 'generating', 'ready', 'error'];
+    }
+    
+    // Validate tone
+    function isValidTone(tone) {
+      return tone == null || tone in ['warm_simple', 'joyful', 'calm_reflective'];
+    }
+    
+    // Validate reading level
+    function isValidReadingLevel(level) {
+      return level == null || level in ['very_simple', 'standard'];
+    }
+    
+    // Validate image category
+    function isValidImageCategory(category) {
+      return category in ['profile_reference', 'childhood', 'teen', 'adult', 'laterLife'];
+    }
+    
+    // Validate section ID
+    function isValidSectionId(sectionId) {
+      return sectionId in ['childhood', 'teen', 'adult', 'laterLife'];
+    }
+
+    // ============================================
+    // USERS COLLECTION
+    // ============================================
+    match /users/{userId} {
+      // Users can only read and write their own document
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) &&
+        request.resource.data.keys().hasAll(['displayName', 'email', 'createdAt']) &&
+        request.resource.data.displayName is string &&
+        request.resource.data.email is string;
+      allow update: if isOwner(userId);
+      allow delete: if isOwner(userId);
+    }
+    
+    // ============================================
+    // MEMORY BOOKS COLLECTION
+    // ============================================
+    match /memoryBooks/{bookId} {
+      // Only the owner can read their memory books
+      allow read: if isAuthenticated() && 
+        resource.data.ownerId == request.auth.uid;
+      
+      // Create: validate required fields and ownership
+      allow create: if isAuthenticated() &&
+        request.resource.data.ownerId == request.auth.uid &&
+        request.resource.data.keys().hasAll(['ownerId', 'title', 'pageCount', 'imageStyle', 'status', 'createdAt', 'updatedAt']) &&
+        request.resource.data.title is string &&
+        request.resource.data.title.size() > 0 &&
+        isValidPageCount(request.resource.data.pageCount) &&
+        isValidImageStyle(request.resource.data.imageStyle) &&
+        isValidBookStatus(request.resource.data.status) &&
+        isValidTone(request.resource.data.get('tone', null)) &&
+        isValidReadingLevel(request.resource.data.get('readingLevel', null));
+      
+      // Update: owner only, cannot change ownerId
+      allow update: if isAuthenticated() &&
+        resource.data.ownerId == request.auth.uid &&
+        request.resource.data.ownerId == resource.data.ownerId &&
+        (request.resource.data.title is string && request.resource.data.title.size() > 0) &&
+        isValidPageCount(request.resource.data.pageCount) &&
+        isValidImageStyle(request.resource.data.imageStyle) &&
+        isValidBookStatus(request.resource.data.status);
+      
+      // Delete: owner only
+      allow delete: if isAuthenticated() && 
+        resource.data.ownerId == request.auth.uid;
+      
+      // ----------------------------------------
+      // SECTIONS SUBCOLLECTION
+      // ----------------------------------------
+      match /sections/{sectionId} {
+        allow read: if isAuthenticated() &&
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
+        
+        allow create, update: if isAuthenticated() &&
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid &&
+          isValidSectionId(sectionId) &&
+          request.resource.data.keys().hasAll(['text', 'skipped', 'updatedAt']);
+        
+        allow delete: if isAuthenticated() &&
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
+      }
+      
+      // ----------------------------------------
+      // IMAGES SUBCOLLECTION
+      // ----------------------------------------
+      match /images/{imageId} {
+        allow read: if isAuthenticated() &&
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
+        
+        allow create: if isAuthenticated() &&
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid &&
+          request.resource.data.keys().hasAll(['category', 'storagePath', 'createdAt']) &&
+          isValidImageCategory(request.resource.data.category) &&
+          request.resource.data.storagePath is string;
+        
+        allow update: if isAuthenticated() &&
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
+        
+        allow delete: if isAuthenticated() &&
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
+      }
+      
+      // ----------------------------------------
+      // PAGES SUBCOLLECTION
+      // ----------------------------------------
+      match /pages/{pageId} {
+        allow read: if isAuthenticated() &&
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
+        
+        allow create: if isAuthenticated() &&
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid &&
+          request.resource.data.keys().hasAll(['pageNumber', 'chapter', 'title', 'body', 'createdAt']) &&
+          request.resource.data.pageNumber is number &&
+          request.resource.data.pageNumber >= 1;
+        
+        allow update: if isAuthenticated() &&
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
+        
+        allow delete: if isAuthenticated() &&
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
+      }
+      
+      // ----------------------------------------
+      // GENERATION JOBS SUBCOLLECTION
+      // ----------------------------------------
+      match /generationJobs/{jobId} {
+        allow read: if isAuthenticated() &&
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
+        
+        allow create: if isAuthenticated() &&
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid &&
+          request.resource.data.keys().hasAll(['startedAt', 'inputSnapshot']);
+        
+        allow update: if isAuthenticated() &&
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
+        
+        // Generation jobs should generally not be deleted by users
+        allow delete: if false;
+      }
+    }
+    
+    // ============================================
+    // DENY ALL OTHER ACCESS
+    // ============================================
+    // Prevent listing all documents in root collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

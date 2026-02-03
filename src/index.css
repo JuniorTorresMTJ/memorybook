@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@theme {
+  /* Custom Colors - Updated Palette */
+  --color-primary-teal: #00E5E5;
+  --color-accent-coral: #FF8A7A;
+  --color-accent-amber: #FFB347;
+  --color-bg-soft: #F7FAFC;
+  --color-text-main: #1A202C;
+  --color-text-muted: #718096;
+  --color-card-bg: #FFFFFF;
+
+  /* Gradient colors */
+  --color-teal-50: #F0FDFA;
+  --color-teal-100: #CCFBF1;
+  --color-teal-400: #2DD4BF;
+  --color-teal-500: #14B8A6;
+  --color-orange-50: #FFF1F0;
+  --color-slate-600: #475569;
+  --color-slate-900: #0F172A;
+
+  /* Custom Shadows */
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+
+  /* Custom Border Radius */
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+}
+
+:root {
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+[data-theme='dark'],
+.dark {
+  --color-primary-teal: #00E5E5;
+  --color-accent-coral: #FF9E91;
+  --color-bg-soft: #1A202C;
+  --color-text-main: #F7FAFC;
+  --color-text-muted: #A0AEC0;
+  --color-card-bg: #2D3748;
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+body {
+  background-color: var(--color-bg-soft);
+  color: var(--color-text-main);
+  margin: 0;
+  transition: background-color 0.3s ease;
+}
+
+/* Custom Utilities */
+.hero-gradient {
+  background: linear-gradient(135deg, var(--color-bg-soft) 0%, #F0F9FA 100%);
+}

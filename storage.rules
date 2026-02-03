@@ -1,0 +1,89 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
+    
+    // Check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Check if the user owns the path
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Check if the file is an image
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    // Check file size (max 10MB for images)
+    function isValidSize() {
+      return request.resource.size < 10 * 1024 * 1024;
+    }
+    
+    // Validate image file
+    function isValidImage() {
+      return isImage() && isValidSize();
+    }
+
+    // ============================================
+    // USER FILES
+    // ============================================
+    match /users/{userId}/{allPaths=**} {
+      // Only the owner can read their files
+      allow read: if isOwner(userId);
+      
+      // Only the owner can write their files (with validation)
+      allow write: if isOwner(userId) && isValidImage();
+      
+      // Allow delete by owner
+      allow delete: if isOwner(userId);
+    }
+    
+    // ============================================
+    // SPECIFIC PATH STRUCTURES
+    // ============================================
+    
+    // Profile reference photos
+    // /users/{uid}/books/{bookId}/profile-references/{filename}
+    match /users/{userId}/books/{bookId}/profile-references/{filename} {
+      allow read: if isOwner(userId);
+      allow write: if isOwner(userId) && isValidImage();
+      allow delete: if isOwner(userId);
+    }
+    
+    // Section reference photos (childhood, teen, adult, laterLife)
+    // /users/{uid}/books/{bookId}/section-references/{section}/{filename}
+    match /users/{userId}/books/{bookId}/section-references/{section}/{filename} {
+      allow read: if isOwner(userId);
+      allow write: if isOwner(userId) && 
+        isValidImage() &&
+        section in ['childhood', 'teen', 'adult', 'laterLife'];
+      allow delete: if isOwner(userId);
+    }
+    
+    // Generated pages (created by backend/cloud functions)
+    // /users/{uid}/books/{bookId}/generated-pages/{pageNumber}/{filename}
+    match /users/{userId}/books/{bookId}/generated-pages/{pageNumber}/{filename} {
+      // Only owner can read generated pages
+      allow read: if isOwner(userId);
+      
+      // Writing should typically be done by Cloud Functions with admin SDK
+      // But allow user writes for hackathon simplicity
+      allow write: if isOwner(userId) && isValidImage();
+      allow delete: if isOwner(userId);
+    }
+    
+    // ============================================
+    // DENY ALL OTHER ACCESS
+    // ============================================
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
