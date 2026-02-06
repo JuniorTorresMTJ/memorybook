@@ -551,62 +551,49 @@ export const CreateMemoryBookModal = ({
                         {/* Content Area */}
                         <div className="flex-1 overflow-y-auto">
                             <div className="max-w-3xl mx-auto p-6 lg:p-8">
-                                <AnimatePresence mode="wait">
-                                    {(modalState === 'generating' || modalState === 'error') && (
-                                        <GenerateLoadingScreen
-                                            key="loading"
-                                            status={jobStatus}
-                                            error={generationError}
-                                            onComplete={() => {}}
-                                            onRetry={handleRetry}
-                                            preBackendStep={preBackendStep}
-                                        />
-                                    )}
+                                {(modalState === 'generating' || modalState === 'error') && (
+                                    <GenerateLoadingScreen
+                                        status={jobStatus}
+                                        error={generationError}
+                                        onComplete={() => {}}
+                                        onRetry={handleRetry}
+                                        preBackendStep={preBackendStep}
+                                    />
+                                )}
 
-                                    {modalState === 'success' && (
-                                        <SuccessScreen
-                                            key="success"
-                                            bookTitle={data.bookSetup.title}
-                                            onOpenViewer={handleOpenViewer}
-                                            onBackToDashboard={handleBackToDashboard}
-                                        />
-                                    )}
+                                {modalState === 'success' && (
+                                    <SuccessScreen
+                                        bookTitle={data.bookSetup.title}
+                                        onOpenViewer={handleOpenViewer}
+                                        onBackToDashboard={handleBackToDashboard}
+                                    />
+                                )}
 
-                                    {modalState === 'wizard' && !showRestoreDialog && (
-                                        <motion.div
-                                            key="wizard-content"
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                            transition={{ duration: 0.2 }}
-                                        >
-                                            {currentStep === 1 && (
-                                                <BookSetupStep
-                                                    key="step1"
-                                                    data={data.bookSetup}
-                                                    onChange={updateBookSetup}
-                                                    errors={errors}
-                                                />
-                                            )}
-                                            {currentStep === 2 && (
-                                                <MemoriesStep
-                                                    key="step2"
-                                                    data={data.memories}
-                                                    onChange={updateMemories}
-                                                />
-                                            )}
-                                            {currentStep === 3 && (
-                                                <ReviewStep
-                                                    key="step3"
-                                                    data={data}
-                                                    onEditSection={goToStep}
-                                                    onSettingsChange={updateGenerationSettings}
-                                                    completedSteps={completedSteps}
-                                                />
-                                            )}
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
+                                {modalState === 'wizard' && !showRestoreDialog && (
+                                    <>
+                                        {currentStep === 1 && (
+                                            <BookSetupStep
+                                                data={data.bookSetup}
+                                                onChange={updateBookSetup}
+                                                errors={errors}
+                                            />
+                                        )}
+                                        {currentStep === 2 && (
+                                            <MemoriesStep
+                                                data={data.memories}
+                                                onChange={updateMemories}
+                                            />
+                                        )}
+                                        {currentStep === 3 && (
+                                            <ReviewStep
+                                                data={data}
+                                                onEditSection={goToStep}
+                                                onSettingsChange={updateGenerationSettings}
+                                                completedSteps={completedSteps}
+                                            />
+                                        )}
+                                    </>
+                                )}
                             </div>
                         </div>
 
