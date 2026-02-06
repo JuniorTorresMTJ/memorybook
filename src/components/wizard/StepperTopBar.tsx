@@ -1,7 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { Check, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { useState } from 'react';
-import type { WizardStep, StepInfo } from './types';
+import type { WizardStep } from './types';
 import { WIZARD_STEPS } from './types';
 
 interface StepperTopBarProps {
@@ -19,11 +20,21 @@ export const StepperTopBar = ({
     onClose,
     savedStatus = 'idle',
 }: StepperTopBarProps) => {
+    const { t } = useLanguage();
+    const wz = t.wizard;
+
+    // Translated step titles
+    const stepTranslations: Record<number, string> = {
+        1: wz?.bookSetup || 'Book Setup',
+        2: wz?.memoriesTitle || 'Memories',
+        3: wz?.review || 'Review & Generate',
+    };
+
     const [isExpanded, setIsExpanded] = useState(false);
     const currentStepInfo = WIZARD_STEPS.find((s) => s.number === currentStep);
 
     return (
-        <div className="lg:hidden sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-black/5 dark:border-white/10">
+        <div className="lg:hidden sticky top-0 z-10 bg-white border-b border-black/5">
             {/* Main Bar */}
             <div className="flex items-center justify-between p-4">
                 <button
@@ -35,10 +46,10 @@ export const StepperTopBar = ({
                     </div>
                     <div className="text-left">
                         <p className="font-medium text-sm text-text-main">
-                            {currentStepInfo?.title}
+                            {stepTranslations[currentStep] || currentStepInfo?.title}
                         </p>
                         <p className="text-xs text-text-muted">
-                            Step {currentStep} of {WIZARD_STEPS.length}
+                            {wz?.step || 'Step'} {currentStep} {wz?.of || 'of'} {WIZARD_STEPS.length}
                         </p>
                     </div>
                     {isExpanded ? (
@@ -53,15 +64,15 @@ export const StepperTopBar = ({
                         <motion.span
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1"
+                            className="text-xs text-green-600 flex items-center gap-1"
                         >
                             <Check className="w-3 h-3" />
-                            Saved
+                            {wz?.saved || 'Saved'}
                         </motion.span>
                     )}
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-colors"
+                        className="p-2 hover:bg-black/5 rounded-lg transition-colors"
                     >
                         <X className="w-5 h-5 text-text-muted" />
                     </button>
@@ -69,7 +80,7 @@ export const StepperTopBar = ({
             </div>
 
             {/* Progress Bar */}
-            <div className="h-1 bg-gray-200 dark:bg-gray-700">
+            <div className="h-1 bg-gray-200">
                 <motion.div
                     className="h-full bg-linear-to-r from-primary-teal to-teal-400"
                     initial={{ width: 0 }}
@@ -86,7 +97,7 @@ export const StepperTopBar = ({
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="overflow-hidden bg-bg-soft dark:bg-gray-800/50"
+                        className="overflow-hidden bg-white"
                     >
                         <div className="p-4 space-y-2">
                             {WIZARD_STEPS.map((step) => {
@@ -106,9 +117,9 @@ export const StepperTopBar = ({
                                         disabled={!isClickable}
                                         className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left ${
                                             isCurrent
-                                                ? 'bg-primary-teal/10 dark:bg-primary-teal/20'
+                                                ? 'bg-primary-teal/10'
                                                 : isClickable
-                                                ? 'hover:bg-black/5 dark:hover:bg-white/5'
+                                                ? 'hover:bg-black/5'
                                                 : 'opacity-50'
                                         }`}
                                     >
@@ -123,7 +134,7 @@ export const StepperTopBar = ({
                                                 </span>
                                             </div>
                                         ) : (
-                                            <div className="w-6 h-6 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center">
+                                            <div className="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center">
                                                 <span className="text-xs text-text-muted">
                                                     {step.number}
                                                 </span>
@@ -135,12 +146,12 @@ export const StepperTopBar = ({
                                                     isCurrent ? 'text-primary-teal' : 'text-text-main'
                                                 }`}
                                             >
-                                                {step.title}
+                                                {stepTranslations[step.number] || step.title}
                                             </p>
                                         </div>
                                         {step.isOptional && (
-                                            <span className="text-xs text-amber-600 dark:text-amber-400">
-                                                Optional
+                                            <span className="text-xs text-amber-600">
+                                                {t.common?.optional || 'Optional'}
                                             </span>
                                         )}
                                     </button>

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Check, Circle } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { Check } from 'lucide-react';
 import type { WizardStep, StepInfo } from './types';
 import { WIZARD_STEPS } from './types';
 
@@ -16,6 +17,16 @@ export const StepperSidebar = ({
     onStepClick,
     savedStatus = 'idle',
 }: StepperSidebarProps) => {
+    const { t } = useLanguage();
+    const wz = t.wizard;
+
+    // Translated step titles and descriptions
+    const stepTranslations: Record<number, { title: string; description: string }> = {
+        1: { title: wz?.bookSetup || 'Book Setup', description: wz?.bookSetupDesc || 'Basic settings and photos' },
+        2: { title: wz?.memoriesTitle || 'Memories', description: wz?.memoriesDesc || 'Share their story' },
+        3: { title: wz?.review || 'Review & Generate', description: wz?.reviewDesc || 'Final review' },
+    };
+
     const getStepStatus = (step: StepInfo) => {
         if (completedSteps.has(step.number)) return 'completed';
         if (step.number === currentStep) return 'current';
@@ -24,26 +35,26 @@ export const StepperSidebar = ({
     };
 
     return (
-        <div className="hidden lg:flex flex-col w-72 bg-card-bg dark:bg-gray-800/50 border-r border-black/5 dark:border-white/10 p-6">
+        <div className="hidden lg:flex flex-col w-72 bg-white border-r border-black/5 p-6">
             {/* Header */}
             <div className="mb-8">
-                <h2 className="text-lg font-semibold text-text-main">Create Memory Book</h2>
+                <h2 className="text-lg font-semibold text-text-main">{wz?.createMemoryBook || 'Create Memory Book'}</h2>
                 <div className="flex items-center gap-2 mt-2">
                     <span className="text-sm text-text-muted">
-                        Step {currentStep} of {WIZARD_STEPS.length}
+                        {wz?.step || 'Step'} {currentStep} {wz?.of || 'of'} {WIZARD_STEPS.length}
                     </span>
                     {savedStatus === 'saved' && (
                         <motion.span
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1"
+                            className="text-xs text-green-600 flex items-center gap-1"
                         >
                             <Check className="w-3 h-3" />
-                            Saved
+                            {wz?.saved || 'Saved'}
                         </motion.span>
                     )}
                     {savedStatus === 'saving' && (
-                        <span className="text-xs text-text-muted">Saving...</span>
+                        <span className="text-xs text-text-muted">{wz?.saving || 'Saving...'}</span>
                     )}
                 </div>
             </div>
@@ -62,9 +73,9 @@ export const StepperSidebar = ({
                                     disabled={!isClickable}
                                     className={`w-full flex items-start gap-3 p-3 rounded-xl transition-all text-left ${
                                         status === 'current'
-                                            ? 'bg-primary-teal/10 dark:bg-primary-teal/20'
+                                            ? 'bg-primary-teal/10'
                                             : isClickable
-                                            ? 'hover:bg-black/5 dark:hover:bg-white/5'
+                                            ? 'hover:bg-black/5'
                                             : 'opacity-50 cursor-not-allowed'
                                     }`}
                                 >
@@ -85,7 +96,7 @@ export const StepperSidebar = ({
                                                 </span>
                                             </div>
                                         ) : (
-                                            <div className="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center">
+                                            <div className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center">
                                                 <span className="text-sm text-text-muted">
                                                     {step.number}
                                                 </span>
@@ -98,7 +109,7 @@ export const StepperSidebar = ({
                                                 className={`absolute left-1/2 top-full w-0.5 h-4 -translate-x-1/2 ${
                                                     completedSteps.has(step.number)
                                                         ? 'bg-green-500'
-                                                        : 'bg-gray-200 dark:bg-gray-700'
+                                                        : 'bg-gray-200'
                                                 }`}
                                             />
                                         )}
@@ -115,14 +126,14 @@ export const StepperSidebar = ({
                                                     : 'text-text-muted'
                                             }`}
                                         >
-                                            {step.title}
+                                            {stepTranslations[step.number]?.title || step.title}
                                         </p>
                                         <p className="text-xs text-text-muted truncate mt-0.5">
-                                            {step.description}
+                                            {stepTranslations[step.number]?.description || step.description}
                                         </p>
                                         {step.isOptional && (
-                                            <span className="text-xs text-amber-600 dark:text-amber-400">
-                                                Optional
+                                            <span className="text-xs text-amber-600">
+                                                {t.common?.optional || 'Optional'}
                                             </span>
                                         )}
                                     </div>
@@ -136,10 +147,10 @@ export const StepperSidebar = ({
             {/* Progress Bar */}
             <div className="mt-auto pt-6">
                 <div className="flex justify-between text-xs text-text-muted mb-2">
-                    <span>Progress</span>
+                    <span>{wz?.progress || 'Progress'}</span>
                     <span>{Math.round((currentStep / WIZARD_STEPS.length) * 100)}%</span>
                 </div>
-                <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                     <motion.div
                         className="h-full bg-linear-to-r from-primary-teal to-teal-400"
                         initial={{ width: 0 }}

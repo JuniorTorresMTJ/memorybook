@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { Check, AlertCircle, Edit3, Image as ImageIcon } from 'lucide-react';
 
 interface ReviewSummaryCardProps {
@@ -22,6 +23,9 @@ export const ReviewSummaryCard = ({
     onEdit,
     isSkipped = false,
 }: ReviewSummaryCardProps) => {
+    const { t } = useLanguage();
+    const wz = t.wizard;
+
     const completionPercent = totalPrompts > 0 ? Math.round((promptsAnswered / totalPrompts) * 100) : 0;
     const isComplete = promptsAnswered > 0;
 
@@ -52,10 +56,10 @@ export const ReviewSummaryCard = ({
                             {title}
                         </h3>
                         {isSkipped ? (
-                            <p className="text-xs text-text-muted">Skipped</p>
+                            <p className="text-xs text-text-muted">{wz?.skipped || 'Skipped'}</p>
                         ) : (
                             <p className="text-xs text-text-muted">
-                                {promptsAnswered} of {totalPrompts} prompts answered
+                                {promptsAnswered} {wz?.ofPrompts || 'of'} {totalPrompts} {wz?.promptsWord || 'prompts answered'}
                             </p>
                         )}
                     </div>
@@ -73,12 +77,12 @@ export const ReviewSummaryCard = ({
                         {isComplete ? (
                             <>
                                 <Check className="w-3 h-3" />
-                                Ready
+                                {wz?.ready || 'Ready'}
                             </>
                         ) : (
                             <>
                                 <AlertCircle className="w-3 h-3" />
-                                Pending
+                                {wz?.pending || 'Pending'}
                             </>
                         )}
                     </div>
@@ -105,14 +109,14 @@ export const ReviewSummaryCard = ({
             <div className="flex items-center justify-between mt-3">
                 <div className="flex items-center gap-1 text-xs text-text-muted">
                     <ImageIcon className="w-3.5 h-3.5" />
-                    {imagesAdded} photo{imagesAdded !== 1 ? 's' : ''}
+                    {imagesAdded} {imagesAdded !== 1 ? (wz?.photosWord || 'photos') : (wz?.photo || 'photo')}
                 </div>
                 <button
                     onClick={onEdit}
                     className="flex items-center gap-1 text-xs font-medium text-primary-teal hover:text-primary-teal/80 transition-colors"
                 >
                     <Edit3 className="w-3.5 h-3.5" />
-                    Edit
+                    {wz?.edit || 'Edit'}
                 </button>
             </div>
         </motion.div>

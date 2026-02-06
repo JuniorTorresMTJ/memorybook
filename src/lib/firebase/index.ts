@@ -6,6 +6,8 @@ export {
     signUpWithEmail,
     signInWithEmail,
     signInWithGoogle,
+    signInAnonymousUser,
+    ensureAuthenticated,
     signOut,
     resetPassword,
     getCurrentUser,

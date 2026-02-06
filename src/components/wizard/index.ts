@@ -14,17 +14,21 @@ export { PageCountSelector } from './PageCountSelector';
 export { StyleSelector } from './StyleSelector';
 export { TitleDateForm } from './TitleDateForm';
 export { FormInput, FormTextArea } from './FormTextArea';
+export { PhysicalCharacteristics } from './PhysicalCharacteristics';
 
 // Step Components
 export { BookSetupStep } from './steps/BookSetupStep';
-export { ChildhoodStep } from './steps/ChildhoodStep';
-export { TeenageStep } from './steps/TeenageStep';
-export { AdultLifeStep } from './steps/AdultLifeStep';
-export { LaterLifeStep } from './steps/LaterLifeStep';
+export { MemoriesStep } from './steps/MemoriesStep';
 export { ReviewStep } from './steps/ReviewStep';
 
 // UI Components
 export { ReviewSummaryCard } from './ReviewSummaryCard';
 export { GenerateLoadingScreen } from './GenerateLoadingScreen';
 export { SuccessScreen } from './SuccessScreen';
-export { SkipStepDialog } from './SkipStepDialog';
+
+// Job Progress & Preview
+export { JobProgress } from './JobProgress';
+export { BookPreview } from './BookPreview';
+
+// Hooks
+export { useWizardPersistence } from './useWizardPersistence';

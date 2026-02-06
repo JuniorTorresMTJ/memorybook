@@ -28,19 +28,8 @@
 }
 
 :root {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Nunito', system-ui, sans-serif;
   line-height: 1.6;
-}
-
-[data-theme='dark'],
-.dark {
-  --color-primary-teal: #00E5E5;
-  --color-accent-coral: #FF9E91;
-  --color-bg-soft: #1A202C;
-  --color-text-main: #F7FAFC;
-  --color-text-muted: #A0AEC0;
-  --color-card-bg: #2D3748;
-  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 body {
@@ -48,6 +37,16 @@ body {
   color: var(--color-text-main);
   margin: 0;
   transition: background-color 0.3s ease;
+}
+
+/* Heading typography — warm serif for all titles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Utility class to force heading font on any element */
+.font-heading {
+  font-family: 'Playfair Display', Georgia, serif;
 }
 
 /* Custom Utilities */

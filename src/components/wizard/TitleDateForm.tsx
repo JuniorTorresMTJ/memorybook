@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Calendar, Type, FileText } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface TitleDateFormProps {
     title: string;
@@ -20,6 +21,9 @@ export const TitleDateForm = ({
     onDateChange,
     titleError,
 }: TitleDateFormProps) => {
+    const { t } = useLanguage();
+    const wz = t.wizard;
+
     const [isTitleFocused, setIsTitleFocused] = useState(false);
     const [isSubtitleFocused, setIsSubtitleFocused] = useState(false);
     const [isDateFocused, setIsDateFocused] = useState(false);
@@ -32,7 +36,7 @@ export const TitleDateForm = ({
                     htmlFor="book-title"
                     className="block text-sm font-medium text-text-main"
                 >
-                    Book Title <span className="text-red-500">*</span>
+                    {wz?.bookTitle || 'Book Title'} <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                     <div
@@ -49,7 +53,7 @@ export const TitleDateForm = ({
                         onChange={(e) => onTitleChange(e.target.value)}
                         onFocus={() => setIsTitleFocused(true)}
                         onBlur={() => setIsTitleFocused(false)}
-                        placeholder="e.g., Maria's Memory Book"
+                        placeholder={wz?.bookTitlePlaceholder || "e.g., Maria's Memory Book"}
                         className={`w-full pl-12 pr-4 py-3.5 rounded-xl border-2 transition-all bg-transparent ${
                             titleError
                                 ? 'border-red-300 dark:border-red-500/50 focus:border-red-500'
@@ -70,8 +74,8 @@ export const TitleDateForm = ({
                     htmlFor="book-subtitle"
                     className="block text-sm font-medium text-text-main"
                 >
-                    Subtitle{' '}
-                    <span className="text-text-muted font-normal">(optional)</span>
+                    {wz?.subtitle || 'Subtitle'}{' '}
+                    <span className="text-text-muted font-normal">({t.common?.optional || 'optional'})</span>
                 </label>
                 <div className="relative">
                     <div
@@ -88,7 +92,7 @@ export const TitleDateForm = ({
                         onChange={(e) => onSubtitleChange(e.target.value)}
                         onFocus={() => setIsSubtitleFocused(true)}
                         onBlur={() => setIsSubtitleFocused(false)}
-                        placeholder="e.g., A journey through cherished moments"
+                        placeholder={wz?.subtitlePlaceholder || "e.g., A journey through cherished moments"}
                         className={`w-full pl-12 pr-4 py-3.5 rounded-xl border-2 transition-all bg-transparent ${
                             isSubtitleFocused ? 'border-primary-teal' : 'border-gray-200 dark:border-gray-700'
                         } focus:outline-none text-text-main placeholder:text-text-muted/60`}
@@ -102,7 +106,7 @@ export const TitleDateForm = ({
                     htmlFor="book-date"
                     className="block text-sm font-medium text-text-main"
                 >
-                    Creation Date
+                    {wz?.creationDate || 'Creation Date'}
                 </label>
                 <div className="relative">
                     <div

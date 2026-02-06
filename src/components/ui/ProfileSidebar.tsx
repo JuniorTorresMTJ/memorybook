@@ -58,30 +58,36 @@ export const ProfileSidebar = ({ isOpen, onClose, user }: ProfileSidebarProps) =
         onClose();
     };
 
+    const comingSoonLabel = t.profile?.comingSoon || 'Coming soon';
+
     const menuItems = [
         {
             id: 'personal',
             icon: User,
             label: t.profile?.personalInfo || 'Personal Information',
             description: t.profile?.personalInfoDesc || 'Update your name, email and phone',
+            disabled: true,
         },
         {
             id: 'photo',
             icon: Camera,
             label: t.profile?.profilePhoto || 'Profile Photo',
             description: t.profile?.profilePhotoDesc || 'Change your profile picture',
+            disabled: true,
         },
         {
             id: 'password',
             icon: Lock,
             label: t.profile?.changePassword || 'Change Password',
             description: t.profile?.changePasswordDesc || 'Update your password',
+            disabled: true,
         },
         {
             id: 'language',
             icon: Globe,
             label: t.profile?.language || 'Language',
             description: t.profile?.languageDesc || 'Choose your preferred language',
+            disabled: false,
         },
     ];
 
@@ -100,7 +106,7 @@ export const ProfileSidebar = ({ isOpen, onClose, user }: ProfileSidebarProps) =
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="w-full pl-11 pr-4 py-3 bg-bg-soft rounded-xl border border-black/5 dark:border-white/10 text-text-main focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
+                                    className="w-full pl-11 pr-4 py-3 bg-bg-soft rounded-xl border border-black/5 text-text-main focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
                                 />
                             </div>
                         </div>
@@ -115,7 +121,7 @@ export const ProfileSidebar = ({ isOpen, onClose, user }: ProfileSidebarProps) =
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full pl-11 pr-4 py-3 bg-bg-soft rounded-xl border border-black/5 dark:border-white/10 text-text-main focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
+                                    className="w-full pl-11 pr-4 py-3 bg-bg-soft rounded-xl border border-black/5 text-text-main focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
                                 />
                             </div>
                         </div>
@@ -131,7 +137,7 @@ export const ProfileSidebar = ({ isOpen, onClose, user }: ProfileSidebarProps) =
                                     value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
                                     placeholder="+1 (555) 000-0000"
-                                    className="w-full pl-11 pr-4 py-3 bg-bg-soft rounded-xl border border-black/5 dark:border-white/10 text-text-main placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
+                                    className="w-full pl-11 pr-4 py-3 bg-bg-soft rounded-xl border border-black/5 text-text-main placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
                                 />
                             </div>
                         </div>
@@ -211,7 +217,7 @@ export const ProfileSidebar = ({ isOpen, onClose, user }: ProfileSidebarProps) =
                                     value={currentPassword}
                                     onChange={(e) => setCurrentPassword(e.target.value)}
                                     placeholder={t.profile?.currentPassword || 'Enter current password'}
-                                    className="w-full pl-11 pr-4 py-3 bg-bg-soft rounded-xl border border-black/5 dark:border-white/10 text-text-main placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
+                                    className="w-full pl-11 pr-4 py-3 bg-bg-soft rounded-xl border border-black/5 text-text-main placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
                                 />
                             </div>
                         </div>
@@ -227,7 +233,7 @@ export const ProfileSidebar = ({ isOpen, onClose, user }: ProfileSidebarProps) =
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
                                     placeholder={t.profile?.newPassword || 'Enter new password'}
-                                    className="w-full pl-11 pr-4 py-3 bg-bg-soft rounded-xl border border-black/5 dark:border-white/10 text-text-main placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
+                                    className="w-full pl-11 pr-4 py-3 bg-bg-soft rounded-xl border border-black/5 text-text-main placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
                                 />
                             </div>
                         </div>
@@ -243,7 +249,7 @@ export const ProfileSidebar = ({ isOpen, onClose, user }: ProfileSidebarProps) =
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     placeholder={t.profile?.confirmPassword || 'Confirm new password'}
-                                    className="w-full pl-11 pr-4 py-3 bg-bg-soft rounded-xl border border-black/5 dark:border-white/10 text-text-main placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
+                                    className="w-full pl-11 pr-4 py-3 bg-bg-soft rounded-xl border border-black/5 text-text-main placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
                                 />
                             </div>
                         </div>
@@ -272,10 +278,10 @@ export const ProfileSidebar = ({ isOpen, onClose, user }: ProfileSidebarProps) =
                                         className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all ${
                                             isSelected
                                                 ? 'bg-primary-teal/10 border-2 border-primary-teal'
-                                                : 'bg-bg-soft border-2 border-transparent hover:bg-black/5 dark:hover:bg-white/5'
+                                                : 'bg-bg-soft border-2 border-transparent hover:bg-black/5'
                                         }`}
                                     >
-                                        <div className="w-10 h-10 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
+                                        <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center shadow-sm">
                                             <FlagComponent />
                                         </div>
                                         <span className={`flex-1 text-left font-medium ${
@@ -301,26 +307,44 @@ export const ProfileSidebar = ({ isOpen, onClose, user }: ProfileSidebarProps) =
                         {menuItems.map((item) => (
                             <button
                                 key={item.id}
-                                onClick={() => setActiveSection(item.id as typeof activeSection)}
-                                className="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors group"
+                                onClick={() => !item.disabled && setActiveSection(item.id as typeof activeSection)}
+                                disabled={item.disabled}
+                                className={`w-full flex items-center gap-4 p-4 rounded-xl transition-colors group ${
+                                    item.disabled 
+                                        ? 'opacity-50 cursor-not-allowed' 
+                                        : 'hover:bg-black/5'
+                                }`}
                             >
-                                <div className="w-12 h-12 bg-primary-teal/10 rounded-xl flex items-center justify-center shrink-0">
-                                    <item.icon className="w-5 h-5 text-primary-teal" />
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
+                                    item.disabled ? 'bg-gray-100' : 'bg-primary-teal/10'
+                                }`}>
+                                    <item.icon className={`w-5 h-5 ${
+                                        item.disabled ? 'text-gray-400' : 'text-primary-teal'
+                                    }`} />
                                 </div>
                                 <div className="flex-1 text-left">
-                                    <p className="font-medium text-text-main">{item.label}</p>
-                                    <p className="text-sm text-text-muted">{item.description}</p>
+                                    <div className="flex items-center gap-2">
+                                        <p className={`font-medium ${item.disabled ? 'text-gray-400' : 'text-text-main'}`}>{item.label}</p>
+                                        {item.disabled && (
+                                            <span className="px-2 py-0.5 bg-gray-100 text-gray-400 text-xs font-medium rounded-full">
+                                                {comingSoonLabel}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <p className={`text-sm ${item.disabled ? 'text-gray-300' : 'text-text-muted'}`}>{item.description}</p>
                                 </div>
-                                <ChevronRight className="w-5 h-5 text-text-muted group-hover:text-primary-teal transition-colors" />
+                                {!item.disabled && (
+                                    <ChevronRight className="w-5 h-5 text-text-muted group-hover:text-primary-teal transition-colors" />
+                                )}
                             </button>
                         ))}
 
-                        <div className="pt-4 mt-4 border-t border-black/5 dark:border-white/10">
+                        <div className="pt-4 mt-4 border-t border-black/5">
                             <button 
                                 onClick={handleSignOut}
-                                className="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors group"
+                                className="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-red-50 transition-colors group"
                             >
-                                <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center shrink-0">
+                                <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center shrink-0">
                                     <LogOut className="w-5 h-5 text-red-500" />
                                 </div>
                                 <div className="flex-1 text-left">
@@ -368,16 +392,16 @@ export const ProfileSidebar = ({ isOpen, onClose, user }: ProfileSidebarProps) =
                         animate={{ x: 0 }}
                         exit={{ x: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed right-0 top-0 h-full w-full max-w-md bg-card-bg shadow-2xl z-50 flex flex-col"
+                        className="fixed right-0 top-0 h-full w-full sm:max-w-md bg-white shadow-2xl z-50 flex flex-col"
                     >
                         {/* Header */}
-                        <div className="p-6 border-b border-black/5 dark:border-white/10">
+                        <div className="p-6 border-b border-black/5">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     {activeSection !== 'menu' && (
                                         <button
                                             onClick={() => setActiveSection('menu')}
-                                            className="p-2 -ml-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                                            className="p-2 -ml-2 rounded-xl hover:bg-black/5 transition-colors"
                                         >
                                             <ChevronRight className="w-5 h-5 text-text-muted rotate-180" />
                                         </button>
@@ -386,7 +410,7 @@ export const ProfileSidebar = ({ isOpen, onClose, user }: ProfileSidebarProps) =
                                 </div>
                                 <button
                                     onClick={handleClose}
-                                    className="p-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                                    className="p-2 rounded-xl hover:bg-black/5 transition-colors"
                                 >
                                     <X className="w-5 h-5 text-text-muted" />
                                 </button>

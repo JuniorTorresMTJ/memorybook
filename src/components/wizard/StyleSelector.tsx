@@ -1,6 +1,12 @@
 import { motion } from 'framer-motion';
-import { Palette, Pencil, Sparkles, Droplets } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 import type { IllustrationStyle } from './types';
+
+// Import style images
+import animeImg from '../../assets/anime.png';
+import cartoonImg from '../../assets/cartoon.png';
+import coloringImg from '../../assets/coloring_book.png';
+import heroWomanImg from '../../assets/hero-woman.png';
 
 interface StyleSelectorProps {
     value: IllustrationStyle;
@@ -11,49 +17,48 @@ interface StyleOption {
     id: IllustrationStyle;
     label: string;
     description: string;
-    icon: React.ReactNode;
-    gradient: string;
+    image?: string;
+    gradient?: string;
 }
 
-const styles: StyleOption[] = [
-    {
-        id: 'coloring',
-        label: 'Coloring Page',
-        description: 'Simple black & white outlines, perfect for coloring together',
-        icon: <Pencil className="w-6 h-6" />,
-        gradient: 'from-gray-400 to-gray-600',
-    },
-    {
-        id: 'cartoon',
-        label: 'Cartoon',
-        description: 'Bright, cheerful illustrations with bold colors',
-        icon: <Sparkles className="w-6 h-6" />,
-        gradient: 'from-amber-400 to-orange-500',
-    },
-    {
-        id: 'anime',
-        label: 'Anime',
-        description: 'Soft, expressive style with gentle features',
-        icon: <Palette className="w-6 h-6" />,
-        gradient: 'from-pink-400 to-purple-500',
-    },
-    {
-        id: 'watercolor',
-        label: 'Watercolor',
-        description: 'Delicate, dreamy paintings with soft edges',
-        icon: <Droplets className="w-6 h-6" />,
-        gradient: 'from-teal-400 to-cyan-500',
-    },
-];
-
 export const StyleSelector = ({ value, onChange }: StyleSelectorProps) => {
+    const { t } = useLanguage();
+    const wz = t.wizard;
+
+    const styles: StyleOption[] = [
+        {
+            id: 'coloring',
+            label: wz?.styleColoring || 'Coloring Page',
+            description: wz?.styleColoringDesc || 'Simple black & white outlines, perfect for coloring together',
+            image: coloringImg,
+        },
+        {
+            id: 'cartoon',
+            label: wz?.styleCartoon || 'Cartoon',
+            description: wz?.styleCartoonDesc || 'Bright, cheerful illustrations with bold colors',
+            image: cartoonImg,
+        },
+        {
+            id: 'anime',
+            label: wz?.styleAnime || 'Anime',
+            description: wz?.styleAnimeDesc || 'Soft, expressive style with gentle features',
+            image: animeImg,
+        },
+        {
+            id: 'watercolor',
+            label: wz?.styleWatercolor || 'Watercolor',
+            description: wz?.styleWatercolorDesc || 'Delicate, dreamy paintings with soft edges',
+            image: heroWomanImg,
+        },
+    ];
+
     return (
         <div className="space-y-3">
             <label className="block text-sm font-medium text-text-main">
-                Illustration Style
+                {wz?.illustrationStyle || 'Illustration Style'}
             </label>
             <p className="text-sm text-text-muted">
-                Choose how the memories will be illustrated.
+                {wz?.illustrationStyleDesc || 'Choose how the memories will be illustrated.'}
             </p>
 
             <div className="grid grid-cols-2 gap-3 mt-4">
@@ -96,11 +101,21 @@ export const StyleSelector = ({ value, onChange }: StyleSelectorProps) => {
 
                             {/* Style Preview */}
                             <div
-                                className={`w-full aspect-video rounded-xl mb-3 bg-gradient-to-br ${style.gradient} flex items-center justify-center`}
+                                className={`w-full aspect-video rounded-xl mb-3 overflow-hidden ${
+                                    style.gradient ? `bg-gradient-to-br ${style.gradient} flex items-center justify-center` : ''
+                                }`}
                             >
-                                <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center text-white">
-                                    {style.icon}
-                                </div>
+                                {style.image ? (
+                                    <img
+                                        src={style.image}
+                                        alt={style.label}
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center text-white">
+                                        <span className="text-2xl">🎨</span>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Content */}

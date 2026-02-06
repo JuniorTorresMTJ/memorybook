@@ -16,6 +16,7 @@ Este guia detalha como configurar o Firebase para o projeto Memory Book.
 1. No menu lateral, clique em **Authentication**
 2. Clique em **Get started**
 3. Na aba **Sign-in method**, habilite:
+   - **Anonymous**: Clique, ative e salve (IMPORTANTE para usuários guest!)
    - **Email/Password**: Clique, ative e salve
    - **Google**: Clique, ative, configure o email de suporte e salve
 

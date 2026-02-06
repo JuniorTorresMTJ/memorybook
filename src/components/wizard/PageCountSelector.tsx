@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { BookOpen, Sparkles, BookMarked } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { Sparkles, BookMarked, BookOpen } from 'lucide-react';
 import type { PageCount } from './types';
 
 interface PageCountSelectorProps {
@@ -14,35 +15,38 @@ interface PageOption {
     icon: React.ReactNode;
 }
 
-const options: PageOption[] = [
-    {
-        count: 10,
-        label: '10 Pages',
-        description: 'A brief, heartfelt collection',
-        icon: <BookOpen className="w-6 h-6" />,
-    },
-    {
-        count: 15,
-        label: '15 Pages',
-        description: 'A balanced story of memories',
-        icon: <Sparkles className="w-6 h-6" />,
-    },
-    {
-        count: 20,
-        label: '20 Pages',
-        description: 'A rich journey through life',
-        icon: <BookMarked className="w-6 h-6" />,
-    },
-];
-
 export const PageCountSelector = ({ value, onChange }: PageCountSelectorProps) => {
+    const { t } = useLanguage();
+    const wz = t.wizard;
+
+    const options: PageOption[] = [
+        {
+            count: 10,
+            label: wz?.pages10 || '10 Pages',
+            description: wz?.pages10Desc || 'A brief, heartfelt collection',
+            icon: <BookOpen className="w-6 h-6" />,
+        },
+        {
+            count: 15,
+            label: wz?.pages15 || '15 Pages',
+            description: wz?.pages15Desc || 'A balanced story of memories',
+            icon: <Sparkles className="w-6 h-6" />,
+        },
+        {
+            count: 20,
+            label: wz?.pages20 || '20 Pages',
+            description: wz?.pages20Desc || 'A rich journey through life',
+            icon: <BookMarked className="w-6 h-6" />,
+        },
+    ];
+
     return (
         <div className="space-y-3">
             <label className="block text-sm font-medium text-text-main">
-                How many pages?
+                {wz?.howManyPages || 'How many pages?'}
             </label>
             <p className="text-sm text-text-muted">
-                More pages means more moments and chapters.
+                {wz?.morePages || 'More pages means more moments and chapters.'}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">

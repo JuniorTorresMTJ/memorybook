@@ -26,19 +26,19 @@ service cloud.firestore {
       return style in ['coloring', 'cartoon', 'anime', 'watercolor'];
     }
     
-    // Validate book status
+    // Validate book status (including 'completed')
     function isValidBookStatus(status) {
-      return status in ['draft', 'generating', 'ready', 'error'];
+      return status in ['draft', 'generating', 'completed', 'ready', 'error'];
     }
     
-    // Validate tone
+    // Validate tone (allow both formats)
     function isValidTone(tone) {
-      return tone == null || tone in ['warm_simple', 'joyful', 'calm_reflective'];
+      return tone == null || tone in ['warm', 'joyful', 'calm', 'warm_simple', 'calm_reflective'];
     }
     
-    // Validate reading level
+    // Validate reading level (allow both formats)
     function isValidReadingLevel(level) {
-      return level == null || level in ['very_simple', 'standard'];
+      return level == null || level in ['very-simple', 'standard', 'very_simple'];
     }
     
     // Validate image category
@@ -69,11 +69,11 @@ service cloud.firestore {
     // MEMORY BOOKS COLLECTION
     // ============================================
     match /memoryBooks/{bookId} {
-      // Only the owner can read their memory books
+      // Read: authenticated users can read their own books
       allow read: if isAuthenticated() && 
         resource.data.ownerId == request.auth.uid;
       
-      // Create: validate required fields and ownership
+      // Create: authenticated users can create books
       allow create: if isAuthenticated() &&
         request.resource.data.ownerId == request.auth.uid &&
         request.resource.data.keys().hasAll(['ownerId', 'title', 'pageCount', 'imageStyle', 'status', 'createdAt', 'updatedAt']) &&
@@ -89,9 +89,6 @@ service cloud.firestore {
       allow update: if isAuthenticated() &&
         resource.data.ownerId == request.auth.uid &&
         request.resource.data.ownerId == resource.data.ownerId &&
-        (request.resource.data.title is string && request.resource.data.title.size() > 0) &&
-        isValidPageCount(request.resource.data.pageCount) &&
-        isValidImageStyle(request.resource.data.imageStyle) &&
         isValidBookStatus(request.resource.data.status);
       
       // Delete: owner only
@@ -106,9 +103,7 @@ service cloud.firestore {
           get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
         
         allow create, update: if isAuthenticated() &&
-          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid &&
-          isValidSectionId(sectionId) &&
-          request.resource.data.keys().hasAll(['text', 'skipped', 'updatedAt']);
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
         
         allow delete: if isAuthenticated() &&
           get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
@@ -122,10 +117,7 @@ service cloud.firestore {
           get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
         
         allow create: if isAuthenticated() &&
-          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid &&
-          request.resource.data.keys().hasAll(['category', 'storagePath', 'createdAt']) &&
-          isValidImageCategory(request.resource.data.category) &&
-          request.resource.data.storagePath is string;
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
         
         allow update: if isAuthenticated() &&
           get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
@@ -142,10 +134,7 @@ service cloud.firestore {
           get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
         
         allow create: if isAuthenticated() &&
-          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid &&
-          request.resource.data.keys().hasAll(['pageNumber', 'chapter', 'title', 'body', 'createdAt']) &&
-          request.resource.data.pageNumber is number &&
-          request.resource.data.pageNumber >= 1;
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
         
         allow update: if isAuthenticated() &&
           get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
@@ -162,8 +151,7 @@ service cloud.firestore {
           get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
         
         allow create: if isAuthenticated() &&
-          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid &&
-          request.resource.data.keys().hasAll(['startedAt', 'inputSnapshot']);
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
         
         allow update: if isAuthenticated() &&
           get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;

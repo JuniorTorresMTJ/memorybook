@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, X, Image as ImageIcon, AlertCircle, Plus } from 'lucide-react';
 import type { UploadedImage } from './types';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface UploadDropzoneProps {
     images: UploadedImage[];
@@ -28,6 +29,10 @@ export const UploadDropzone = ({
 }: UploadDropzoneProps) => {
     const [isDragging, setIsDragging] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
+    const { t } = useLanguage();
+    const up = t.upload;
+    const wz = t.wizard;
+    const cm = t.common;
 
     const generateId = () => Math.random().toString(36).substring(2, 11);
 
@@ -98,9 +103,10 @@ export const UploadDropzone = ({
     );
 
     const hasError = error || (required && minImages > 0 && images.length < minImages);
+    const photosWord = minImages > 1 ? (up?.photos || 'fotos') : (up?.photo || 'foto');
     const errorMessage =
         error || (required && minImages > 0 && images.length < minImages
-            ? `Please add at least ${minImages} photo${minImages > 1 ? 's' : ''}.`
+            ? `${up?.addAtLeast || 'Adicione pelo menos'} ${minImages} ${photosWord} ${up?.toContinue || 'para continuar'}.`
             : undefined);
 
     return (
@@ -112,7 +118,7 @@ export const UploadDropzone = ({
                     {required && <span className="text-red-500 ml-1">*</span>}
                 </label>
                 <span className="text-xs text-text-muted">
-                    {images.length} / {maxImages} photos
+                    {images.length} / {maxImages} {cm?.photos || 'fotos'}
                 </span>
             </div>
 
@@ -166,12 +172,12 @@ export const UploadDropzone = ({
                     </div>
                     <div>
                         <p className="font-medium text-text-main">
-                            {isDragging ? 'Drop photos here' : 'Drag & drop photos'}
+                            {isDragging ? (up?.dropHere || 'Solte as fotos aqui') : (up?.dragDrop || 'Arraste e solte fotos')}
                         </p>
                         <p className="text-sm text-text-muted mt-1">
-                            or{' '}
+                            {cm?.or || 'ou'}{' '}
                             <span className="text-primary-teal font-medium">
-                                click to browse your files
+                                {up?.clickBrowse || 'clique para navegar seus arquivos'}
                             </span>
                         </p>
                     </div>
@@ -199,7 +205,7 @@ export const UploadDropzone = ({
             {showPrivacyHint && (
                 <p className="text-xs text-text-muted flex items-center gap-1">
                     <span className="text-primary-teal">🔒</span>
-                    Photos are used only to personalize the book.
+                    {wz?.photosPrivacy || 'As fotos são usadas apenas para personalizar o livro.'}
                 </p>
             )}
 
@@ -254,7 +260,7 @@ export const UploadDropzone = ({
                             className="w-24 h-24 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-primary-teal hover:bg-primary-teal/5 dark:hover:bg-primary-teal/10 transition-all flex flex-col items-center justify-center gap-1"
                         >
                             <Plus className="w-6 h-6 text-text-muted" />
-                            <span className="text-xs text-text-muted">Add</span>
+                            <span className="text-xs text-text-muted">{up?.add || 'Adicionar'}</span>
                         </motion.button>
                     )}
                 </div>
@@ -264,7 +270,7 @@ export const UploadDropzone = ({
             {images.length === 0 && minImages > 0 && (
                 <div className="flex items-center gap-2 p-3 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 text-sm">
                     <ImageIcon className="w-4 h-4" />
-                    Add at least {minImages} photo{minImages > 1 ? 's' : ''} to continue.
+                    {up?.addAtLeast || 'Adicione pelo menos'} {minImages} {minImages > 1 ? (up?.photos || 'fotos') : (up?.photo || 'foto')} {up?.toContinue || 'para continuar'}.
                 </div>
             )}
         </div>

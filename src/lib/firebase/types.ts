@@ -12,7 +12,7 @@ export type BookTone = 'warm_simple' | 'joyful' | 'calm_reflective';
 
 export type ReadingLevel = 'very_simple' | 'standard';
 
-export type BookStatus = 'draft' | 'generating' | 'ready' | 'error';
+export type BookStatus = 'draft' | 'generating' | 'completed' | 'ready' | 'error';
 
 export type ImageCategory = 'profile_reference' | 'childhood' | 'teen' | 'adult' | 'laterLife';
 
@@ -61,8 +61,8 @@ export interface MemoryBookInput {
     bookDate?: Date;
     pageCount: PageCount;
     imageStyle: ImageStyle;
-    tone?: BookTone;
-    readingLevel?: ReadingLevel;
+    tone?: BookTone | string;
+    readingLevel?: ReadingLevel | string;
 }
 
 export interface MemoryBookUpdate {
@@ -146,12 +146,17 @@ export interface PageInput {
 // ============================================
 
 export interface GenerationJobInputSnapshot {
-    pageCount: PageCount;
-    imageStyle: ImageStyle;
+    // Backend job ID
+    backendJobId?: string;
+    // Original payload sent to backend
+    payload?: Record<string, unknown>;
+    // Legacy fields (for backwards compatibility)
+    pageCount?: PageCount;
+    imageStyle?: ImageStyle;
     tone?: BookTone;
     readingLevel?: ReadingLevel;
-    sectionsCount: number;
-    imagesCount: number;
+    sectionsCount?: number;
+    imagesCount?: number;
 }
 
 export interface GenerationJobDocument {
@@ -160,6 +165,8 @@ export interface GenerationJobDocument {
     finishedAt?: Timestamp;
     inputSnapshot: GenerationJobInputSnapshot;
     errorMessage?: string;
+    /** Saved result from backend FinalBookPackage for offline/persistent display */
+    resultSnapshot?: Record<string, unknown>;
 }
 
 // ============================================

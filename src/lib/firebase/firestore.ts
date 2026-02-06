@@ -13,7 +13,6 @@ import {
     limit,
     serverTimestamp,
     Timestamp,
-    type DocumentReference,
     type QueryConstraint,
 } from 'firebase/firestore';
 import { db } from './config';
@@ -387,13 +386,15 @@ export const createPages = async (
 
 /**
  * Create a generation job
+ * @param bookId - The ID of the memory book
+ * @param inputSnapshot - The input data for the job
+ * @param jobId - Optional ID for the job (if provided by backend)
  */
 export const createGenerationJob = async (
     bookId: string,
-    inputSnapshot: GenerationJobInputSnapshot
+    inputSnapshot: GenerationJobInputSnapshot,
+    jobId?: string
 ): Promise<string> => {
-    const jobsRef = collection(db, 'memoryBooks', bookId, 'generationJobs');
-    
     const jobData = {
         startedAt: serverTimestamp(),
         inputSnapshot,
@@ -401,21 +402,41 @@ export const createGenerationJob = async (
         errorMessage: null,
     };
     
+    // If a jobId is provided, use it as the document ID
+    if (jobId) {
+        const jobRef = doc(db, 'memoryBooks', bookId, 'generationJobs', jobId);
+        await setDoc(jobRef, jobData);
+        return jobId;
+    }
+    
+    // Otherwise, generate a new ID
+    const jobsRef = collection(db, 'memoryBooks', bookId, 'generationJobs');
     const docRef = await addDoc(jobsRef, jobData);
     return docRef.id;
 };
 
 /**
  * Complete a generation job (success)
+ * 
+ * @param bookId - Memory book ID
+ * @param jobId - Backend job ID
+ * @param resultSnapshot - Optional: the FinalBookPackage data to persist for later display
  */
 export const completeGenerationJob = async (
     bookId: string,
-    jobId: string
+    jobId: string,
+    resultSnapshot?: Record<string, unknown>
 ): Promise<void> => {
     const jobRef = doc(db, 'memoryBooks', bookId, 'generationJobs', jobId);
-    await updateDoc(jobRef, {
+    const updateData: Record<string, unknown> = {
         finishedAt: serverTimestamp(),
-    });
+    };
+    
+    if (resultSnapshot) {
+        updateData.resultSnapshot = resultSnapshot;
+    }
+    
+    await updateDoc(jobRef, updateData);
 };
 
 /**

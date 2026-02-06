@@ -15,9 +15,28 @@ export interface UploadedImage {
     name: string;
 }
 
+export type Gender = 'male' | 'female';
+export type SkinColor = 'light' | 'fair' | 'medium' | 'olive' | 'tan' | 'brown' | 'dark';
+export type HairColor = 'blonde' | 'golden' | 'brown' | 'dark-brown' | 'black' | 'red' | 'gray' | 'white';
+export type HairStyle = 'short' | 'medium' | 'long' | 'curly' | 'wavy' | 'bald' | 'buzz-cut' | 'ponytail' | 'bun';
+
+export interface PhysicalCharacteristicsData {
+    name: string;
+    gender: Gender | null;
+    skinColor: SkinColor | null;
+    hairColor: HairColor | null;
+    hairStyle: HairStyle | null;
+    hasGlasses: boolean;
+    hasFacialHair: boolean;
+}
+
+export type ReferenceInputMode = 'photos' | 'characteristics';
+
 export interface BookSetupData {
     pageCount: PageCount;
     referencePhotos: UploadedImage[];
+    referenceInputMode: ReferenceInputMode;
+    physicalCharacteristics: PhysicalCharacteristicsData;
     illustrationStyle: IllustrationStyle;
     title: string;
     subtitle: string;
@@ -58,6 +77,14 @@ export interface LaterLifeData {
     photos: UploadedImage[];
 }
 
+/** Simplified memories - one free-text field per life phase */
+export interface MemoriesData {
+    childhood: string;
+    teenage: string;
+    adultLife: string;
+    laterLife: string;
+}
+
 export interface GenerationSettings {
     readingLevel: ReadingLevel;
     tone: Tone;
@@ -65,6 +92,8 @@ export interface GenerationSettings {
 
 export interface MemoryBookData {
     bookSetup: BookSetupData;
+    memories: MemoriesData;
+    // Legacy fields kept for backwards compatibility with saved drafts
     childhood: ChildhoodData;
     teenage: TeenageData;
     adultLife: AdultLifeData;
@@ -72,7 +101,7 @@ export interface MemoryBookData {
     generationSettings: GenerationSettings;
 }
 
-export type WizardStep = 1 | 2 | 3 | 4 | 5 | 6;
+export type WizardStep = 1 | 2 | 3;
 
 export interface StepInfo {
     number: WizardStep;
@@ -83,16 +112,25 @@ export interface StepInfo {
 
 export const WIZARD_STEPS: StepInfo[] = [
     { number: 1, title: 'Book Setup', description: 'Basic settings and photos', isOptional: false },
-    { number: 2, title: 'Childhood', description: 'Early memories', isOptional: true },
-    { number: 3, title: 'Teenage Years', description: 'Growing up', isOptional: true },
-    { number: 4, title: 'Adult Life', description: 'Career and family', isOptional: true },
-    { number: 5, title: 'Later Life', description: 'Golden years', isOptional: true },
-    { number: 6, title: 'Review & Generate', description: 'Final review', isOptional: false },
+    { number: 2, title: 'Memories', description: 'Share their story', isOptional: false },
+    { number: 3, title: 'Review & Generate', description: 'Final review', isOptional: false },
 ];
+
+export const getInitialPhysicalCharacteristics = (): PhysicalCharacteristicsData => ({
+    name: '',
+    gender: null,
+    skinColor: null,
+    hairColor: null,
+    hairStyle: null,
+    hasGlasses: false,
+    hasFacialHair: false,
+});
 
 export const getInitialBookSetup = (): BookSetupData => ({
     pageCount: 15,
     referencePhotos: [],
+    referenceInputMode: 'photos',
+    physicalCharacteristics: getInitialPhysicalCharacteristics(),
     illustrationStyle: 'watercolor',
     title: '',
     subtitle: '',
@@ -138,8 +176,16 @@ export const getInitialGenerationSettings = (): GenerationSettings => ({
     tone: 'warm',
 });
 
+export const getInitialMemories = (): MemoriesData => ({
+    childhood: '',
+    teenage: '',
+    adultLife: '',
+    laterLife: '',
+});
+
 export const getInitialMemoryBookData = (): MemoryBookData => ({
     bookSetup: getInitialBookSetup(),
+    memories: getInitialMemories(),
     childhood: getInitialChildhood(),
     teenage: getInitialTeenage(),
     adultLife: getInitialAdultLife(),

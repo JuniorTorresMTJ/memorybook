@@ -1,16 +1,16 @@
 import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
     X, 
     Upload, 
     Trash2, 
-    GripVertical,
     Plus,
     Save,
     ArrowLeft,
     Image as ImageIcon
 } from 'lucide-react';
 import type { BookPage } from './BookViewer';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface BookEditorProps {
     isOpen: boolean;
@@ -32,6 +32,8 @@ export const BookEditor = ({
     const [replacePageIndex, setReplacePageIndex] = useState<number | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const replaceInputRef = useRef<HTMLInputElement>(null);
+    const { t } = useLanguage();
+    const be = t.bookEditor;
 
     const generateId = () => Math.random().toString(36).substring(2, 11);
 
@@ -132,18 +134,18 @@ export const BookEditor = ({
                                 className="flex items-center gap-2 text-text-muted hover:text-text-main transition-colors"
                             >
                                 <ArrowLeft className="w-5 h-5" />
-                                Back
+                                {be?.back || 'Voltar'}
                             </button>
                             <button
                                 onClick={handleSave}
                                 className="flex items-center gap-2 px-4 py-2 bg-primary-teal text-white rounded-xl font-medium hover:bg-primary-teal/90 transition-colors"
                             >
                                 <Save className="w-4 h-4" />
-                                Save
+                                {be?.save || 'Salvar'}
                             </button>
                         </div>
                         <h2 className="text-lg font-bold text-text-main">{title}</h2>
-                        <p className="text-sm text-text-muted">{pages.length} pages</p>
+                        <p className="text-sm text-text-muted">{pages.length} {be?.pages || 'páginas'}</p>
                     </div>
 
                     {/* Page Thumbnails */}
@@ -195,7 +197,7 @@ export const BookEditor = ({
                                 className="aspect-3/4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-primary-teal hover:bg-primary-teal/5 transition-all flex flex-col items-center justify-center gap-2"
                             >
                                 <Plus className="w-6 h-6 text-text-muted" />
-                                <span className="text-xs text-text-muted">Add Page</span>
+                                <span className="text-xs text-text-muted">{be?.addPage || 'Adicionar Página'}</span>
                             </button>
                         </div>
                     </div>
@@ -221,7 +223,7 @@ export const BookEditor = ({
                             {/* Editor Header */}
                             <div className="p-4 border-b border-black/5 dark:border-white/10 flex items-center justify-between">
                                 <h3 className="font-semibold text-text-main">
-                                    Editing Page {selectedPage + 1}
+                                    {be?.editingPage || 'Editando Página'} {selectedPage + 1}
                                 </h3>
                                 <button
                                     onClick={() => setSelectedPage(null)}
@@ -254,7 +256,7 @@ export const BookEditor = ({
                                                 className="flex items-center gap-2 px-6 py-3 bg-white/90 text-gray-900 rounded-xl font-medium hover:bg-white transition-colors"
                                             >
                                                 <Upload className="w-5 h-5" />
-                                                Replace Image
+                                                {be?.replaceImage || 'Substituir Imagem'}
                                             </button>
                                         </div>
                                     </div>
@@ -263,7 +265,7 @@ export const BookEditor = ({
                                     <div className="space-y-4">
                                         <div>
                                             <label className="block text-sm font-medium text-text-main mb-2">
-                                                Page Title
+                                                {be?.pageTitle || 'Título da Página'}
                                             </label>
                                             <input
                                                 type="text"
@@ -271,14 +273,14 @@ export const BookEditor = ({
                                                 onChange={(e) => 
                                                     handleUpdatePage(selectedPage, { title: e.target.value })
                                                 }
-                                                placeholder="Enter a title for this page..."
+                                                placeholder={be?.pageTitlePlaceholder || 'Digite um título para esta página...'}
                                                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-transparent text-text-main placeholder:text-text-muted/60 focus:border-primary-teal focus:outline-none transition-colors"
                                             />
                                         </div>
 
                                         <div>
                                             <label className="block text-sm font-medium text-text-main mb-2">
-                                                Date
+                                                {be?.date || 'Data'}
                                             </label>
                                             <input
                                                 type="text"
@@ -286,21 +288,21 @@ export const BookEditor = ({
                                                 onChange={(e) => 
                                                     handleUpdatePage(selectedPage, { date: e.target.value })
                                                 }
-                                                placeholder="e.g., July 2023"
+                                                placeholder={be?.datePlaceholder || 'ex., Julho 2023'}
                                                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-transparent text-text-main placeholder:text-text-muted/60 focus:border-primary-teal focus:outline-none transition-colors"
                                             />
                                         </div>
 
                                         <div>
                                             <label className="block text-sm font-medium text-text-main mb-2">
-                                                Description
+                                                {be?.description || 'Descrição'}
                                             </label>
                                             <textarea
                                                 value={pages[selectedPage].description || ''}
                                                 onChange={(e) => 
                                                     handleUpdatePage(selectedPage, { description: e.target.value })
                                                 }
-                                                placeholder="Write a short description or story for this page..."
+                                                placeholder={be?.descriptionPlaceholder || 'Escreva uma breve descrição ou história para esta página...'}
                                                 rows={4}
                                                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-transparent text-text-main placeholder:text-text-muted/60 focus:border-primary-teal focus:outline-none transition-colors resize-none"
                                             />
@@ -317,10 +319,10 @@ export const BookEditor = ({
                                     <ImageIcon className="w-10 h-10 text-text-muted" />
                                 </div>
                                 <h3 className="text-lg font-semibold text-text-main mb-2">
-                                    Select a page to edit
+                                    {be?.selectPage || 'Selecione uma página para editar'}
                                 </h3>
                                 <p className="text-text-muted">
-                                    Click on any page thumbnail to edit its details
+                                    {be?.selectPageDesc || 'Clique em qualquer miniatura para editar seus detalhes'}
                                 </p>
                             </div>
                         </div>

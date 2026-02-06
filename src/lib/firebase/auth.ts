@@ -2,6 +2,7 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signInWithPopup,
+    signInAnonymously,
     GoogleAuthProvider,
     signOut as firebaseSignOut,
     onAuthStateChanged,
@@ -81,11 +82,35 @@ export const signInWithGoogle = async (): Promise<UserCredential> => {
 };
 
 /**
+ * Sign in anonymously (for guest users)
+ */
+export const signInAnonymousUser = async (): Promise<UserCredential> => {
+    const userCredential = await signInAnonymously(auth);
+    return userCredential;
+};
+
+/**
+ * Ensure user is authenticated (sign in anonymously if not)
+ */
+export const ensureAuthenticated = async (): Promise<User> => {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+        return currentUser;
+    }
+    
+    const userCredential = await signInAnonymously(auth);
+    return userCredential.user;
+};
+
+/**
  * Sign out the current user
  */
 export const signOut = async (): Promise<void> => {
     await firebaseSignOut(auth);
 };
+
+// Alias for backwards compatibility
+export const signOutUser = signOut;
 
 /**
  * Send password reset email

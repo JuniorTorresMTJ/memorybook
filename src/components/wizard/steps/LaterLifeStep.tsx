@@ -3,6 +3,7 @@ import { Home, Heart, Users, Sun, Leaf } from 'lucide-react';
 import type { LaterLifeData } from '../types';
 import { FormInput, FormTextArea } from '../FormTextArea';
 import { UploadDropzone } from '../UploadDropzone';
+import { useLanguage } from '../../../contexts/LanguageContext';
 
 interface LaterLifeStepProps {
     data: LaterLifeData;
@@ -10,6 +11,9 @@ interface LaterLifeStepProps {
 }
 
 export const LaterLifeStep = ({ data, onChange }: LaterLifeStepProps) => {
+    const { t } = useLanguage();
+    const wz = t.wizard;
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -23,10 +27,10 @@ export const LaterLifeStep = ({ data, onChange }: LaterLifeStepProps) => {
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-400 to-green-500 flex items-center justify-center">
                         <Leaf className="w-5 h-5 text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold text-text-main">Later Life</h2>
+                    <h2 className="text-2xl font-bold text-text-main">{wz?.laterLife || 'Later Life'}</h2>
                 </div>
                 <p className="text-text-muted">
-                    The golden years and present day. Write as little or as much as you'd like.
+                    {wz?.laterLifeIntro || "The golden years and present day. Write as little or as much as you'd like."}
                 </p>
             </div>
 
@@ -34,39 +38,39 @@ export const LaterLifeStep = ({ data, onChange }: LaterLifeStepProps) => {
             <div className="space-y-6">
                 <FormInput
                     id="laterLivingPlace"
-                    label="Where did they live later in life?"
+                    label={wz?.whereLiveLater || "Where did they live later in life?"}
                     value={data.livingPlace}
                     onChange={(livingPlace) => onChange({ livingPlace })}
-                    placeholder="e.g., Same house for 40 years, moved to be closer to family..."
+                    placeholder={wz?.laterLivePlaceholder || "e.g., Same house for 40 years, moved to be closer to family..."}
                     icon={<Home className="w-5 h-5" />}
                 />
 
                 <FormTextArea
                     id="routinesTraditions"
-                    label="Favorite routines, traditions, and places"
+                    label={wz?.routinesTraditions || "Favorite routines, traditions, and places"}
                     value={data.routinesTraditions}
                     onChange={(routinesTraditions) => onChange({ routinesTraditions })}
-                    placeholder="e.g., Morning coffee ritual, Sunday lunches, favorite park bench..."
+                    placeholder={wz?.routinesPlaceholder || "e.g., Morning coffee ritual, Sunday lunches, favorite park bench..."}
                     rows={3}
                     icon={<Sun className="w-5 h-5" />}
                 />
 
                 <FormTextArea
                     id="familyMoments"
-                    label="Family moments"
+                    label={wz?.familyMoments || "Family moments"}
                     value={data.familyMoments}
                     onChange={(familyMoments) => onChange({ familyMoments })}
-                    placeholder="e.g., Time with grandchildren, family gatherings, celebrations..."
+                    placeholder={wz?.familyMomentsPlaceholder || "e.g., Time with grandchildren, family gatherings, celebrations..."}
                     rows={3}
                     icon={<Users className="w-5 h-5" />}
                 />
 
                 <FormTextArea
                     id="comfortJoy"
-                    label="What brings them comfort and joy today?"
+                    label={wz?.comfortJoy || "What brings them comfort and joy today?"}
                     value={data.comfortJoy}
                     onChange={(comfortJoy) => onChange({ comfortJoy })}
-                    placeholder="e.g., Listening to old songs, looking at photos, visits from loved ones..."
+                    placeholder={wz?.comfortPlaceholder || "e.g., Listening to old songs, looking at photos, visits from loved ones..."}
                     rows={4}
                     icon={<Heart className="w-5 h-5" />}
                 />
@@ -77,8 +81,8 @@ export const LaterLifeStep = ({ data, onChange }: LaterLifeStepProps) => {
                 <UploadDropzone
                     images={data.photos}
                     onChange={(photos) => onChange({ photos })}
-                    label="Add later life photos"
-                    helperText="Recent photos or from recent years"
+                    label={wz?.addLaterPhotos || "Add later life photos"}
+                    helperText={wz?.laterPhotosHelper || "Recent photos or from recent years"}
                     maxImages={5}
                 />
             </div>

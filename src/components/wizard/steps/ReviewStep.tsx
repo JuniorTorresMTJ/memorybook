@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Sparkles, Rocket, Gem, Leaf, BookOpen, Zap } from 'lucide-react';
+import { Sparkles, Rocket, Gem, Leaf, Zap, BookOpen } from 'lucide-react';
 import type {
     MemoryBookData,
     GenerationSettings,
@@ -7,7 +7,7 @@ import type {
     Tone,
     WizardStep,
 } from '../types';
-import { ReviewSummaryCard } from '../ReviewSummaryCard';
+import { useLanguage } from '../../../contexts/LanguageContext';
 
 interface ReviewStepProps {
     data: MemoryBookData;
@@ -16,68 +16,65 @@ interface ReviewStepProps {
     completedSteps: Set<WizardStep>;
 }
 
-const readingLevels: { value: ReadingLevel; label: string; description: string }[] = [
-    {
-        value: 'very-simple',
-        label: 'Very Simple',
-        description: 'Short sentences, basic words',
-    },
-    {
-        value: 'standard',
-        label: 'Standard',
-        description: 'Natural, conversational tone',
-    },
-];
-
-const toneOptions: { value: Tone; label: string; emoji: string }[] = [
-    { value: 'warm', label: 'Warm & Simple', emoji: '🌟' },
-    { value: 'joyful', label: 'Joyful & Celebratory', emoji: '🎉' },
-    { value: 'calm', label: 'Calm & Reflective', emoji: '🌿' },
-];
-
-const countFilledFields = (obj: Record<string, unknown>): number => {
-    return Object.values(obj).filter((value) => {
-        if (typeof value === 'string') return value.trim().length > 0;
-        if (Array.isArray(value)) return value.length > 0;
-        return false;
-    }).length;
-};
-
 export const ReviewStep = ({
     data,
     onEditSection,
     onSettingsChange,
-    completedSteps,
 }: ReviewStepProps) => {
-    const childhoodPrompts = countFilledFields({
-        birthPlace: data.childhood.birthPlace,
-        parents: data.childhood.parents,
-        siblings: data.childhood.siblings,
-        happyMemory: data.childhood.happyMemory,
-        enjoyedActivities: data.childhood.enjoyedActivities,
-    });
+    const { t } = useLanguage();
+    const wz = t.wizard;
 
-    const teenagePrompts = countFilledFields({
-        livingPlace: data.teenage.livingPlace,
-        schoolExperiences: data.teenage.schoolExperiences,
-        friendsInterests: data.teenage.friendsInterests,
-        memorableEvents: data.teenage.memorableEvents,
-    });
+    const readingLevels: { value: ReadingLevel; label: string; description: string }[] = [
+        {
+            value: 'very-simple',
+            label: wz?.verySimple || 'Very Simple',
+            description: wz?.verySimpleDesc || 'Short sentences, basic words',
+        },
+        {
+            value: 'standard',
+            label: wz?.standard || 'Standard',
+            description: wz?.standardDesc || 'Natural, conversational tone',
+        },
+    ];
 
-    const adultPrompts = countFilledFields({
-        career: data.adultLife.career,
-        hobbiesPassions: data.adultLife.hobbiesPassions,
-        partner: data.adultLife.partner,
-        children: data.adultLife.children,
-        milestones: data.adultLife.milestones,
-    });
+    const toneOptions: { value: Tone; label: string; emoji: string }[] = [
+        { value: 'warm', label: wz?.toneWarm || 'Warm & Simple', emoji: '🌟' },
+        { value: 'joyful', label: wz?.toneJoyful || 'Joyful & Celebratory', emoji: '🎉' },
+        { value: 'calm', label: wz?.toneCalm || 'Calm & Reflective', emoji: '🌿' },
+    ];
 
-    const laterLifePrompts = countFilledFields({
-        livingPlace: data.laterLife.livingPlace,
-        routinesTraditions: data.laterLife.routinesTraditions,
-        familyMoments: data.laterLife.familyMoments,
-        comfortJoy: data.laterLife.comfortJoy,
-    });
+    const memorySections = [
+        {
+            key: 'childhood',
+            title: wz?.childhood || 'Childhood',
+            icon: <Sparkles className="w-4 h-4 text-amber-500" />,
+            text: data.memories.childhood,
+            bgColor: 'bg-amber-50',
+        },
+        {
+            key: 'teenage',
+            title: wz?.teenage || 'Teenage Years',
+            icon: <Rocket className="w-4 h-4 text-purple-500" />,
+            text: data.memories.teenage,
+            bgColor: 'bg-purple-50',
+        },
+        {
+            key: 'adultLife',
+            title: wz?.adultLife || 'Adult Life',
+            icon: <Gem className="w-4 h-4 text-blue-500" />,
+            text: data.memories.adultLife,
+            bgColor: 'bg-blue-50',
+        },
+        {
+            key: 'laterLife',
+            title: wz?.laterLife || 'Later Life',
+            icon: <Leaf className="w-4 h-4 text-teal-500" />,
+            text: data.memories.laterLife,
+            bgColor: 'bg-teal-50',
+        },
+    ];
+
+    const filledSections = memorySections.filter((s) => s.text.trim().length > 0);
 
     return (
         <motion.div
@@ -92,10 +89,10 @@ export const ReviewStep = ({
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-teal to-teal-400 flex items-center justify-center">
                         <BookOpen className="w-5 h-5 text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold text-text-main">Review & Generate</h2>
+                    <h2 className="text-2xl font-bold text-text-main">{wz?.review || 'Review & Generate'}</h2>
                 </div>
                 <p className="text-text-muted">
-                    Review your content and customize how your Memory Book will be created.
+                    {wz?.reviewIntro || 'Review your content and customize how your Memory Book will be created.'}
                 </p>
             </div>
 
@@ -103,9 +100,9 @@ export const ReviewStep = ({
             <div className="p-4 rounded-2xl bg-gradient-to-br from-primary-teal/10 to-teal-400/10 border border-primary-teal/20">
                 <div className="flex items-center justify-between flex-wrap gap-4">
                     <div>
-                        <p className="text-sm text-text-muted">Book Title</p>
+                        <p className="text-sm text-text-muted">{wz?.bookTitle || 'Book Title'}</p>
                         <p className="text-lg font-semibold text-text-main">
-                            {data.bookSetup.title || 'Untitled Book'}
+                            {data.bookSetup.title || (wz?.bookTitlePlaceholder || 'Untitled Book')}
                         </p>
                         {data.bookSetup.subtitle && (
                             <p className="text-sm text-text-muted">{data.bookSetup.subtitle}</p>
@@ -114,82 +111,65 @@ export const ReviewStep = ({
                     <div className="flex gap-4 text-sm">
                         <div className="text-center">
                             <p className="font-semibold text-text-main">{data.bookSetup.pageCount}</p>
-                            <p className="text-text-muted">Pages</p>
+                            <p className="text-text-muted">{wz?.howManyPages?.split('?')[0]?.trim() || 'Pages'}</p>
                         </div>
                         <div className="text-center">
                             <p className="font-semibold text-text-main capitalize">
                                 {data.bookSetup.illustrationStyle}
                             </p>
-                            <p className="text-text-muted">Style</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="font-semibold text-text-main">
-                                {data.bookSetup.referencePhotos.length}
-                            </p>
-                            <p className="text-text-muted">Photos</p>
+                            <p className="text-text-muted">{wz?.illustrationStyle || 'Style'}</p>
                         </div>
                     </div>
                 </div>
+                <button
+                    onClick={() => onEditSection(1)}
+                    className="text-xs text-primary-teal hover:underline mt-2"
+                >
+                    {wz?.editSetup || 'Edit setup'}
+                </button>
             </div>
 
-            {/* Section Summaries */}
+            {/* Memory Sections Summary */}
             <div>
-                <h3 className="text-lg font-semibold text-text-main mb-4">Content Summary</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <ReviewSummaryCard
-                        title="Childhood"
-                        icon={<Sparkles className="w-5 h-5 text-white" />}
-                        gradient="from-amber-400 to-orange-500"
-                        promptsAnswered={childhoodPrompts}
-                        totalPrompts={5}
-                        imagesAdded={data.childhood.photos.length}
-                        onEdit={() => onEditSection(2)}
-                        isSkipped={!completedSteps.has(2) && childhoodPrompts === 0}
-                    />
-                    <ReviewSummaryCard
-                        title="Teenage Years"
-                        icon={<Rocket className="w-5 h-5 text-white" />}
-                        gradient="from-purple-400 to-pink-500"
-                        promptsAnswered={teenagePrompts}
-                        totalPrompts={4}
-                        imagesAdded={data.teenage.photos.length}
-                        onEdit={() => onEditSection(3)}
-                        isSkipped={!completedSteps.has(3) && teenagePrompts === 0}
-                    />
-                    <ReviewSummaryCard
-                        title="Adult Life"
-                        icon={<Gem className="w-5 h-5 text-white" />}
-                        gradient="from-blue-400 to-indigo-500"
-                        promptsAnswered={adultPrompts}
-                        totalPrompts={5}
-                        imagesAdded={data.adultLife.photos.length}
-                        onEdit={() => onEditSection(4)}
-                        isSkipped={!completedSteps.has(4) && adultPrompts === 0}
-                    />
-                    <ReviewSummaryCard
-                        title="Later Life"
-                        icon={<Leaf className="w-5 h-5 text-white" />}
-                        gradient="from-teal-400 to-green-500"
-                        promptsAnswered={laterLifePrompts}
-                        totalPrompts={4}
-                        imagesAdded={data.laterLife.photos.length}
-                        onEdit={() => onEditSection(5)}
-                        isSkipped={!completedSteps.has(5) && laterLifePrompts === 0}
-                    />
+                <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-text-main">{wz?.contentSummary || 'Content Summary'}</h3>
+                    <button
+                        onClick={() => onEditSection(2)}
+                        className="text-xs text-primary-teal hover:underline"
+                    >
+                        {wz?.editMemories || 'Edit memories'}
+                    </button>
                 </div>
+                {filledSections.length > 0 ? (
+                    <div className="space-y-3">
+                        {filledSections.map((section) => (
+                            <div key={section.key} className={`p-3 rounded-xl ${section.bgColor} flex items-start gap-3`}>
+                                {section.icon}
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-text-main">{section.title}</p>
+                                    <p className="text-xs text-text-muted mt-1 line-clamp-2">{section.text}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-sm text-text-muted italic">
+                        {wz?.noMemoriesYet || 'No memories added yet. The AI will create a generic story based on the book title.'}
+                    </p>
+                )}
             </div>
 
             {/* Generation Settings */}
             <div className="space-y-6">
                 <h3 className="text-lg font-semibold text-text-main flex items-center gap-2">
                     <Zap className="w-5 h-5 text-primary-teal" />
-                    Generation Settings
+                    {wz?.generationSettings || 'Generation Settings'}
                 </h3>
 
                 {/* Reading Level */}
                 <div className="space-y-3">
                     <label className="block text-sm font-medium text-text-main">
-                        Reading Level
+                        {wz?.readingLevel || 'Reading Level'}
                     </label>
                     <div className="grid grid-cols-2 gap-3">
                         {readingLevels.map((level) => (
@@ -224,7 +204,7 @@ export const ReviewStep = ({
                 {/* Tone */}
                 <div className="space-y-3">
                     <label className="block text-sm font-medium text-text-main">
-                        Book Tone
+                        {wz?.bookTone || 'Book Tone'}
                     </label>
                     <div className="flex flex-wrap gap-2">
                         {toneOptions.map((tone) => (

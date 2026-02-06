@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Check, BookOpen, ArrowRight, Home } from 'lucide-react';
+import { Check, ArrowRight, Home, BookOpen } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface SuccessScreenProps {
     bookTitle: string;
@@ -12,6 +13,9 @@ export const SuccessScreen = ({
     onOpenViewer,
     onBackToDashboard,
 }: SuccessScreenProps) => {
+    const { t } = useLanguage();
+    const wz = t.wizard;
+
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -60,9 +64,9 @@ export const SuccessScreen = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="text-3xl font-bold text-text-main mb-3"
+                className="text-3xl font-bold text-gray-800 mb-3"
             >
-                Your Memory Book is Ready!
+                {wz?.bookReady || 'Your Memory Book is Ready!'}
             </motion.h2>
 
             {/* Book Name */}
@@ -70,7 +74,7 @@ export const SuccessScreen = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="text-lg text-text-muted mb-2"
+                className="text-lg text-gray-500 mb-2"
             >
                 <span className="font-semibold text-primary-teal">{bookTitle}</span>
             </motion.p>
@@ -79,10 +83,9 @@ export const SuccessScreen = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="text-text-muted max-w-md mb-8"
+                className="text-gray-500 max-w-md mb-8"
             >
-                We've created a beautiful, personalized book filled with precious memories.
-                It's ready for you to view, print, or share with family.
+                {wz?.bookCreatedDesc || "We've created a beautiful, personalized book filled with precious memories. It's ready for you to view, print, or share with family."}
             </motion.p>
 
             {/* Actions */}
@@ -97,15 +100,15 @@ export const SuccessScreen = ({
                     className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-primary-teal to-teal-400 hover:from-teal-500 hover:to-teal-400 text-white font-semibold transition-all shadow-lg shadow-primary-teal/20 hover:shadow-xl hover:shadow-primary-teal/30"
                 >
                     <BookOpen className="w-5 h-5" />
-                    Open Book Viewer
+                    {wz?.openViewer || 'Open Book Viewer'}
                     <ArrowRight className="w-5 h-5" />
                 </button>
                 <button
                     onClick={onBackToDashboard}
-                    className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-text-main font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+                    className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl border-2 border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 transition-all"
                 >
                     <Home className="w-5 h-5" />
-                    Dashboard
+                    {wz?.backToDashboard || 'Dashboard'}
                 </button>
             </motion.div>
 
@@ -114,9 +117,9 @@ export const SuccessScreen = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.8 }}
-                className="text-xs text-text-muted mt-8"
+                className="text-xs text-gray-400 mt-8"
             >
-                You can access your Memory Book anytime from your dashboard
+                {wz?.accessAnytime || 'You can access your Memory Book anytime from your dashboard'}
             </motion.p>
         </motion.div>
     );

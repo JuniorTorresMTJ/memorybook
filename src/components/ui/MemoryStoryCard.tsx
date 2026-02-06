@@ -1,6 +1,6 @@
 import { Heart, Edit3, Download, Trash2, BookOpen } from 'lucide-react';
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface MemoryStoryCardProps {
     id: string;
@@ -8,12 +8,14 @@ interface MemoryStoryCardProps {
     date: string;
     description: string;
     imageUrl: string;
+    pageImages?: string[]; // Array of all page images for slideshow
     isFavorite?: boolean;
     pageCount?: number;
     onClick?: () => void;
     onEdit?: () => void;
     onPrint?: () => void;
     onDelete?: () => void;
+    onToggleFavorite?: () => void;
 }
 
 export const MemoryStoryCard = ({
@@ -21,19 +23,67 @@ export const MemoryStoryCard = ({
     date,
     description,
     imageUrl,
+    pageImages = [],
     isFavorite = false,
     pageCount,
     onClick,
     onEdit,
     onPrint,
-    onDelete
+    onDelete,
+    onToggleFavorite
 }: MemoryStoryCardProps) => {
-    const [favorite, setFavorite] = useState(isFavorite);
     const [showActions, setShowActions] = useState(false);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isHovering, setIsHovering] = useState(false);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+    // Get all images - use pageImages if available, otherwise just the cover
+    const allImages = pageImages.length > 0 ? pageImages : [imageUrl];
+    
+    // Slideshow effect on hover
+    const startSlideshow = useCallback(() => {
+        if (allImages.length <= 1) return;
+        
+        intervalRef.current = setInterval(() => {
+            setCurrentImageIndex(prev => (prev + 1) % allImages.length);
+        }, 1200); // Change image every 1.2 seconds
+    }, [allImages.length]);
+
+    const stopSlideshow = useCallback(() => {
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
+        setCurrentImageIndex(0); // Reset to cover image
+    }, []);
+
+    useEffect(() => {
+        if (isHovering) {
+            startSlideshow();
+        } else {
+            stopSlideshow();
+        }
+
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        };
+    }, [isHovering, startSlideshow, stopSlideshow]);
+
+    const handleMouseEnter = () => {
+        setShowActions(true);
+        setIsHovering(true);
+    };
+
+    const handleMouseLeave = () => {
+        setShowActions(false);
+        setIsHovering(false);
+    };
 
     const handleFavoriteClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        setFavorite(!favorite);
+        onToggleFavorite?.();
     };
 
     const handleEditClick = (e: React.MouseEvent) => {
@@ -58,17 +108,44 @@ export const MemoryStoryCard = ({
             whileHover={{ y: -4 }}
             transition={{ duration: 0.3 }}
             onClick={onClick}
-            onMouseEnter={() => setShowActions(true)}
-            onMouseLeave={() => setShowActions(false)}
-            className="bg-card-bg rounded-2xl overflow-hidden shadow-soft border border-black/5 dark:border-white/10 cursor-pointer hover:shadow-lg transition-shadow group"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            className="bg-white rounded-2xl overflow-hidden shadow-soft border border-black/5 cursor-pointer hover:shadow-lg transition-shadow group"
         >
-            {/* Image */}
-            <div className="relative aspect-[4/3] overflow-hidden">
-                <img
-                    src={imageUrl}
-                    alt={title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+            {/* Image with Slideshow */}
+            <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-primary-teal/20 to-accent-coral/20">
+                <AnimatePresence mode="wait">
+                    <motion.img
+                        key={currentImageIndex}
+                        src={allImages[currentImageIndex] || imageUrl}
+                        alt={`${title} - ${currentImageIndex === 0 ? 'Capa' : `Página ${currentImageIndex}`}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        onError={(e) => {
+                            // Fallback to gradient if image fails to load
+                            (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                    />
+                </AnimatePresence>
+                
+                {/* Image Progress Dots (only show if multiple images and hovering) */}
+                {allImages.length > 1 && isHovering && (
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 z-10">
+                        {allImages.map((_, index) => (
+                            <div
+                                key={index}
+                                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                                    index === currentImageIndex 
+                                        ? 'bg-white w-3' 
+                                        : 'bg-white/50'
+                                }`}
+                            />
+                        ))}
+                    </div>
+                )}
                 
                 {/* Page Count Badge */}
                 {pageCount && (
@@ -78,70 +155,68 @@ export const MemoryStoryCard = ({
                     </div>
                 )}
 
-                {/* Action Buttons */}
-                <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                {/* View Book Overlay - Below action buttons */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4 pointer-events-none z-10">
+                    <span className="flex items-center gap-2 px-4 py-2 bg-white/90 text-text-main rounded-full text-sm font-medium shadow-lg">
+                        <BookOpen className="w-4 h-4 text-primary-teal" />
+                        View Book
+                    </span>
+                </div>
+
+                {/* Action Buttons - Above overlay */}
+                <div className="absolute top-3 right-3 flex items-center gap-1.5 z-20">
                     {/* Edit Button */}
-                    {onEdit && (
-                        <motion.button
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: showActions ? 1 : 0, scale: showActions ? 1 : 0.8 }}
-                            onClick={handleEditClick}
-                            className="p-2 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-sm hover:bg-white dark:hover:bg-black/70 transition-colors"
-                            title="Edit Book"
-                        >
-                            <Edit3 className="w-4 h-4 text-text-muted hover:text-primary-teal" />
-                        </motion.button>
-                    )}
+                    <motion.button
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: showActions ? 1 : 0, scale: showActions ? 1 : 0.8 }}
+                        onClick={handleEditClick}
+                        className="p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-colors shadow-sm"
+                        title="Edit Book"
+                    >
+                        <Edit3 className="w-4 h-4 text-text-muted hover:text-primary-teal" />
+                    </motion.button>
 
                     {/* Download/Print Button */}
-                    {onPrint && (
-                        <motion.button
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: showActions ? 1 : 0, scale: showActions ? 1 : 0.8 }}
-                            transition={{ delay: 0.05 }}
-                            onClick={handlePrintClick}
-                            className="p-2 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-sm hover:bg-white dark:hover:bg-black/70 transition-colors"
-                            title="Download PDF"
-                        >
-                            <Download className="w-4 h-4 text-text-muted hover:text-primary-teal" />
-                        </motion.button>
-                    )}
+                    <motion.button
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: showActions ? 1 : 0, scale: showActions ? 1 : 0.8 }}
+                        transition={{ delay: 0.05 }}
+                        onClick={handlePrintClick}
+                        className="p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-colors shadow-sm"
+                        title="Download PDF"
+                    >
+                        <Download className="w-4 h-4 text-text-muted hover:text-primary-teal" />
+                    </motion.button>
 
                     {/* Delete Button */}
-                    {onDelete && (
-                        <motion.button
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: showActions ? 1 : 0, scale: showActions ? 1 : 0.8 }}
-                            transition={{ delay: 0.1 }}
-                            onClick={handleDeleteClick}
-                            className="p-2 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-sm hover:bg-red-50 dark:hover:bg-red-500/20 transition-colors"
-                            title="Delete Book"
-                        >
-                            <Trash2 className="w-4 h-4 text-text-muted hover:text-red-500" />
-                        </motion.button>
-                    )}
+                    <motion.button
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: showActions ? 1 : 0, scale: showActions ? 1 : 0.8 }}
+                        transition={{ delay: 0.1 }}
+                        onClick={handleDeleteClick}
+                        className="p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-red-50 transition-colors shadow-sm"
+                        title="Delete Book"
+                    >
+                        <Trash2 className="w-4 h-4 text-text-muted hover:text-red-500" />
+                    </motion.button>
 
-                    {/* Favorite Button - Last */}
+                    {/* Favorite Button - Always visible */}
                     <button
                         onClick={handleFavoriteClick}
-                        className="p-2 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-sm hover:bg-white dark:hover:bg-black/70 transition-colors"
+                        className={`p-2 rounded-full backdrop-blur-sm transition-colors shadow-sm ${
+                            isFavorite 
+                                ? 'bg-red-50 hover:bg-red-100' 
+                                : 'bg-white/90 hover:bg-white'
+                        }`}
                     >
                         <Heart
                             className={`w-4 h-4 transition-colors ${
-                                favorite
+                                isFavorite
                                     ? 'fill-accent-coral text-accent-coral'
                                     : 'text-text-muted hover:text-accent-coral'
                             }`}
                         />
                     </button>
-                </div>
-
-                {/* View Book Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
-                    <span className="flex items-center gap-2 px-4 py-2 bg-white/90 dark:bg-gray-800/90 text-text-main rounded-full text-sm font-medium">
-                        <BookOpen className="w-4 h-4" />
-                        View Book
-                    </span>
                 </div>
             </div>
 

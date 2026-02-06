@@ -88,14 +88,14 @@ export const AddMemoryModal = ({ isOpen, onClose, onSubmit }: AddMemoryModalProp
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4">
                     {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={handleClose}
-                        className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm"
+                        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
                     />
 
                     {/* Modal */}
@@ -104,10 +104,10 @@ export const AddMemoryModal = ({ isOpen, onClose, onSubmit }: AddMemoryModalProp
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         transition={{ duration: 0.2 }}
-                        className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-transparent dark:border-white/10"
+                        className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-none sm:rounded-2xl shadow-2xl"
                     >
                         {/* Header */}
-                        <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-black/5 dark:border-white/10 px-6 py-4 flex items-center justify-between z-10">
+                        <div className="sticky top-0 bg-white border-b border-black/5 px-6 py-4 flex items-center justify-between z-10">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-primary-teal/10 rounded-xl flex items-center justify-center">
                                     <Sparkles className="w-5 h-5 text-primary-teal" />
@@ -119,7 +119,7 @@ export const AddMemoryModal = ({ isOpen, onClose, onSubmit }: AddMemoryModalProp
                             </div>
                             <button
                                 onClick={handleClose}
-                                className="p-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                                className="p-2 rounded-xl hover:bg-black/5 transition-colors"
                             >
                                 <X className="w-5 h-5 text-text-muted" />
                             </button>
@@ -158,7 +158,7 @@ export const AddMemoryModal = ({ isOpen, onClose, onSubmit }: AddMemoryModalProp
                                         className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
                                             isDragging
                                                 ? 'border-primary-teal bg-primary-teal/5'
-                                                : 'border-black/10 dark:border-white/10 hover:border-primary-teal/50 hover:bg-black/2 dark:hover:bg-white/2'
+                                                : 'border-black/10 hover:border-primary-teal/50 hover:bg-black/2'
                                         }`}
                                     >
                                         <div className="w-12 h-12 bg-primary-teal/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -193,7 +193,7 @@ export const AddMemoryModal = ({ isOpen, onClose, onSubmit }: AddMemoryModalProp
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                     placeholder="Give this memory a name..."
-                                    className="w-full px-4 py-3 bg-bg-soft rounded-xl border border-black/5 dark:border-white/10 text-text-main placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
+                                    className="w-full px-4 py-3 bg-bg-soft rounded-xl border border-black/5 text-text-main placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
                                     required
                                 />
                             </div>
@@ -208,7 +208,7 @@ export const AddMemoryModal = ({ isOpen, onClose, onSubmit }: AddMemoryModalProp
                                     type="date"
                                     value={date}
                                     onChange={(e) => setDate(e.target.value)}
-                                    className="w-full px-4 py-3 bg-bg-soft rounded-xl border border-black/5 dark:border-white/10 text-text-main placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
+                                    className="w-full px-4 py-3 bg-bg-soft rounded-xl border border-black/5 text-text-main placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-teal/30 focus:border-primary-teal transition-all"
                                     required
                                 />
                             </div>
@@ -230,11 +230,11 @@ export const AddMemoryModal = ({ isOpen, onClose, onSubmit }: AddMemoryModalProp
                             </div>
 
                             {/* Actions */}
-                            <div className="flex items-center justify-end gap-3 pt-4 border-t border-black/5 dark:border-white/10">
+                            <div className="flex items-center justify-end gap-3 pt-4 border-t border-black/5">
                                 <button
                                     type="button"
                                     onClick={handleClose}
-                                    className="px-6 py-2.5 rounded-xl font-medium text-text-muted hover:text-text-main hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                                    className="px-6 py-2.5 rounded-xl font-medium text-text-muted hover:text-text-main hover:bg-black/5 transition-colors"
                                 >
                                     Cancel
                                 </button>

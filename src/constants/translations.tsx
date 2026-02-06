@@ -1,23 +1,23 @@
 // React not explicitly needed for JSX in recent versions with Vite/TS configuration
 
 
-// Using emoji flags to avoid external dependency issues
-const Flag = ({ emoji, className }: { emoji: string; className?: string }) => (
-    <span
+// Flag images using flagcdn.com for cross-platform compatibility (emoji flags don't render on Windows)
+const FlagImg = ({ code, className }: { code: string; className?: string }) => (
+    <img
+        src={`https://flagcdn.com/w40/${code}.png`}
+        srcSet={`https://flagcdn.com/w80/${code}.png 2x`}
+        alt={code.toUpperCase()}
         className={className}
-        style={{ fontSize: '1.5em', lineHeight: 1 }}
-        role="img"
-        aria-label="flag"
-    >
-        {emoji}
-    </span>
+        style={{ width: '1.4em', height: 'auto', borderRadius: '2px', display: 'inline-block', verticalAlign: 'middle' }}
+        loading="lazy"
+    />
 );
 
-const BR = (props: { className?: string }) => <Flag emoji="🇧🇷" {...props} />;
-const ES = (props: { className?: string }) => <Flag emoji="🇪🇸" {...props} />;
-const GB = (props: { className?: string }) => <Flag emoji="🇬🇧" {...props} />;
-const DE = (props: { className?: string }) => <Flag emoji="🇩🇪" {...props} />;
-const FR = (props: { className?: string }) => <Flag emoji="🇫🇷" {...props} />;
+const BR = (props: { className?: string }) => <FlagImg code="br" {...props} />;
+const ES = (props: { className?: string }) => <FlagImg code="es" {...props} />;
+const GB = (props: { className?: string }) => <FlagImg code="gb" {...props} />;
+const DE = (props: { className?: string }) => <FlagImg code="de" {...props} />;
+const FR = (props: { className?: string }) => <FlagImg code="fr" {...props} />;
 
 export const translations = {
     en: {
@@ -26,9 +26,9 @@ export const translations = {
             subtitle: "Preserving Legacies",
             title_start: "Keep their story",
             title_gradient: "close, always",
-            description: "A family-focused way to preserve and share memories for loved ones living with Alzheimer's.",
+            description: "Transform the life stories of someone you love into a beautiful illustrated memory book — a gift that brings comfort, connection, and smiles.",
             cta_primary: "Create a Memory Book",
-            cta_secondary: "See how it helps"
+            cta_secondary: "See how it works"
         },
         // Navigation
         nav: {
@@ -46,27 +46,27 @@ export const translations = {
         // How it Works Section
         howItWorks: {
             title: "How it Works",
-            description: "We've designed a simple three-step process to help you capture every precious moment without the stress.",
-            step1Title: "Add memories",
-            step1Desc: "Upload photos and share stories from your phone or computer. Voice-to-text makes it easy for everyone to contribute.",
-            step2Title: "Organize",
-            step2Desc: "Categorize moments by family members, years, or special events. Our AI helps sort and suggest connections.",
-            step3Title: "Generate",
-            step3Desc: "Create a beautiful digital or physical memory book instantly. Perfect for therapy sessions or bedside reminiscence."
+            description: "A simple process to transform your family's most precious memories into a beautiful illustrated book.",
+            step1Title: "Share your stories",
+            step1Desc: "Answer simple questions about childhood, growing up, and the moments that shaped your loved one's life. Each memory helps build something truly special.",
+            step2Title: "Personalize the book",
+            step2Desc: "Choose an illustration style, add photos or describe physical characteristics. Every detail helps create a one-of-a-kind memory book.",
+            step3Title: "Receive your book",
+            step3Desc: "In just a few minutes, receive a beautifully illustrated book ready to view, print, and share with the whole family."
         },
         // Privacy Section
         privacySection: {
-            title: "Privacy you can trust",
-            description: "We use end-to-end encryption to ensure your family memories remain private forever.",
+            title: "Your memories are safe with us",
+            description: "Your family's stories are precious. We protect every photo and memory with end-to-end encryption, so they remain yours — always.",
             learnMore: "Learn about security"
         },
         // CTA Section
         cta: {
-            title_start: "Start your family's",
+            title_start: "Begin your family's",
             title_gradient: "Memory Book Today",
-            description: "Join thousands of families keeping their stories alive and strengthening connections every single day.",
+            description: "Preserve the memories and stories that connect your family across generations. A beautiful gift of love and remembrance.",
             button: "Get Started for Free",
-            lovedBy: "Loved by 10,000+ families"
+            lovedBy: ""
         },
         // Footer
         footer: {
@@ -74,7 +74,7 @@ export const translations = {
             privacyPolicy: "Privacy Policy",
             helpCenter: "Help Center",
             contact: "Contact",
-            copyright: "© 2024 Memory Book. All rights reserved."
+            copyright: "© 2026 Memory Book. All rights reserved."
         },
         // Auth Modal
         auth: {
@@ -109,7 +109,31 @@ export const translations = {
             pages: "pages",
             searchMemories: "Search memories...",
             memoryAdded: "Memory successfully added!",
-            memorySaved: "Your latest memory has been saved to the album."
+            memorySaved: "Your latest memory has been saved to the album.",
+            coverLabel: "Cover",
+            backCoverLabel: "Back Cover",
+            memoryN: "Memory",
+            coverDescription: "Book cover",
+            pageDescription: "This page will be generated with your memories",
+            bookEndDescription: "End of the book",
+            bookDeleted: "Memory Book deleted",
+            removedPermanently: "was permanently removed",
+            deleteError: "Error deleting",
+            deleteErrorMsg: "Could not delete the book. Please try again.",
+            createFirst: "Create your first Memory Book",
+            createFirstDesc: "See the example below for inspiration and then create yours!",
+            createMemoryBook: "Create Memory Book",
+            example: "Example",
+            bookGenerated: "Memory Book Generated!",
+            bookGeneratedMsg: "Your Memory Book was created successfully!",
+            deleteModalTitle: "Delete Memory Book",
+            loading: "Loading your memory books...",
+            tryAgain: "Try Again",
+            generating: "Generating...",
+            generationFailed: "Generation Failed",
+            draft: "Draft",
+            noResults: "No results found",
+            noResultsDesc: "Try searching with different words."
         },
         // Profile Settings
         profile: {
@@ -139,7 +163,8 @@ export const translations = {
             guidelineSize: "Maximum file size: 5MB",
             guidelineFormat: "Supported formats: JPG, PNG",
             clickToUpload: "Click the camera icon to upload a new photo",
-            selectLanguage: "Select Language"
+            selectLanguage: "Select Language",
+            comingSoon: "Coming soon"
         },
         // Book Viewer
         bookViewer: {
@@ -147,7 +172,24 @@ export const translations = {
             of: "of",
             editBook: "Edit Book",
             downloadPdf: "Download PDF",
-            deleteBook: "Delete Book"
+            deleteBook: "Delete Book",
+            cover: "Cover",
+            backCover: "Back Cover",
+            openBook: "Open Book",
+            returnToStart: "Return to Start",
+            favorite: "Favorite",
+            closeViewer: "Close viewer",
+            prevPage: "Previous page",
+            nextPage: "Next page",
+            goToSpread: "Go to spread",
+            emptyBookTitle: "Empty Book",
+            emptyBookDesc: "This book is still being generated or has no pages.",
+            back: "Back",
+            imageUnavailable: "Image unavailable",
+            childhood: "Childhood",
+            teenage: "Teenage Years",
+            adultLife: "Adult Life",
+            goldenAge: "Golden Age"
         },
         // Book Editor
         bookEditor: {
@@ -209,49 +251,24 @@ export const translations = {
             subtitle: "Subtitle",
             subtitlePlaceholder: "e.g., A journey through cherished moments",
             creationDate: "Creation Date",
-            // Step 2 - Childhood
+            // Step 2 - Memories (simplified)
+            memoriesTitle: "Memories",
+            memoriesDesc: "Share their story",
+            memoriesIntro: "Write freely about each phase of their life. A few sentences is enough — the AI will create a beautiful story from your words.",
+            memoriesTip: "Don't worry about writing perfectly — our AI will transform your words into a beautiful narrative.",
+            childhoodMemoriesPlaceholder: "Where were they born? Parents, siblings, happy memories, what they loved doing...",
+            teenageMemoriesPlaceholder: "School, friends, hobbies, memorable events, where they lived...",
+            adultMemoriesPlaceholder: "Career, partner, children, hobbies, milestones, proud moments...",
+            laterMemoriesPlaceholder: "Routines, traditions, family moments, what brings them comfort and joy today...",
+            editSetup: "Edit setup",
+            editMemories: "Edit memories",
+            noMemoriesYet: "No memories added yet. The AI will create a generic story based on the book title.",
+            // Life phase labels (used in review & memories step)
             childhood: "Childhood",
-            childhoodDesc: "Early memories",
-            childhoodIntro: "Tell us about their early years. Write as little or as much as you'd like.",
-            whereBorn: "Where were they born?",
-            whoParents: "Who were their parents?",
-            siblings: "Did they have siblings?",
-            happyMemory: "A happy childhood memory",
-            whatEnjoy: "What did they enjoy doing?",
-            addChildhoodPhotos: "Add childhood photos",
-            childhoodPhotosHelper: "Old family photos help us capture their early years",
-            // Step 3 - Teenage
             teenage: "Teenage Years",
-            teenageDesc: "Growing up",
-            teenageIntro: "Growing up memories. Write as little or as much as you'd like.",
-            whereLiveTeenage: "Where did they live during adolescence?",
-            schoolExperiences: "School experiences",
-            friendsInterests: "Friends, interests, and hobbies",
-            memorableEvents: "Any memorable events?",
-            addTeenagePhotos: "Add adolescence photos",
-            teenagePhotosHelper: "School photos, with friends, or from special moments",
-            // Step 4 - Adult Life
             adultLife: "Adult Life",
-            adultLifeDesc: "Career and family",
-            adultLifeIntro: "Career, family, and life's adventures. Write as little or as much as you'd like.",
-            workCareer: "Work and career",
-            hobbiesPassions: "Hobbies and passions",
-            marriagePartner: "Marriage or partner",
-            childrenFamily: "Children and family",
-            milestones: "Milestones and proud moments",
-            addAdultPhotos: "Add adult life photos",
-            adultPhotosHelper: "Work, family, travel, or celebration photos",
-            // Step 5 - Later Life
             laterLife: "Later Life",
-            laterLifeDesc: "Golden years",
-            laterLifeIntro: "The golden years and present day. Write as little or as much as you'd like.",
-            whereLiveLater: "Where did they live later in life?",
-            routinesTraditions: "Favorite routines, traditions, and places",
-            familyMoments: "Family moments",
-            comfortJoy: "What brings them comfort and joy today?",
-            addLaterPhotos: "Add later life photos",
-            laterPhotosHelper: "Recent photos or from recent years",
-            // Step 6 - Review
+            // Step 3 - Review
             review: "Review & Generate",
             reviewDesc: "Final review",
             reviewIntro: "Review your content and customize how your Memory Book will be created.",
@@ -279,10 +296,12 @@ export const translations = {
             skipForNow: "Skip for Now",
             // Loading Screen
             creatingBook: "Creating Your Memory Book",
+            savingMemories: "Saving your memories...",
             organizingMemories: "Organizing memories",
             creatingChapters: "Creating chapters",
             generatingIllustrations: "Generating illustrations",
             finalTouches: "Final touches",
+            pendingLabel: "pending",
             loadingMsg1: "Every memory is precious...",
             loadingMsg2: "Creating something beautiful...",
             loadingMsg3: "Weaving stories together...",
@@ -293,7 +312,138 @@ export const translations = {
             bookCreatedDesc: "We've created a beautiful, personalized book filled with precious memories. It's ready for you to view, print, or share with family.",
             openViewer: "Open Book Viewer",
             backToDashboard: "Dashboard",
-            accessAnytime: "You can access your Memory Book anytime from your dashboard"
+            accessAnytime: "You can access your Memory Book anytime from your dashboard",
+            visualReference: "Visual Reference",
+            visualReferenceDesc: "Choose how you want to help us personalize the illustrations",
+            uploadPhotos: "Upload Photos",
+            uploadPhotosDesc: "Minimum 3 photos from different angles",
+            describeCharacteristics: "Describe Characteristics",
+            describeCharacteristicsDesc: "Hair color, skin, glasses, etc.",
+            referencePhotosLabel: "Reference Photos",
+            referencePhotosHelperText: "Upload at least 3 clear photos of the person from different angles. This helps us create personalized illustrations.",
+            // Placeholders
+            birthPlacePlaceholder: "e.g., São Paulo, Brazil",
+            parentsPlaceholder: "e.g., João and Maria Silva",
+            siblingsPlaceholder: "e.g., Two brothers, Pedro and Paulo",
+            happyMemoryPlaceholder: "Share a warm memory from their childhood...",
+            enjoyedPlaceholder: "e.g., Playing in the garden, reading books, helping in the kitchen...",
+            teenLivePlaceholder: "e.g., Rio de Janeiro, in the Copacabana neighborhood",
+            schoolPlaceholder: "e.g., Favorite subjects, teachers they remember, school activities...",
+            friendsPlaceholder: "e.g., Best friends, favorite activities, clubs or groups...",
+            eventsPlaceholder: "e.g., A graduation, first job, special trips, achievements...",
+            workPlaceholder: "e.g., Where they worked, what they did, colleagues they remember...",
+            hobbiesPlaceholder: "e.g., Gardening, cooking, music, sports, travel...",
+            partnerPlaceholder: "e.g., How they met, special moments together...",
+            childrenPlaceholder: "e.g., Names of children, favorite family activities...",
+            milestonesPlaceholder: "e.g., Achievements, travels, special celebrations...",
+            laterLivePlaceholder: "e.g., Same house for 40 years, moved to be closer to family...",
+            routinesPlaceholder: "e.g., Morning coffee ritual, Sunday lunches, favorite park bench...",
+            familyMomentsPlaceholder: "e.g., Time with grandchildren, family gatherings, celebrations...",
+            comfortPlaceholder: "e.g., Listening to old songs, looking at photos, visits from loved ones...",
+            // Validation
+            validationTitle: "Please enter a title for your Memory Book",
+            validationPhotos: "Please add at least 3 photos",
+            validationName: "Please enter the person's name",
+            validationGender: "Please select a gender",
+            // Draft dialog
+            draftTitle: "Continue where you left off?",
+            draftSubtitle: "We found a saved draft",
+            draftMessage: "You have an unfinished Memory Book. Would you like to continue editing it or start fresh?",
+            startFresh: "Start Fresh",
+            continueDraft: "Continue Draft",
+            // Errors
+            somethingWentWrong: "Something Went Wrong",
+            // Loading screen
+            generationFailed: "Generation Failed",
+            generationFailedMsg: "Something went wrong while creating your Memory Book. Please try again.",
+            tryAgain: "Try Again",
+            persistMsg: "If the problem persists, please try again later or contact support.",
+            connectingServer: "Connecting to Server",
+            waitingConnection: "Please wait while we establish a connection...",
+            attempt: "Attempt",
+            connectionSlow: "The connection is taking a while. Please wait or try again.",
+            startingProcessing: "Starting processing...",
+            percentComplete: "complete",
+            stepsProcess: "Process Steps",
+            inProgressLabel: "in progress",
+            bookPagesLabel: "Book Pages",
+            generatingPage: "Generating page",
+            pagesCompleted: "pages completed",
+            connectedServer: "Connected to server • Job ID",
+            photo: "photo",
+            photosWord: "photos",
+            ofPrompts: "of",
+            promptsWord: "prompts answered"
+        },
+        // Delete Confirmation
+        deleteConfirm: {
+            aboutToDelete: "You are about to delete",
+            permanentAction: "This action is permanent and cannot be undone.",
+            lostForever: "All pages, images, and memories from this book will be lost forever.",
+            cancel: "Cancel",
+            deleting: "Deleting...",
+            deletePermanently: "Delete Permanently"
+        },
+        // Physical Characteristics
+        physicalCharacteristics: {
+            personName: "Person's name",
+            namePlaceholder: "E.g.: Grandma Maria",
+            gender: "Gender",
+            male: "Male",
+            female: "Female",
+            skinColor: "Skin Color",
+            hairColor: "Hair Color",
+            hairStyle: "Hair Style",
+            accessories: "Accessories",
+            wearsGlasses: "Wears Glasses",
+            facialHair: "Facial Hair",
+            light: "Light",
+            fair: "Fair",
+            medium: "Medium",
+            olive: "Olive",
+            tan: "Tan",
+            brown: "Brown",
+            dark: "Dark",
+            blonde: "Blonde",
+            golden: "Golden",
+            brownHair: "Brown",
+            darkBrown: "Dark Brown",
+            black: "Black",
+            red: "Red",
+            gray: "Gray",
+            white: "White",
+            short: "Short",
+            mediumHair: "Medium",
+            long: "Long",
+            curly: "Curly",
+            wavy: "Wavy",
+            bald: "Bald",
+            buzzCut: "Buzz Cut",
+            ponytail: "Ponytail",
+            bun: "Bun"
+        },
+        // Navbar
+        navbar: {
+            searchPlaceholder: "Search memories...",
+            createBook: "Create Book",
+            myBooks: "My Books",
+            favorites: "Favorites",
+            myProfile: "My Profile",
+            settings: "Settings",
+            logout: "Logout"
+        },
+        // Home Page
+        home: {
+            seeResult: "See the result",
+            bookCreatedWithLove: "A book created with love",
+            sampleDesc1: "This book was created by a daughter for her father with Alzheimer's.",
+            sampleDesc2: "Each page brings real memories transformed into watercolor illustrations.",
+            watercolor: "Watercolor",
+            pages: "pages",
+            viewBook: "View Book",
+            pagePreview: "Page preview",
+            createYours: "Create Your Memory Book",
+            example: "Example"
         },
         // Upload
         upload: {
@@ -305,6 +455,61 @@ export const translations = {
             photo: "photo",
             toContinue: "to continue",
             add: "Add"
+        },
+        // Info Modals (Privacy, Accessibility, Support)
+        infoModals: {
+            close: "Close",
+            privacy: {
+                title: "Privacy Policy",
+                sections: [
+                    { heading: "Your data, your control", body: "Memory Book is built with privacy at its core. All personal data, photos, and memories you share are encrypted and stored securely. We never sell, share, or use your data for advertising." },
+                    { heading: "What we collect", body: "We collect only what is necessary to provide the service: your account information (name, email), uploaded photos for illustration generation, and the text memories you provide. Photos are processed temporarily and deleted from our servers after your book is generated." },
+                    { heading: "Encryption & Storage", body: "All data is transmitted over HTTPS with TLS 1.3 encryption. Files are stored in encrypted cloud storage. Access to your data is protected by your account credentials and our internal security protocols." },
+                    { heading: "Third-party services", body: "We use Firebase (Google) for authentication and storage, and AI services for illustration generation. These providers have their own privacy policies and are GDPR-compliant." },
+                    { heading: "Your rights", body: "You can request a copy of your data, correct inaccuracies, or delete your account and all associated data at any time. Contact us at privacy@memorybook.app." },
+                    { heading: "Contact", body: "For privacy-related questions, email us at privacy@memorybook.app. We respond within 48 hours." }
+                ]
+            },
+            accessibility: {
+                title: "Accessibility",
+                sections: [
+                    { heading: "Our commitment", body: "Memory Book is designed to be accessible to everyone, including elderly users and those with visual, motor, or cognitive impairments. We follow WCAG 2.1 AA guidelines." },
+                    { heading: "Visual design", body: "High contrast text, large touch targets, and clear typography ensure readability. Our color palette was chosen to be distinguishable by people with color vision deficiency." },
+                    { heading: "Navigation", body: "All interactive elements are keyboard-accessible. The interface supports screen readers with proper ARIA labels. Page navigation in the book viewer works with arrow keys." },
+                    { heading: "Font & text size", body: "The book viewer uses legible serif fonts (Playfair Display and Lora) optimized for readability. Text sizes are responsive and adapt to different screen sizes." },
+                    { heading: "Feedback", body: "We continuously improve our accessibility. If you encounter any barrier, please let us know at accessibility@memorybook.app." }
+                ]
+            },
+            support: {
+                title: "Support",
+                sections: [
+                    { heading: "Getting started", body: "Creating a Memory Book is simple: sign in, click 'Create Book', fill in memories about your loved one across different life phases, choose an illustration style, and generate your book. The whole process takes about 10-15 minutes." },
+                    { heading: "Common questions", body: "How long does generation take? Usually 3-5 minutes. Can I edit after generation? Yes, use the editor to modify text and images. Can I print? PDF download is available for all completed books." },
+                    { heading: "Technical requirements", body: "Memory Book works on any modern browser (Chrome, Firefox, Safari, Edge). For the best experience, use a screen at least 768px wide. An internet connection is required." },
+                    { heading: "Troubleshooting", body: "If images aren't loading, try refreshing the page. If generation seems stuck, check your internet connection and try again. Clear your browser cache if you experience display issues." },
+                    { heading: "Contact us", body: "Need help? Email us at support@memorybook.app or use the in-app feedback button. Our team typically responds within 24 hours on business days." }
+                ]
+            }
+        },
+        // Sample Book
+        sampleBook: {
+            bookTitle: "Dad's Memories",
+            bookDescription: "A memory book created with love, so each page brings back a smile.",
+            displayDate: "February 14, 2026",
+            displayDescription: "A watercolor memory book created by a daughter for her father — a tribute to love that transcends forgetting.",
+            pages: [
+                { title: "The Yellow House Backyard in Ouro Fino", description: "In Ouro Fino, a small town in southern Minas Gerais, Brazil, dad grew up in a yellow house with an enormous backyard. He spent his afternoons running barefoot among the mango trees, chasing butterflies with his siblings Pedro, Ana, and João while Dona Rosa called everyone in for afternoon coffee." },
+                { title: "First Day at the Local School", description: "With his brand-new backpack and hair combed by Grandma Rosa, dad went to his first day at the Ouro Fino State School. He came home bursting with stories about new friends and his teacher Dona Lúcia, who drew colorful flowers on the blackboard." },
+                { title: "Football Afternoons at the Neighborhood Field", description: "As a teenager, after moving to the city for school, dad practically lived at the neighborhood field. He played football with his friends until sunset, coming home sweaty and happy, dreaming of becoming a professional player — though fate had other plans for him." },
+                { title: "The Graduation that Made the Whole Family Proud", description: "Dad was the first in the family to graduate — from Ouro Fino State School. On graduation day, Grandma Rosa cried tears of joy and Grandpa Antônio said it was the happiest day of his life. The whole family came from the countryside to celebrate." },
+                { title: "The Day Everything Began", description: "Dad and mom Maria Helena got married on a sunny morning. He always says that when he saw her at the altar, he forgot the speech he'd been rehearsing for weeks and could only smile — a smile that didn't leave his face all day." },
+                { title: "The Arrival of Ana Clara", description: "When I, Ana Clara, was born, dad held me in his arms for the first time and promised he'd always be there for me. Mom says he didn't let go for hours, just gazing and smiling, whispering softly: 'My little princess.'" },
+                { title: "Learning to Fly on a Bicycle", description: "Dad ran beside me at the Municipal Park holding the bike seat, repeating 'I'm here, I won't let go.' Until in a magical moment, he let go — and I flew on my own for the first time. When I looked back, he had tears in his eyes." },
+                { title: "The Teacher Who Turned Numbers into Stories", description: "For 35 years, dad was a math teacher at the Municipal School. His students loved how he turned complicated numbers into stories that made everyone laugh. He was more than a teacher — he was a storyteller with chalk in his hand and love in his heart." },
+                { title: "Morning Coffee in the Garden", description: "Every morning, dad has his fresh-brewed coffee in the garden he planted over the years. The porch, the radio music, the smell of coffee — these are the rituals that bring peace and a smile to his day, even when memories grow more distant." },
+                { title: "The Christmas that Brought Everyone Together", description: "At the last family Christmas, dad sat at the head of the table surrounded by all of us — children, grandchildren, cousins. Even when words fail, his smile says everything. That smile we've known forever and that never, ever changes." }
+            ],
+            backCoverDescription: "Memories are like seeds planted in the heart. Even when the mind forgets, love remains."
         },
         // Common
         common: {
@@ -320,9 +525,9 @@ export const translations = {
             subtitle: "Preservando Legados",
             title_start: "Mantenha a história deles",
             title_gradient: "perto, sempre",
-            description: "Uma maneira focada na família de preservar e compartilhar memórias de entes queridos vivendo com Alzheimer.",
+            description: "Transforme as histórias de vida de alguém que você ama em um lindo livro de memórias ilustrado — um presente que traz conforto, conexão e sorrisos.",
             cta_primary: "Criar um Livro de Memórias",
-            cta_secondary: "Veja como ajuda"
+            cta_secondary: "Veja como funciona"
         },
         // Navigation
         nav: {
@@ -340,27 +545,27 @@ export const translations = {
         // How it Works Section
         howItWorks: {
             title: "Como Funciona",
-            description: "Projetamos um processo simples de três etapas para ajudá-lo a capturar cada momento precioso sem estresse.",
-            step1Title: "Adicione memórias",
-            step1Desc: "Faça upload de fotos e compartilhe histórias do seu celular ou computador. A conversão de voz em texto facilita a contribuição de todos.",
-            step2Title: "Organize",
-            step2Desc: "Categorize momentos por membros da família, anos ou eventos especiais. Nossa IA ajuda a classificar e sugerir conexões.",
-            step3Title: "Gere",
-            step3Desc: "Crie um lindo livro de memórias digital ou físico instantaneamente. Perfeito para sessões de terapia ou momentos de recordação."
+            description: "Um processo simples para transformar as memórias mais preciosas da sua família em um lindo livro ilustrado.",
+            step1Title: "Conte as histórias",
+            step1Desc: "Responda perguntas simples sobre a infância, a juventude e os momentos que marcaram a vida do seu ente querido. Cada lembrança ajuda a construir algo verdadeiramente especial.",
+            step2Title: "Personalize o livro",
+            step2Desc: "Escolha o estilo de ilustração, envie fotos ou descreva as características físicas. Cada detalhe ajuda a criar um livro de memórias único.",
+            step3Title: "Receba seu livro",
+            step3Desc: "Em poucos minutos, receba um livro ilustrado com carinho, pronto para ver, imprimir e compartilhar com toda a família."
         },
         // Privacy Section
         privacySection: {
-            title: "Privacidade em que você pode confiar",
-            description: "Usamos criptografia de ponta a ponta para garantir que as memórias da sua família permaneçam privadas para sempre.",
+            title: "Suas memórias estão seguras conosco",
+            description: "As histórias da sua família são preciosas. Protegemos cada foto e memória com criptografia de ponta a ponta, para que sejam sempre suas.",
             learnMore: "Saiba mais sobre segurança"
         },
         // CTA Section
         cta: {
             title_start: "Comece o",
             title_gradient: "Livro de Memórias da sua família Hoje",
-            description: "Junte-se a milhares de famílias mantendo suas histórias vivas e fortalecendo conexões todos os dias.",
+            description: "Preserve as memórias e histórias que conectam sua família através das gerações. Um lindo presente de amor e lembrança.",
             button: "Comece Gratuitamente",
-            lovedBy: "Amado por mais de 10.000 famílias"
+            lovedBy: ""
         },
         // Footer
         footer: {
@@ -368,7 +573,7 @@ export const translations = {
             privacyPolicy: "Política de Privacidade",
             helpCenter: "Central de Ajuda",
             contact: "Contato",
-            copyright: "© 2024 Memory Book. Todos os direitos reservados."
+            copyright: "© 2026 Memory Book. Todos os direitos reservados."
         },
         // Auth Modal
         auth: {
@@ -403,7 +608,31 @@ export const translations = {
             pages: "páginas",
             searchMemories: "Buscar memórias...",
             memoryAdded: "Memória adicionada com sucesso!",
-            memorySaved: "Sua última memória foi salva no álbum."
+            memorySaved: "Sua última memória foi salva no álbum.",
+            coverLabel: "Capa",
+            backCoverLabel: "Contracapa",
+            memoryN: "Memória",
+            coverDescription: "Capa do livro",
+            pageDescription: "Esta página será gerada com suas memórias",
+            bookEndDescription: "Final do livro",
+            bookDeleted: "Memory Book excluído",
+            removedPermanently: "foi removido permanentemente",
+            deleteError: "Erro ao excluir",
+            deleteErrorMsg: "Não foi possível excluir o livro. Tente novamente.",
+            createFirst: "Crie seu primeiro Memory Book",
+            createFirstDesc: "Veja o exemplo abaixo para inspiração e depois crie o seu!",
+            createMemoryBook: "Criar Memory Book",
+            example: "Exemplo",
+            bookGenerated: "Memory Book Gerado!",
+            bookGeneratedMsg: "Seu Memory Book foi criado com sucesso!",
+            deleteModalTitle: "Excluir Memory Book",
+            loading: "Carregando seus memory books...",
+            tryAgain: "Tentar Novamente",
+            generating: "Gerando...",
+            generationFailed: "Falha na Geração",
+            draft: "Rascunho",
+            noResults: "Nenhum resultado encontrado",
+            noResultsDesc: "Tente buscar com outras palavras."
         },
         // Profile Settings
         profile: {
@@ -433,7 +662,8 @@ export const translations = {
             guidelineSize: "Tamanho máximo: 5MB",
             guidelineFormat: "Formatos suportados: JPG, PNG",
             clickToUpload: "Clique no ícone da câmera para fazer upload de uma nova foto",
-            selectLanguage: "Selecionar Idioma"
+            selectLanguage: "Selecionar Idioma",
+            comingSoon: "Em breve"
         },
         // Book Viewer
         bookViewer: {
@@ -441,7 +671,24 @@ export const translations = {
             of: "de",
             editBook: "Editar Livro",
             downloadPdf: "Baixar PDF",
-            deleteBook: "Excluir Livro"
+            deleteBook: "Excluir Livro",
+            cover: "Capa",
+            backCover: "Contracapa",
+            openBook: "Abrir Livro",
+            returnToStart: "Voltar ao início",
+            favorite: "Favoritar",
+            closeViewer: "Fechar visualização",
+            prevPage: "Página anterior",
+            nextPage: "Próxima página",
+            goToSpread: "Ir para",
+            emptyBookTitle: "Livro Vazio",
+            emptyBookDesc: "Este livro ainda está sendo gerado ou não possui páginas.",
+            back: "Voltar",
+            imageUnavailable: "Imagem não disponível",
+            childhood: "Infância",
+            teenage: "Adolescência",
+            adultLife: "Vida Adulta",
+            goldenAge: "Fase Dourada"
         },
         // Book Editor
         bookEditor: {
@@ -503,49 +750,24 @@ export const translations = {
             subtitle: "Subtítulo",
             subtitlePlaceholder: "ex., Uma jornada através de momentos queridos",
             creationDate: "Data de Criação",
-            // Step 2 - Childhood
+            // Step 2 - Memories (simplified)
+            memoriesTitle: "Memórias",
+            memoriesDesc: "Compartilhe a história",
+            memoriesIntro: "Escreva livremente sobre cada fase da vida. Algumas frases são suficientes — a IA criará uma história linda a partir das suas palavras.",
+            memoriesTip: "Não se preocupe em escrever perfeitamente — nossa IA transformará suas palavras em uma narrativa bonita.",
+            childhoodMemoriesPlaceholder: "Onde nasceu? Pais, irmãos, memórias felizes, o que gostava de fazer...",
+            teenageMemoriesPlaceholder: "Escola, amigos, hobbies, eventos marcantes, onde morava...",
+            adultMemoriesPlaceholder: "Carreira, parceiro(a), filhos, hobbies, conquistas, momentos de orgulho...",
+            laterMemoriesPlaceholder: "Rotinas, tradições, momentos em família, o que traz conforto e alegria hoje...",
+            editSetup: "Editar configuração",
+            editMemories: "Editar memórias",
+            noMemoriesYet: "Nenhuma memória adicionada ainda. A IA criará uma história genérica baseada no título do livro.",
+            // Life phase labels
             childhood: "Infância",
-            childhoodDesc: "Primeiras memórias",
-            childhoodIntro: "Conte-nos sobre os primeiros anos. Escreva pouco ou muito, como preferir.",
-            whereBorn: "Onde nasceu?",
-            whoParents: "Quem eram os pais?",
-            siblings: "Tinha irmãos?",
-            happyMemory: "Uma memória feliz da infância",
-            whatEnjoy: "O que gostava de fazer?",
-            addChildhoodPhotos: "Adicionar fotos da infância",
-            childhoodPhotosHelper: "Fotos antigas da família nos ajudam a capturar os primeiros anos",
-            // Step 3 - Teenage
             teenage: "Adolescência",
-            teenageDesc: "Crescendo",
-            teenageIntro: "Memórias de crescimento. Escreva pouco ou muito, como preferir.",
-            whereLiveTeenage: "Onde morava durante a adolescência?",
-            schoolExperiences: "Experiências escolares",
-            friendsInterests: "Amigos, interesses e hobbies",
-            memorableEvents: "Algum evento memorável?",
-            addTeenagePhotos: "Adicionar fotos da adolescência",
-            teenagePhotosHelper: "Fotos escolares, com amigos ou de momentos especiais",
-            // Step 4 - Adult Life
             adultLife: "Vida Adulta",
-            adultLifeDesc: "Carreira e família",
-            adultLifeIntro: "Carreira, família e aventuras da vida. Escreva pouco ou muito, como preferir.",
-            workCareer: "Trabalho e carreira",
-            hobbiesPassions: "Hobbies e paixões",
-            marriagePartner: "Casamento ou parceiro(a)",
-            childrenFamily: "Filhos e família",
-            milestones: "Marcos e momentos de orgulho",
-            addAdultPhotos: "Adicionar fotos da vida adulta",
-            adultPhotosHelper: "Fotos de trabalho, família, viagens ou celebrações",
-            // Step 5 - Later Life
             laterLife: "Terceira Idade",
-            laterLifeDesc: "Anos dourados",
-            laterLifeIntro: "Os anos dourados e os dias atuais. Escreva pouco ou muito, como preferir.",
-            whereLiveLater: "Onde morou nos últimos anos?",
-            routinesTraditions: "Rotinas, tradições e lugares favoritos",
-            familyMoments: "Momentos em família",
-            comfortJoy: "O que traz conforto e alegria hoje?",
-            addLaterPhotos: "Adicionar fotos recentes",
-            laterPhotosHelper: "Fotos recentes ou dos últimos anos",
-            // Step 6 - Review
+            // Step 3 - Review
             review: "Revisar e Gerar",
             reviewDesc: "Revisão final",
             reviewIntro: "Revise seu conteúdo e personalize como seu Livro de Memórias será criado.",
@@ -573,10 +795,12 @@ export const translations = {
             skipForNow: "Pular por Agora",
             // Loading Screen
             creatingBook: "Criando Seu Livro de Memórias",
+            savingMemories: "Salvando suas memórias...",
             organizingMemories: "Organizando memórias",
             creatingChapters: "Criando capítulos",
             generatingIllustrations: "Gerando ilustrações",
             finalTouches: "Toques finais",
+            pendingLabel: "pendente",
             loadingMsg1: "Cada memória é preciosa...",
             loadingMsg2: "Criando algo lindo...",
             loadingMsg3: "Entrelaçando histórias...",
@@ -587,7 +811,133 @@ export const translations = {
             bookCreatedDesc: "Criamos um livro lindo e personalizado cheio de memórias preciosas. Está pronto para você visualizar, imprimir ou compartilhar com a família.",
             openViewer: "Abrir Visualizador",
             backToDashboard: "Painel",
-            accessAnytime: "Você pode acessar seu Livro de Memórias a qualquer momento pelo painel"
+            accessAnytime: "Você pode acessar seu Livro de Memórias a qualquer momento pelo painel",
+            visualReference: "Referência Visual",
+            visualReferenceDesc: "Escolha como deseja nos ajudar a personalizar as ilustrações",
+            uploadPhotos: "Enviar Fotos",
+            uploadPhotosDesc: "Mínimo 3 fotos de diferentes ângulos",
+            describeCharacteristics: "Descrever Características",
+            describeCharacteristicsDesc: "Cor do cabelo, pele, óculos, etc.",
+            referencePhotosLabel: "Fotos de Referência",
+            referencePhotosHelperText: "Envie pelo menos 3 fotos claras da pessoa de diferentes ângulos. Isso nos ajuda a criar ilustrações personalizadas.",
+            birthPlacePlaceholder: "ex: São Paulo, Brasil",
+            parentsPlaceholder: "ex: João e Maria Silva",
+            siblingsPlaceholder: "ex: Dois irmãos, Pedro e Paulo",
+            happyMemoryPlaceholder: "Compartilhe uma memória feliz da infância...",
+            enjoyedPlaceholder: "ex: Brincar no jardim, ler livros, ajudar na cozinha...",
+            teenLivePlaceholder: "ex: Rio de Janeiro, no bairro de Copacabana",
+            schoolPlaceholder: "ex: Matérias favoritas, professores que se lembra, atividades escolares...",
+            friendsPlaceholder: "ex: Melhores amigos, atividades favoritas, clubes ou grupos...",
+            eventsPlaceholder: "ex: Uma formatura, primeiro emprego, viagens especiais...",
+            workPlaceholder: "ex: Onde trabalhou, o que fazia, colegas que se lembra...",
+            hobbiesPlaceholder: "ex: Jardinagem, cozinhar, música, esportes, viagens...",
+            partnerPlaceholder: "ex: Como se conheceram, momentos especiais juntos...",
+            childrenPlaceholder: "ex: Nomes dos filhos, atividades favoritas em família...",
+            milestonesPlaceholder: "ex: Conquistas, viagens, celebrações especiais...",
+            laterLivePlaceholder: "ex: Mesma casa por 40 anos, mudou para ficar perto da família...",
+            routinesPlaceholder: "ex: Ritual do café da manhã, almoços de domingo, banco favorito no parque...",
+            familyMomentsPlaceholder: "ex: Tempo com os netos, reuniões familiares, celebrações...",
+            comfortPlaceholder: "ex: Ouvir músicas antigas, olhar fotos, visitas de entes queridos...",
+            validationTitle: "Por favor, insira um título para seu Memory Book",
+            validationPhotos: "Por favor, adicione pelo menos 3 fotos",
+            validationName: "Por favor, insira o nome da pessoa",
+            validationGender: "Por favor, selecione o gênero",
+            draftTitle: "Continuar de onde parou?",
+            draftSubtitle: "Encontramos um rascunho salvo",
+            draftMessage: "Você tem um Memory Book inacabado. Gostaria de continuar editando ou começar do zero?",
+            startFresh: "Começar do Zero",
+            continueDraft: "Continuar Rascunho",
+            somethingWentWrong: "Algo Deu Errado",
+            generationFailed: "Falha na Geração",
+            generationFailedMsg: "Algo deu errado ao criar seu Memory Book. Por favor, tente novamente.",
+            tryAgain: "Tentar Novamente",
+            persistMsg: "Se o problema persistir, tente novamente mais tarde ou entre em contato com o suporte.",
+            connectingServer: "Conectando ao Servidor",
+            waitingConnection: "Aguarde enquanto estabelecemos conexão...",
+            attempt: "Tentativa",
+            connectionSlow: "A conexão está demorando. Aguarde ou tente novamente.",
+            startingProcessing: "Iniciando processamento...",
+            percentComplete: "completo",
+            stepsProcess: "Etapas do Processo",
+            inProgressLabel: "em progresso",
+            bookPagesLabel: "Páginas do Livro",
+            generatingPage: "Gerando página",
+            pagesCompleted: "páginas concluídas",
+            connectedServer: "Conectado ao servidor • Job ID",
+            photo: "foto",
+            photosWord: "fotos",
+            ofPrompts: "de",
+            promptsWord: "perguntas respondidas"
+        },
+        // Delete Confirmation
+        deleteConfirm: {
+            aboutToDelete: "Você está prestes a excluir",
+            permanentAction: "Esta ação é permanente e não pode ser desfeita.",
+            lostForever: "Todas as páginas, imagens e memórias deste livro serão perdidas para sempre.",
+            cancel: "Cancelar",
+            deleting: "Excluindo...",
+            deletePermanently: "Excluir Permanentemente"
+        },
+        // Physical Characteristics
+        physicalCharacteristics: {
+            personName: "Nome da pessoa",
+            namePlaceholder: "Ex: Vovó Maria",
+            gender: "Gênero",
+            male: "Masculino",
+            female: "Feminino",
+            skinColor: "Cor da Pele",
+            hairColor: "Cor do Cabelo",
+            hairStyle: "Estilo do Cabelo",
+            accessories: "Acessórios",
+            wearsGlasses: "Usa Óculos",
+            facialHair: "Barba/Bigode",
+            light: "Claro",
+            fair: "Branco",
+            medium: "Médio",
+            olive: "Oliva",
+            tan: "Bronzeado",
+            brown: "Marrom",
+            dark: "Escuro",
+            blonde: "Loiro",
+            golden: "Dourado",
+            brownHair: "Castanho",
+            darkBrown: "Castanho Escuro",
+            black: "Preto",
+            red: "Ruivo",
+            gray: "Grisalho",
+            white: "Branco",
+            short: "Curto",
+            mediumHair: "Médio",
+            long: "Longo",
+            curly: "Cacheado",
+            wavy: "Ondulado",
+            bald: "Careca",
+            buzzCut: "Raspado",
+            ponytail: "Rabo de Cavalo",
+            bun: "Coque"
+        },
+        // Navbar
+        navbar: {
+            searchPlaceholder: "Buscar memórias...",
+            createBook: "Criar Livro",
+            myBooks: "Meus Livros",
+            favorites: "Favoritos",
+            myProfile: "Meu Perfil",
+            settings: "Configurações",
+            logout: "Sair"
+        },
+        // Home Page
+        home: {
+            seeResult: "Veja o resultado",
+            bookCreatedWithLove: "Um livro criado com amor",
+            sampleDesc1: "Este livro foi criado por uma filha para seu pai com Alzheimer.",
+            sampleDesc2: "Cada página traz memórias reais transformadas em ilustrações em aquarela.",
+            watercolor: "Aquarela",
+            pages: "páginas",
+            viewBook: "Visualizar Livro",
+            pagePreview: "Prévia das páginas",
+            createYours: "Crie o Seu Memory Book",
+            example: "Exemplo"
         },
         // Upload
         upload: {
@@ -599,6 +949,61 @@ export const translations = {
             photo: "foto",
             toContinue: "para continuar",
             add: "Adicionar"
+        },
+        // Info Modals
+        infoModals: {
+            close: "Fechar",
+            privacy: {
+                title: "Política de Privacidade",
+                sections: [
+                    { heading: "Seus dados, seu controle", body: "O Memory Book foi construído com privacidade em seu núcleo. Todos os dados pessoais, fotos e memórias que você compartilha são criptografados e armazenados com segurança. Nunca vendemos, compartilhamos ou usamos seus dados para publicidade." },
+                    { heading: "O que coletamos", body: "Coletamos apenas o necessário para fornecer o serviço: suas informações de conta (nome, email), fotos enviadas para geração de ilustrações e as memórias em texto que você fornece. As fotos são processadas temporariamente e excluídas dos nossos servidores após a geração do livro." },
+                    { heading: "Criptografia e armazenamento", body: "Todos os dados são transmitidos via HTTPS com criptografia TLS 1.3. Os arquivos são armazenados em nuvem criptografada. O acesso aos seus dados é protegido pelas suas credenciais e nossos protocolos internos de segurança." },
+                    { heading: "Serviços de terceiros", body: "Usamos Firebase (Google) para autenticação e armazenamento, e serviços de IA para geração de ilustrações. Esses provedores têm suas próprias políticas de privacidade e são compatíveis com LGPD/GDPR." },
+                    { heading: "Seus direitos", body: "Você pode solicitar uma cópia dos seus dados, corrigir imprecisões ou excluir sua conta e todos os dados associados a qualquer momento. Entre em contato pelo email privacy@memorybook.app." },
+                    { heading: "Contato", body: "Para questões relacionadas à privacidade, envie um email para privacy@memorybook.app. Respondemos em até 48 horas." }
+                ]
+            },
+            accessibility: {
+                title: "Acessibilidade",
+                sections: [
+                    { heading: "Nosso compromisso", body: "O Memory Book foi projetado para ser acessível a todos, incluindo usuários idosos e pessoas com deficiências visuais, motoras ou cognitivas. Seguimos as diretrizes WCAG 2.1 AA." },
+                    { heading: "Design visual", body: "Texto de alto contraste, alvos de toque grandes e tipografia clara garantem legibilidade. Nossa paleta de cores foi escolhida para ser distinguível por pessoas com deficiência de visão de cores." },
+                    { heading: "Navegação", body: "Todos os elementos interativos são acessíveis pelo teclado. A interface suporta leitores de tela com rótulos ARIA adequados. A navegação de páginas no visualizador de livros funciona com as teclas de seta." },
+                    { heading: "Fonte e tamanho do texto", body: "O visualizador de livros usa fontes serifadas legíveis (Playfair Display e Lora) otimizadas para legibilidade. Os tamanhos de texto são responsivos e se adaptam a diferentes tamanhos de tela." },
+                    { heading: "Feedback", body: "Melhoramos continuamente nossa acessibilidade. Se encontrar alguma barreira, por favor nos avise em accessibility@memorybook.app." }
+                ]
+            },
+            support: {
+                title: "Suporte",
+                sections: [
+                    { heading: "Primeiros passos", body: "Criar um Memory Book é simples: faça login, clique em 'Criar Livro', preencha memórias sobre seu ente querido em diferentes fases da vida, escolha um estilo de ilustração e gere seu livro. Todo o processo leva cerca de 10-15 minutos." },
+                    { heading: "Perguntas frequentes", body: "Quanto tempo leva a geração? Geralmente 3-5 minutos. Posso editar após a geração? Sim, use o editor para modificar texto e imagens. Posso imprimir? O download em PDF está disponível para todos os livros concluídos." },
+                    { heading: "Requisitos técnicos", body: "O Memory Book funciona em qualquer navegador moderno (Chrome, Firefox, Safari, Edge). Para a melhor experiência, use uma tela de pelo menos 768px de largura. É necessária conexão com a internet." },
+                    { heading: "Solução de problemas", body: "Se as imagens não estão carregando, tente atualizar a página. Se a geração parecer travada, verifique sua conexão com a internet e tente novamente. Limpe o cache do navegador se tiver problemas de exibição." },
+                    { heading: "Fale conosco", body: "Precisa de ajuda? Envie um email para support@memorybook.app ou use o botão de feedback no app. Nossa equipe geralmente responde em até 24 horas em dias úteis." }
+                ]
+            }
+        },
+        // Sample Book
+        sampleBook: {
+            bookTitle: "As Memórias do Papai",
+            bookDescription: "Um livro de memórias criado com amor, para que cada página traga de volta um sorriso.",
+            displayDate: "14 de Fevereiro, 2026",
+            displayDescription: "Um livro de memórias em aquarela criado por uma filha para seu pai — uma homenagem ao amor que transcende o esquecimento.",
+            pages: [
+                { title: "O Quintal da Casa Amarela em Ouro Fino", description: "Lá em Ouro Fino, no sul de Minas Gerais, papai cresceu numa casa amarela com um quintal enorme. Passava as tardes correndo descalço entre as mangueiras, perseguindo borboletas com os irmãos Pedro, Ana e João enquanto dona Rosa chamava todos para o café da tarde." },
+                { title: "O Primeiro Dia na Escola Estadual", description: "Com a mochila nova e o cabelo penteado pela vovó Rosa, papai foi para o seu primeiro dia na Escola Estadual de Ouro Fino. Voltou para casa cheio de histórias sobre os novos amigos e a professora Dona Lúcia, que desenhava flores coloridas no quadro-negro." },
+                { title: "Tardes de Futebol no Campinho do Bairro", description: "Na adolescência, quando se mudou para a cidade para estudar, papai vivia no campinho do bairro. Jogava futebol com os amigos até o sol se pôr, voltava suado e feliz, sonhando em ser jogador profissional — mas o destino tinha outros planos." },
+                { title: "A Formatura que Orgulhou a Família Inteira", description: "Papai foi o primeiro da família a se formar — no Colégio Estadual de Ouro Fino. No dia da formatura, a vovó Rosa chorou de alegria e o vovô Antônio disse que era o dia mais feliz da vida dele. A família inteira veio do interior para assistir." },
+                { title: "O Dia em que Tudo Começou", description: "Papai e mamãe Maria Helena se casaram numa manhã de sol. Ele sempre conta que quando a viu no altar, esqueceu o discurso que tinha ensaiado por semanas e só conseguiu sorrir — um sorriso que não saiu do rosto o dia inteiro." },
+                { title: "A Chegada da Ana Clara", description: "Quando eu, Ana Clara, nasci, papai segurou-me nos braços pela primeira vez e prometeu que estaria sempre ali para mim. Mamãe conta que ele não me largou por horas, só olhando e sorrindo, repetindo baixinho: 'Minha princesinha'." },
+                { title: "Aprendendo a Voar de Bicicleta", description: "Papai corria ao meu lado no Parque Municipal segurando o banco da bicicleta, repetindo 'Eu estou aqui, não vou te soltar.' Até que num momento mágico, ele soltou — e eu voei sozinha pela primeira vez. Quando olhei para trás, ele tinha lágrimas nos olhos." },
+                { title: "O Professor que Transformava Números em Histórias", description: "Por 35 anos, papai foi professor de matemática na Escola Municipal. Seus alunos adoravam como ele transformava números complicados em histórias que faziam todo mundo rir. Era mais que um professor — era um contador de histórias com giz na mão e amor no coração." },
+                { title: "Manhãs no Jardim com Café Coado", description: "Todas as manhãs, papai toma seu café coado no jardim que ele mesmo plantou ao longo dos anos. A varanda, a música do rádio, o cheiro do café — são os rituais que trazem paz e um sorriso ao seu dia, mesmo quando as lembranças ficam mais distantes." },
+                { title: "O Natal que Reuniu Todos", description: "No último Natal em família, papai sentou na cabeceira da mesa cercado por todos nós — filhos, netos, primos. Mesmo quando as palavras faltam, o sorriso dele diz tudo. Aquele sorriso que a gente conhece desde sempre e que nunca, nunca muda." }
+            ],
+            backCoverDescription: "As memórias são como sementes plantadas no coração. Mesmo quando a mente esquece, o amor permanece."
         },
         // Common
         common: {
@@ -614,9 +1019,9 @@ export const translations = {
             subtitle: "Preservando Legados",
             title_start: "Mantén su historia",
             title_gradient: "cerca, siempre",
-            description: "Una forma centrada en la familia de preservar y compartir recuerdos de seres queridos que viven con Alzheimer.",
+            description: "Transforma las historias de vida de alguien que amas en un hermoso libro de recuerdos ilustrado — un regalo que trae consuelo, conexión y sonrisas.",
             cta_primary: "Crear Libro de Recuerdos",
-            cta_secondary: "Mira cómo ayuda"
+            cta_secondary: "Mira cómo funciona"
         },
         // Navigation
         nav: {
@@ -634,27 +1039,27 @@ export const translations = {
         // How it Works Section
         howItWorks: {
             title: "Cómo Funciona",
-            description: "Hemos diseñado un proceso simple de tres pasos para ayudarte a capturar cada momento precioso sin estrés.",
-            step1Title: "Añade recuerdos",
-            step1Desc: "Sube fotos y comparte historias desde tu teléfono o computadora. La conversión de voz a texto facilita la contribución de todos.",
-            step2Title: "Organiza",
-            step2Desc: "Categoriza momentos por familiares, años o eventos especiales. Nuestra IA ayuda a clasificar y sugerir conexiones.",
-            step3Title: "Genera",
-            step3Desc: "Crea un hermoso libro de recuerdos digital o físico al instante. Perfecto para sesiones de terapia o momentos de reminiscencia."
+            description: "Un proceso sencillo para transformar los recuerdos más preciosos de tu familia en un hermoso libro ilustrado.",
+            step1Title: "Cuenta las historias",
+            step1Desc: "Responde preguntas sencillas sobre la infancia, la juventud y los momentos que marcaron la vida de tu ser querido. Cada recuerdo ayuda a construir algo verdaderamente especial.",
+            step2Title: "Personaliza el libro",
+            step2Desc: "Elige el estilo de ilustración, sube fotos o describe las características físicas. Cada detalle ayuda a crear un libro de recuerdos único.",
+            step3Title: "Recibe tu libro",
+            step3Desc: "En pocos minutos, recibe un libro ilustrado con cariño, listo para ver, imprimir y compartir con toda la familia."
         },
         // Privacy Section
         privacySection: {
-            title: "Privacidad en la que puedes confiar",
-            description: "Usamos cifrado de extremo a extremo para garantizar que los recuerdos de tu familia permanezcan privados para siempre.",
+            title: "Tus recuerdos están seguros con nosotros",
+            description: "Las historias de tu familia son preciosas. Protegemos cada foto y recuerdo con cifrado de extremo a extremo, para que sean siempre tuyos.",
             learnMore: "Aprende sobre seguridad"
         },
         // CTA Section
         cta: {
             title_start: "Comienza el",
             title_gradient: "Libro de Recuerdos de tu familia Hoy",
-            description: "Únete a miles de familias manteniendo sus historias vivas y fortaleciendo conexiones cada día.",
+            description: "Preserva los recuerdos e historias que conectan a tu familia a través de las generaciones. Un hermoso regalo de amor y recuerdos.",
             button: "Comienza Gratis",
-            lovedBy: "Amado por más de 10,000 familias"
+            lovedBy: ""
         },
         // Footer
         footer: {
@@ -662,7 +1067,7 @@ export const translations = {
             privacyPolicy: "Política de Privacidad",
             helpCenter: "Centro de Ayuda",
             contact: "Contacto",
-            copyright: "© 2024 Memory Book. Todos los derechos reservados."
+            copyright: "© 2026 Memory Book. Todos los derechos reservados."
         },
         // Auth Modal
         auth: {
@@ -697,7 +1102,31 @@ export const translations = {
             pages: "páginas",
             searchMemories: "Buscar recuerdos...",
             memoryAdded: "¡Recuerdo añadido con éxito!",
-            memorySaved: "Tu último recuerdo ha sido guardado en el álbum."
+            memorySaved: "Tu último recuerdo ha sido guardado en el álbum.",
+            coverLabel: "Portada",
+            backCoverLabel: "Contraportada",
+            memoryN: "Recuerdo",
+            coverDescription: "Portada del libro",
+            pageDescription: "Esta página será generada con tus recuerdos",
+            bookEndDescription: "Final del libro",
+            bookDeleted: "Memory Book eliminado",
+            removedPermanently: "fue eliminado permanentemente",
+            deleteError: "Error al eliminar",
+            deleteErrorMsg: "No se pudo eliminar el libro. Inténtalo de nuevo.",
+            createFirst: "Crea tu primer Memory Book",
+            createFirstDesc: "Mira el ejemplo a continuación para inspiración y luego crea el tuyo.",
+            createMemoryBook: "Crear Memory Book",
+            example: "Ejemplo",
+            bookGenerated: "¡Memory Book Generado!",
+            bookGeneratedMsg: "¡Tu Memory Book fue creado con éxito!",
+            deleteModalTitle: "Eliminar Memory Book",
+            loading: "Cargando tus memory books...",
+            tryAgain: "Intentar de Nuevo",
+            generating: "Generando...",
+            generationFailed: "Error en la Generación",
+            draft: "Borrador",
+            noResults: "No se encontraron resultados",
+            noResultsDesc: "Intenta buscar con otras palabras."
         },
         // Profile Settings
         profile: {
@@ -727,7 +1156,8 @@ export const translations = {
             guidelineSize: "Tamaño máximo: 5MB",
             guidelineFormat: "Formatos soportados: JPG, PNG",
             clickToUpload: "Haz clic en el icono de la cámara para subir una nueva foto",
-            selectLanguage: "Seleccionar Idioma"
+            selectLanguage: "Seleccionar Idioma",
+            comingSoon: "Próximamente"
         },
         // Book Viewer
         bookViewer: {
@@ -735,7 +1165,24 @@ export const translations = {
             of: "de",
             editBook: "Editar Libro",
             downloadPdf: "Descargar PDF",
-            deleteBook: "Eliminar Libro"
+            deleteBook: "Eliminar Libro",
+            cover: "Portada",
+            backCover: "Contraportada",
+            openBook: "Abrir Libro",
+            returnToStart: "Volver al inicio",
+            favorite: "Favorito",
+            closeViewer: "Cerrar visualización",
+            prevPage: "Página anterior",
+            nextPage: "Página siguiente",
+            goToSpread: "Ir a",
+            emptyBookTitle: "Libro Vacío",
+            emptyBookDesc: "Este libro aún se está generando o no tiene páginas.",
+            back: "Volver",
+            imageUnavailable: "Imagen no disponible",
+            childhood: "Infancia",
+            teenage: "Adolescencia",
+            adultLife: "Vida Adulta",
+            goldenAge: "Edad Dorada"
         },
         // Book Editor
         bookEditor: {
@@ -796,44 +1243,21 @@ export const translations = {
             subtitle: "Subtítulo",
             subtitlePlaceholder: "ej., Un viaje a través de momentos queridos",
             creationDate: "Fecha de Creación",
+            memoriesTitle: "Recuerdos",
+            memoriesDesc: "Comparte su historia",
+            memoriesIntro: "Escribe libremente sobre cada fase de su vida. Unas pocas frases son suficientes — la IA creará una hermosa historia a partir de tus palabras.",
+            memoriesTip: "No te preocupes por escribir perfectamente — nuestra IA transformará tus palabras en una hermosa narrativa.",
+            childhoodMemoriesPlaceholder: "¿Dónde nació? Padres, hermanos, recuerdos felices, lo que le gustaba hacer...",
+            teenageMemoriesPlaceholder: "Escuela, amigos, hobbies, eventos memorables, dónde vivía...",
+            adultMemoriesPlaceholder: "Carrera, pareja, hijos, hobbies, logros, momentos de orgullo...",
+            laterMemoriesPlaceholder: "Rutinas, tradiciones, momentos familiares, lo que le trae confort y alegría hoy...",
+            editSetup: "Editar configuración",
+            editMemories: "Editar recuerdos",
+            noMemoriesYet: "No se han añadido recuerdos aún. La IA creará una historia genérica basada en el título del libro.",
             childhood: "Infancia",
-            childhoodDesc: "Primeros recuerdos",
-            childhoodIntro: "Cuéntanos sobre los primeros años. Escribe poco o mucho, como prefieras.",
-            whereBorn: "¿Dónde nació?",
-            whoParents: "¿Quiénes eran sus padres?",
-            siblings: "¿Tenía hermanos?",
-            happyMemory: "Un recuerdo feliz de la infancia",
-            whatEnjoy: "¿Qué le gustaba hacer?",
-            addChildhoodPhotos: "Añadir fotos de la infancia",
-            childhoodPhotosHelper: "Las fotos antiguas de familia nos ayudan a capturar los primeros años",
             teenage: "Adolescencia",
-            teenageDesc: "Creciendo",
-            teenageIntro: "Recuerdos de crecimiento. Escribe poco o mucho, como prefieras.",
-            whereLiveTeenage: "¿Dónde vivía durante la adolescencia?",
-            schoolExperiences: "Experiencias escolares",
-            friendsInterests: "Amigos, intereses y pasatiempos",
-            memorableEvents: "¿Algún evento memorable?",
-            addTeenagePhotos: "Añadir fotos de la adolescencia",
-            teenagePhotosHelper: "Fotos escolares, con amigos o de momentos especiales",
             adultLife: "Vida Adulta",
-            adultLifeDesc: "Carrera y familia",
-            adultLifeIntro: "Carrera, familia y aventuras de la vida. Escribe poco o mucho, como prefieras.",
-            workCareer: "Trabajo y carrera",
-            hobbiesPassions: "Pasatiempos y pasiones",
-            marriagePartner: "Matrimonio o pareja",
-            childrenFamily: "Hijos y familia",
-            milestones: "Hitos y momentos de orgullo",
-            addAdultPhotos: "Añadir fotos de la vida adulta",
-            adultPhotosHelper: "Fotos de trabajo, familia, viajes o celebraciones",
             laterLife: "Tercera Edad",
-            laterLifeDesc: "Años dorados",
-            laterLifeIntro: "Los años dorados y los días actuales. Escribe poco o mucho, como prefieras.",
-            whereLiveLater: "¿Dónde vivió en los últimos años?",
-            routinesTraditions: "Rutinas, tradiciones y lugares favoritos",
-            familyMoments: "Momentos en familia",
-            comfortJoy: "¿Qué le trae confort y alegría hoy?",
-            addLaterPhotos: "Añadir fotos recientes",
-            laterPhotosHelper: "Fotos recientes o de los últimos años",
             review: "Revisar y Generar",
             reviewDesc: "Revisión final",
             reviewIntro: "Revisa tu contenido y personaliza cómo se creará tu Libro de Recuerdos.",
@@ -859,10 +1283,12 @@ export const translations = {
             keepFilling: "Seguir Completando",
             skipForNow: "Saltar por Ahora",
             creatingBook: "Creando Tu Libro de Recuerdos",
+            savingMemories: "Guardando tus recuerdos...",
             organizingMemories: "Organizando recuerdos",
             creatingChapters: "Creando capítulos",
             generatingIllustrations: "Generando ilustraciones",
             finalTouches: "Toques finales",
+            pendingLabel: "pendiente",
             loadingMsg1: "Cada recuerdo es precioso...",
             loadingMsg2: "Creando algo hermoso...",
             loadingMsg3: "Entrelazando historias...",
@@ -872,7 +1298,133 @@ export const translations = {
             bookCreatedDesc: "Hemos creado un hermoso libro personalizado lleno de recuerdos preciosos. Está listo para ver, imprimir o compartir con la familia.",
             openViewer: "Abrir Visor",
             backToDashboard: "Panel",
-            accessAnytime: "Puedes acceder a tu Libro de Recuerdos en cualquier momento desde el panel"
+            accessAnytime: "Puedes acceder a tu Libro de Recuerdos en cualquier momento desde el panel",
+            visualReference: "Referencia Visual",
+            visualReferenceDesc: "Elige cómo quieres ayudarnos a personalizar las ilustraciones",
+            uploadPhotos: "Subir Fotos",
+            uploadPhotosDesc: "Mínimo 3 fotos desde diferentes ángulos",
+            describeCharacteristics: "Describir Características",
+            describeCharacteristicsDesc: "Color de cabello, piel, gafas, etc.",
+            referencePhotosLabel: "Fotos de Referencia",
+            referencePhotosHelperText: "Sube al menos 3 fotos claras de la persona desde diferentes ángulos. Esto nos ayuda a crear ilustraciones personalizadas.",
+            birthPlacePlaceholder: "ej: São Paulo, Brasil",
+            parentsPlaceholder: "ej: João y María Silva",
+            siblingsPlaceholder: "ej: Dos hermanos, Pedro y Paulo",
+            happyMemoryPlaceholder: "Comparte un recuerdo feliz de la infancia...",
+            enjoyedPlaceholder: "ej: Jugar en el jardín, leer libros, ayudar en la cocina...",
+            teenLivePlaceholder: "ej: Río de Janeiro, en el barrio de Copacabana",
+            schoolPlaceholder: "ej: Materias favoritas, profesores que recuerda, actividades escolares...",
+            friendsPlaceholder: "ej: Mejores amigos, actividades favoritas, clubes o grupos...",
+            eventsPlaceholder: "ej: Una graduación, primer empleo, viajes especiales...",
+            workPlaceholder: "ej: Dónde trabajó, qué hacía, colegas que recuerda...",
+            hobbiesPlaceholder: "ej: Jardinería, cocina, música, deportes, viajes...",
+            partnerPlaceholder: "ej: Cómo se conocieron, momentos especiales juntos...",
+            childrenPlaceholder: "ej: Nombres de los hijos, actividades familiares favoritas...",
+            milestonesPlaceholder: "ej: Logros, viajes, celebraciones especiales...",
+            laterLivePlaceholder: "ej: Misma casa por 40 años, se mudó para estar cerca de la familia...",
+            routinesPlaceholder: "ej: Ritual del café matutino, almuerzos dominicales...",
+            familyMomentsPlaceholder: "ej: Tiempo con los nietos, reuniones familiares...",
+            comfortPlaceholder: "ej: Escuchar canciones antiguas, mirar fotos, visitas de seres queridos...",
+            validationTitle: "Por favor, ingresa un título para tu Memory Book",
+            validationPhotos: "Por favor, agrega al menos 3 fotos",
+            validationName: "Por favor, ingresa el nombre de la persona",
+            validationGender: "Por favor, selecciona el género",
+            draftTitle: "¿Continuar donde lo dejaste?",
+            draftSubtitle: "Encontramos un borrador guardado",
+            draftMessage: "Tienes un Memory Book sin terminar. ¿Te gustaría continuar editándolo o empezar de nuevo?",
+            startFresh: "Empezar de Nuevo",
+            continueDraft: "Continuar Borrador",
+            somethingWentWrong: "Algo Salió Mal",
+            generationFailed: "Generación Fallida",
+            generationFailedMsg: "Algo salió mal al crear tu Memory Book. Por favor, inténtalo de nuevo.",
+            tryAgain: "Intentar de Nuevo",
+            persistMsg: "Si el problema persiste, inténtalo de nuevo más tarde o contacta al soporte.",
+            connectingServer: "Conectando al Servidor",
+            waitingConnection: "Espera mientras establecemos conexión...",
+            attempt: "Intento",
+            connectionSlow: "La conexión está tardando. Espera o inténtalo de nuevo.",
+            startingProcessing: "Iniciando procesamiento...",
+            percentComplete: "completo",
+            stepsProcess: "Pasos del Proceso",
+            inProgressLabel: "en progreso",
+            bookPagesLabel: "Páginas del Libro",
+            generatingPage: "Generando página",
+            pagesCompleted: "páginas completadas",
+            connectedServer: "Conectado al servidor • Job ID",
+            photo: "foto",
+            photosWord: "fotos",
+            ofPrompts: "de",
+            promptsWord: "preguntas respondidas"
+        },
+        // Delete Confirmation
+        deleteConfirm: {
+            aboutToDelete: "Estás a punto de eliminar",
+            permanentAction: "Esta acción es permanente y no se puede deshacer.",
+            lostForever: "Todas las páginas, imágenes y recuerdos de este libro se perderán para siempre.",
+            cancel: "Cancelar",
+            deleting: "Eliminando...",
+            deletePermanently: "Eliminar Permanentemente"
+        },
+        // Physical Characteristics
+        physicalCharacteristics: {
+            personName: "Nombre de la persona",
+            namePlaceholder: "Ej: Abuela María",
+            gender: "Género",
+            male: "Masculino",
+            female: "Femenino",
+            skinColor: "Color de Piel",
+            hairColor: "Color de Cabello",
+            hairStyle: "Estilo de Cabello",
+            accessories: "Accesorios",
+            wearsGlasses: "Usa Gafas",
+            facialHair: "Barba/Bigote",
+            light: "Claro",
+            fair: "Blanco",
+            medium: "Medio",
+            olive: "Oliva",
+            tan: "Bronceado",
+            brown: "Marrón",
+            dark: "Oscuro",
+            blonde: "Rubio",
+            golden: "Dorado",
+            brownHair: "Castaño",
+            darkBrown: "Castaño Oscuro",
+            black: "Negro",
+            red: "Pelirrojo",
+            gray: "Canoso",
+            white: "Blanco",
+            short: "Corto",
+            mediumHair: "Medio",
+            long: "Largo",
+            curly: "Rizado",
+            wavy: "Ondulado",
+            bald: "Calvo",
+            buzzCut: "Rapado",
+            ponytail: "Cola de Caballo",
+            bun: "Moño"
+        },
+        // Navbar
+        navbar: {
+            searchPlaceholder: "Buscar recuerdos...",
+            createBook: "Crear Libro",
+            myBooks: "Mis Libros",
+            favorites: "Favoritos",
+            myProfile: "Mi Perfil",
+            settings: "Configuración",
+            logout: "Cerrar Sesión"
+        },
+        // Home Page
+        home: {
+            seeResult: "Mira el resultado",
+            bookCreatedWithLove: "Un libro creado con amor",
+            sampleDesc1: "Este libro fue creado por una hija para su padre con Alzheimer.",
+            sampleDesc2: "Cada página trae recuerdos reales transformados en ilustraciones en acuarela.",
+            watercolor: "Acuarela",
+            pages: "páginas",
+            viewBook: "Ver Libro",
+            pagePreview: "Vista previa de páginas",
+            createYours: "Crea Tu Memory Book",
+            example: "Ejemplo"
         },
         // Upload
         upload: {
@@ -884,6 +1436,61 @@ export const translations = {
             photo: "foto",
             toContinue: "para continuar",
             add: "Añadir"
+        },
+        // Info Modals
+        infoModals: {
+            close: "Cerrar",
+            privacy: {
+                title: "Política de Privacidad",
+                sections: [
+                    { heading: "Tus datos, tu control", body: "Memory Book está construido con la privacidad en su núcleo. Todos los datos personales, fotos y recuerdos que compartes están encriptados y almacenados de forma segura. Nunca vendemos, compartimos ni usamos tus datos para publicidad." },
+                    { heading: "Qué recopilamos", body: "Solo recopilamos lo necesario para proporcionar el servicio: tu información de cuenta (nombre, correo), fotos subidas para la generación de ilustraciones y los recuerdos en texto que proporcionas. Las fotos se procesan temporalmente y se eliminan de nuestros servidores después de generar el libro." },
+                    { heading: "Cifrado y almacenamiento", body: "Todos los datos se transmiten a través de HTTPS con cifrado TLS 1.3. Los archivos se almacenan en la nube cifrada. El acceso a tus datos está protegido por tus credenciales y nuestros protocolos internos de seguridad." },
+                    { heading: "Servicios de terceros", body: "Usamos Firebase (Google) para autenticación y almacenamiento, y servicios de IA para la generación de ilustraciones. Estos proveedores tienen sus propias políticas de privacidad y cumplen con el RGPD." },
+                    { heading: "Tus derechos", body: "Puedes solicitar una copia de tus datos, corregir inexactitudes o eliminar tu cuenta y todos los datos asociados en cualquier momento. Contáctanos en privacy@memorybook.app." },
+                    { heading: "Contacto", body: "Para preguntas relacionadas con la privacidad, envíanos un correo a privacy@memorybook.app. Respondemos en un máximo de 48 horas." }
+                ]
+            },
+            accessibility: {
+                title: "Accesibilidad",
+                sections: [
+                    { heading: "Nuestro compromiso", body: "Memory Book está diseñado para ser accesible para todos, incluyendo usuarios mayores y personas con discapacidades visuales, motoras o cognitivas. Seguimos las directrices WCAG 2.1 AA." },
+                    { heading: "Diseño visual", body: "Texto de alto contraste, objetivos de toque grandes y tipografía clara garantizan la legibilidad. Nuestra paleta de colores fue elegida para ser distinguible por personas con deficiencia de visión del color." },
+                    { heading: "Navegación", body: "Todos los elementos interactivos son accesibles por teclado. La interfaz es compatible con lectores de pantalla con etiquetas ARIA adecuadas. La navegación de páginas en el visor de libros funciona con las teclas de flecha." },
+                    { heading: "Fuente y tamaño del texto", body: "El visor de libros usa fuentes serif legibles (Playfair Display y Lora) optimizadas para la legibilidad. Los tamaños de texto son responsivos y se adaptan a diferentes tamaños de pantalla." },
+                    { heading: "Comentarios", body: "Mejoramos continuamente nuestra accesibilidad. Si encuentras alguna barrera, háznolo saber en accessibility@memorybook.app." }
+                ]
+            },
+            support: {
+                title: "Soporte",
+                sections: [
+                    { heading: "Primeros pasos", body: "Crear un Memory Book es sencillo: inicia sesión, haz clic en 'Crear Libro', completa recuerdos sobre tu ser querido en diferentes etapas de la vida, elige un estilo de ilustración y genera tu libro. Todo el proceso toma unos 10-15 minutos." },
+                    { heading: "Preguntas frecuentes", body: "¿Cuánto tarda la generación? Normalmente 3-5 minutos. ¿Puedo editar después? Sí, usa el editor para modificar texto e imágenes. ¿Puedo imprimir? La descarga en PDF está disponible para todos los libros completados." },
+                    { heading: "Requisitos técnicos", body: "Memory Book funciona en cualquier navegador moderno (Chrome, Firefox, Safari, Edge). Para la mejor experiencia, usa una pantalla de al menos 768px de ancho. Se requiere conexión a internet." },
+                    { heading: "Solución de problemas", body: "Si las imágenes no cargan, intenta actualizar la página. Si la generación parece atascada, verifica tu conexión a internet e inténtalo de nuevo. Limpia la caché del navegador si tienes problemas de visualización." },
+                    { heading: "Contáctanos", body: "¿Necesitas ayuda? Envíanos un correo a support@memorybook.app o usa el botón de feedback en la app. Nuestro equipo generalmente responde en 24 horas en días laborables." }
+                ]
+            }
+        },
+        // Sample Book
+        sampleBook: {
+            bookTitle: "Los Recuerdos de Papá",
+            bookDescription: "Un libro de recuerdos creado con amor, para que cada página traiga de vuelta una sonrisa.",
+            displayDate: "14 de Febrero, 2026",
+            displayDescription: "Un libro de recuerdos en acuarela creado por una hija para su padre — un homenaje al amor que trasciende el olvido.",
+            pages: [
+                { title: "El Patio de la Casa Amarilla", description: "De pequeño, papá pasaba las tardes jugando en el patio de la casa amarilla en el campo. Corría descalzo entre los árboles de mango, persiguiendo mariposas e inventando aventuras con sus hermanos." },
+                { title: "El Primer Día de Escuela", description: "Con su mochila nueva y el pelo peinado por la abuela, papá fue a su primer día de escuela. Volvió a casa lleno de historias sobre nuevos amigos y la maestra que dibujaba flores en la pizarra." },
+                { title: "Tardes de Fútbol en el Campito", description: "En la adolescencia, papá vivía en el campo del barrio. Jugaba fútbol con los amigos hasta la puesta del sol, y volvía a casa sudado y feliz, soñando con ser jugador profesional." },
+                { title: "La Graduación que Enorgulleció a la Familia", description: "Papá fue el primero de la familia en graduarse del colegio. El día de la graduación, la abuela lloró de alegría y el abuelo dijo que era el día más feliz de su vida." },
+                { title: "El Día en que Todo Comenzó", description: "Papá y mamá se casaron en una mañana soleada. Siempre cuenta que cuando la vio en el altar, olvidó el discurso que había ensayado y solo pudo sonreír." },
+                { title: "La Llegada de la Princesita", description: "Cuando nací, papá me sostuvo en sus brazos por primera vez y prometió que siempre estaría ahí para mí. Mamá dijo que no me soltó por horas, solo mirándome y sonriendo." },
+                { title: "Aprendiendo a Volar en Bicicleta", description: "Papá corría a mi lado sosteniendo el asiento de la bicicleta, repitiendo 'Estoy aquí, no te voy a soltar.' Hasta que en un momento mágico, soltó — y volé sola por primera vez." },
+                { title: "El Profesor que Convertía Números en Historias", description: "Por 35 años, papá fue profesor de matemáticas. Sus alumnos adoraban cómo convertía números complicados en historias simples. Era más que un profesor — era un narrador con tiza en la mano." },
+                { title: "Mañanas de Café en el Jardín", description: "Todas las mañanas, papá toma café en el jardín mirando las flores que plantó a lo largo de los años. El porche, la música antigua, el aroma del café — son los rituales que traen paz a su día." },
+                { title: "La Navidad que Reunió a Todos", description: "En la última Navidad en familia, papá se sentó a la cabecera de la mesa rodeado de hijos y nietos. Aunque las palabras falten, su sonrisa lo dice todo. Esa sonrisa que nunca cambia." }
+            ],
+            backCoverDescription: "Los recuerdos son como semillas plantadas en el corazón. Incluso cuando la mente olvida, el amor permanece."
         },
         // Common
         common: {
@@ -899,9 +1506,9 @@ export const translations = {
             subtitle: "Vermächtnisse bewahren",
             title_start: "Halten Sie ihre Geschichte",
             title_gradient: "immer nah",
-            description: "Ein familienorientierter Weg, um Erinnerungen für Angehörige mit Alzheimer zu bewahren und zu teilen.",
+            description: "Verwandeln Sie die Lebensgeschichten eines geliebten Menschen in ein wunderschönes illustriertes Erinnerungsbuch — ein Geschenk, das Trost, Verbundenheit und Lächeln bringt.",
             cta_primary: "Erinnerungsbuch erstellen",
-            cta_secondary: "So hilft es"
+            cta_secondary: "So funktioniert es"
         },
         // Navigation
         nav: {
@@ -919,27 +1526,27 @@ export const translations = {
         // How it Works Section
         howItWorks: {
             title: "Wie es funktioniert",
-            description: "Wir haben einen einfachen dreistufigen Prozess entwickelt, um Ihnen zu helfen, jeden kostbaren Moment ohne Stress festzuhalten.",
-            step1Title: "Erinnerungen hinzufügen",
-            step1Desc: "Laden Sie Fotos hoch und teilen Sie Geschichten von Ihrem Telefon oder Computer. Sprache-zu-Text macht es jedem leicht, beizutragen.",
-            step2Title: "Organisieren",
-            step2Desc: "Kategorisieren Sie Momente nach Familienmitgliedern, Jahren oder besonderen Ereignissen. Unsere KI hilft beim Sortieren und Vorschlagen von Verbindungen.",
-            step3Title: "Generieren",
-            step3Desc: "Erstellen Sie sofort ein schönes digitales oder physisches Erinnerungsbuch. Perfekt für Therapiesitzungen oder Erinnerungsmomente am Bett."
+            description: "Ein einfacher Prozess, um die kostbarsten Erinnerungen Ihrer Familie in ein wunderschönes illustriertes Buch zu verwandeln.",
+            step1Title: "Erzählen Sie die Geschichten",
+            step1Desc: "Beantworten Sie einfache Fragen über Kindheit, Jugend und die Momente, die das Leben Ihres geliebten Menschen geprägt haben. Jede Erinnerung hilft, etwas wirklich Besonderes zu schaffen.",
+            step2Title: "Personalisieren Sie das Buch",
+            step2Desc: "Wählen Sie einen Illustrationsstil, laden Sie Fotos hoch oder beschreiben Sie die physischen Merkmale. Jedes Detail hilft, ein einzigartiges Erinnerungsbuch zu erstellen.",
+            step3Title: "Erhalten Sie Ihr Buch",
+            step3Desc: "In wenigen Minuten erhalten Sie ein liebevoll illustriertes Buch, bereit zum Ansehen, Drucken und Teilen mit der ganzen Familie."
         },
         // Privacy Section
         privacySection: {
-            title: "Datenschutz, dem Sie vertrauen können",
-            description: "Wir verwenden Ende-zu-Ende-Verschlüsselung, um sicherzustellen, dass Ihre Familienerinnerungen für immer privat bleiben.",
+            title: "Ihre Erinnerungen sind bei uns sicher",
+            description: "Die Geschichten Ihrer Familie sind kostbar. Wir schützen jedes Foto und jede Erinnerung mit Ende-zu-Ende-Verschlüsselung, damit sie immer Ihnen gehören.",
             learnMore: "Mehr über Sicherheit erfahren"
         },
         // CTA Section
         cta: {
-            title_start: "Starten Sie das",
+            title_start: "Beginnen Sie das",
             title_gradient: "Erinnerungsbuch Ihrer Familie Heute",
-            description: "Schließen Sie sich Tausenden von Familien an, die ihre Geschichten lebendig halten und jeden Tag Verbindungen stärken.",
+            description: "Bewahren Sie die Erinnerungen und Geschichten, die Ihre Familie über Generationen hinweg verbinden. Ein wunderschönes Geschenk der Liebe und Erinnerung.",
             button: "Kostenlos loslegen",
-            lovedBy: "Geliebt von über 10.000 Familien"
+            lovedBy: ""
         },
         // Footer
         footer: {
@@ -947,7 +1554,7 @@ export const translations = {
             privacyPolicy: "Datenschutzrichtlinie",
             helpCenter: "Hilfezentrum",
             contact: "Kontakt",
-            copyright: "© 2024 Memory Book. Alle Rechte vorbehalten."
+            copyright: "© 2026 Memory Book. Alle Rechte vorbehalten."
         },
         // Auth Modal
         auth: {
@@ -982,7 +1589,31 @@ export const translations = {
             pages: "Seiten",
             searchMemories: "Erinnerungen suchen...",
             memoryAdded: "Erinnerung erfolgreich hinzugefügt!",
-            memorySaved: "Ihre letzte Erinnerung wurde im Album gespeichert."
+            memorySaved: "Ihre letzte Erinnerung wurde im Album gespeichert.",
+            coverLabel: "Einband",
+            backCoverLabel: "Rückseite",
+            memoryN: "Erinnerung",
+            coverDescription: "Bucheinband",
+            pageDescription: "Diese Seite wird mit Ihren Erinnerungen generiert",
+            bookEndDescription: "Ende des Buches",
+            bookDeleted: "Memory Book gelöscht",
+            removedPermanently: "wurde dauerhaft entfernt",
+            deleteError: "Fehler beim Löschen",
+            deleteErrorMsg: "Das Buch konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
+            createFirst: "Erstellen Sie Ihr erstes Memory Book",
+            createFirstDesc: "Sehen Sie sich das Beispiel unten zur Inspiration an und erstellen Sie dann Ihr eigenes!",
+            createMemoryBook: "Memory Book erstellen",
+            example: "Beispiel",
+            bookGenerated: "Memory Book Generiert!",
+            bookGeneratedMsg: "Ihr Memory Book wurde erfolgreich erstellt!",
+            deleteModalTitle: "Memory Book löschen",
+            loading: "Ihre Memory Books werden geladen...",
+            tryAgain: "Erneut versuchen",
+            generating: "Wird generiert...",
+            generationFailed: "Generierung fehlgeschlagen",
+            draft: "Entwurf",
+            noResults: "Keine Ergebnisse gefunden",
+            noResultsDesc: "Versuchen Sie es mit anderen Suchbegriffen."
         },
         // Profile Settings
         profile: {
@@ -1012,7 +1643,8 @@ export const translations = {
             guidelineSize: "Maximale Dateigröße: 5MB",
             guidelineFormat: "Unterstützte Formate: JPG, PNG",
             clickToUpload: "Klicken Sie auf das Kamera-Symbol, um ein neues Foto hochzuladen",
-            selectLanguage: "Sprache auswählen"
+            selectLanguage: "Sprache auswählen",
+            comingSoon: "Demnächst"
         },
         // Book Viewer
         bookViewer: {
@@ -1020,7 +1652,24 @@ export const translations = {
             of: "von",
             editBook: "Buch bearbeiten",
             downloadPdf: "PDF herunterladen",
-            deleteBook: "Buch löschen"
+            deleteBook: "Buch löschen",
+            cover: "Einband",
+            backCover: "Rückseite",
+            openBook: "Buch öffnen",
+            returnToStart: "Zurück zum Anfang",
+            favorite: "Favorit",
+            closeViewer: "Ansicht schließen",
+            prevPage: "Vorherige Seite",
+            nextPage: "Nächste Seite",
+            goToSpread: "Gehe zu",
+            emptyBookTitle: "Leeres Buch",
+            emptyBookDesc: "Dieses Buch wird noch generiert oder hat keine Seiten.",
+            back: "Zurück",
+            imageUnavailable: "Bild nicht verfügbar",
+            childhood: "Kindheit",
+            teenage: "Jugend",
+            adultLife: "Erwachsenenleben",
+            goldenAge: "Goldenes Alter"
         },
         // Book Editor
         bookEditor: {
@@ -1081,44 +1730,21 @@ export const translations = {
             subtitle: "Untertitel",
             subtitlePlaceholder: "z.B. Eine Reise durch geschätzte Momente",
             creationDate: "Erstellungsdatum",
+            memoriesTitle: "Erinnerungen",
+            memoriesDesc: "Teilen Sie ihre Geschichte",
+            memoriesIntro: "Schreiben Sie frei über jede Lebensphase. Ein paar Sätze genügen — die KI erstellt eine wunderschöne Geschichte aus Ihren Worten.",
+            memoriesTip: "Machen Sie sich keine Sorgen über perfektes Schreiben — unsere KI verwandelt Ihre Worte in eine schöne Erzählung.",
+            childhoodMemoriesPlaceholder: "Wo wurde er/sie geboren? Eltern, Geschwister, glückliche Erinnerungen, was er/sie gerne machte...",
+            teenageMemoriesPlaceholder: "Schule, Freunde, Hobbys, denkwürdige Ereignisse, wo er/sie lebte...",
+            adultMemoriesPlaceholder: "Karriere, Partner, Kinder, Hobbys, Meilensteine, stolze Momente...",
+            laterMemoriesPlaceholder: "Routinen, Traditionen, Familienmomente, was heute Trost und Freude bringt...",
+            editSetup: "Einstellungen bearbeiten",
+            editMemories: "Erinnerungen bearbeiten",
+            noMemoriesYet: "Noch keine Erinnerungen hinzugefügt. Die KI erstellt eine allgemeine Geschichte basierend auf dem Buchtitel.",
             childhood: "Kindheit",
-            childhoodDesc: "Frühe Erinnerungen",
-            childhoodIntro: "Erzählen Sie uns von den frühen Jahren. Schreiben Sie so wenig oder so viel, wie Sie möchten.",
-            whereBorn: "Wo wurde er/sie geboren?",
-            whoParents: "Wer waren die Eltern?",
-            siblings: "Hatte er/sie Geschwister?",
-            happyMemory: "Eine glückliche Kindheitserinnerung",
-            whatEnjoy: "Was hat er/sie gerne gemacht?",
-            addChildhoodPhotos: "Kindheitsfotos hinzufügen",
-            childhoodPhotosHelper: "Alte Familienfotos helfen uns, die frühen Jahre einzufangen",
             teenage: "Jugendjahre",
-            teenageDesc: "Aufwachsen",
-            teenageIntro: "Erinnerungen ans Erwachsenwerden. Schreiben Sie so wenig oder so viel, wie Sie möchten.",
-            whereLiveTeenage: "Wo lebte er/sie während der Jugend?",
-            schoolExperiences: "Schulerfahrungen",
-            friendsInterests: "Freunde, Interessen und Hobbys",
-            memorableEvents: "Denkwürdige Ereignisse?",
-            addTeenagePhotos: "Jugendfotos hinzufügen",
-            teenagePhotosHelper: "Schulfotos, mit Freunden oder von besonderen Momenten",
             adultLife: "Erwachsenenleben",
-            adultLifeDesc: "Karriere und Familie",
-            adultLifeIntro: "Karriere, Familie und Lebensabenteuer. Schreiben Sie so wenig oder so viel, wie Sie möchten.",
-            workCareer: "Arbeit und Karriere",
-            hobbiesPassions: "Hobbys und Leidenschaften",
-            marriagePartner: "Ehe oder Partner",
-            childrenFamily: "Kinder und Familie",
-            milestones: "Meilensteine und stolze Momente",
-            addAdultPhotos: "Fotos aus dem Erwachsenenleben hinzufügen",
-            adultPhotosHelper: "Arbeits-, Familien-, Reise- oder Feierfotos",
             laterLife: "Späteres Leben",
-            laterLifeDesc: "Goldene Jahre",
-            laterLifeIntro: "Die goldenen Jahre und die Gegenwart. Schreiben Sie so wenig oder so viel, wie Sie möchten.",
-            whereLiveLater: "Wo lebte er/sie später im Leben?",
-            routinesTraditions: "Lieblingsroutinen, Traditionen und Orte",
-            familyMoments: "Familienmomente",
-            comfortJoy: "Was bringt heute Trost und Freude?",
-            addLaterPhotos: "Aktuelle Fotos hinzufügen",
-            laterPhotosHelper: "Aktuelle Fotos oder aus den letzten Jahren",
             review: "Überprüfen & Generieren",
             reviewDesc: "Letzte Überprüfung",
             reviewIntro: "Überprüfen Sie Ihren Inhalt und passen Sie an, wie Ihr Erinnerungsbuch erstellt wird.",
@@ -1157,7 +1783,133 @@ export const translations = {
             bookCreatedDesc: "Wir haben ein wunderschönes, personalisiertes Buch voller kostbarer Erinnerungen erstellt. Es ist bereit zum Ansehen, Drucken oder Teilen mit der Familie.",
             openViewer: "Buch öffnen",
             backToDashboard: "Dashboard",
-            accessAnytime: "Sie können jederzeit vom Dashboard auf Ihr Erinnerungsbuch zugreifen"
+            accessAnytime: "Sie können jederzeit vom Dashboard auf Ihr Erinnerungsbuch zugreifen",
+            visualReference: "Visuelle Referenz",
+            visualReferenceDesc: "Wählen Sie, wie Sie uns helfen möchten, die Illustrationen zu personalisieren",
+            uploadPhotos: "Fotos hochladen",
+            uploadPhotosDesc: "Mindestens 3 Fotos aus verschiedenen Winkeln",
+            describeCharacteristics: "Eigenschaften beschreiben",
+            describeCharacteristicsDesc: "Haarfarbe, Haut, Brille, usw.",
+            referencePhotosLabel: "Referenzfotos",
+            referencePhotosHelperText: "Laden Sie mindestens 3 klare Fotos der Person aus verschiedenen Winkeln hoch. Dies hilft uns, personalisierte Illustrationen zu erstellen.",
+            birthPlacePlaceholder: "z.B. São Paulo, Brasilien",
+            parentsPlaceholder: "z.B. João und Maria Silva",
+            siblingsPlaceholder: "z.B. Zwei Brüder, Pedro und Paulo",
+            happyMemoryPlaceholder: "Teilen Sie eine glückliche Kindheitserinnerung...",
+            enjoyedPlaceholder: "z.B. Im Garten spielen, Bücher lesen, in der Küche helfen...",
+            teenLivePlaceholder: "z.B. Rio de Janeiro, im Stadtteil Copacabana",
+            schoolPlaceholder: "z.B. Lieblingsfächer, Lehrer, an die man sich erinnert, Schulaktivitäten...",
+            friendsPlaceholder: "z.B. Beste Freunde, Lieblingsaktivitäten, Clubs oder Gruppen...",
+            eventsPlaceholder: "z.B. Ein Abschluss, erster Job, besondere Reisen, Erfolge...",
+            workPlaceholder: "z.B. Wo sie gearbeitet haben, was sie gemacht haben, Kollegen...",
+            hobbiesPlaceholder: "z.B. Gartenarbeit, Kochen, Musik, Sport, Reisen...",
+            partnerPlaceholder: "z.B. Wie sie sich kennenlernten, besondere gemeinsame Momente...",
+            childrenPlaceholder: "z.B. Namen der Kinder, Lieblings-Familienaktivitäten...",
+            milestonesPlaceholder: "z.B. Erfolge, Reisen, besondere Feierlichkeiten...",
+            laterLivePlaceholder: "z.B. 40 Jahre im selben Haus, Umzug in die Nähe der Familie...",
+            routinesPlaceholder: "z.B. Morgendliches Kaffeeritual, Sonntagsessen, Lieblingsbank im Park...",
+            familyMomentsPlaceholder: "z.B. Zeit mit den Enkeln, Familientreffen, Feiern...",
+            comfortPlaceholder: "z.B. Alte Lieder hören, Fotos anschauen, Besuche von Angehörigen...",
+            validationTitle: "Bitte geben Sie einen Titel für Ihr Memory Book ein",
+            validationPhotos: "Bitte fügen Sie mindestens 3 Fotos hinzu",
+            validationName: "Bitte geben Sie den Namen der Person ein",
+            validationGender: "Bitte wählen Sie ein Geschlecht",
+            draftTitle: "Dort weitermachen, wo Sie aufgehört haben?",
+            draftSubtitle: "Wir haben einen gespeicherten Entwurf gefunden",
+            draftMessage: "Sie haben ein unvollständiges Memory Book. Möchten Sie weiter bearbeiten oder neu beginnen?",
+            startFresh: "Neu Beginnen",
+            continueDraft: "Entwurf Fortsetzen",
+            somethingWentWrong: "Etwas ist Schiefgelaufen",
+            generationFailed: "Generierung Fehlgeschlagen",
+            generationFailedMsg: "Beim Erstellen Ihres Memory Books ist etwas schiefgelaufen. Bitte versuchen Sie es erneut.",
+            tryAgain: "Erneut Versuchen",
+            persistMsg: "Wenn das Problem weiterhin besteht, versuchen Sie es später erneut oder kontaktieren Sie den Support.",
+            connectingServer: "Verbindung zum Server",
+            waitingConnection: "Bitte warten Sie, während wir eine Verbindung herstellen...",
+            attempt: "Versuch",
+            connectionSlow: "Die Verbindung dauert länger. Bitte warten Sie oder versuchen Sie es erneut.",
+            startingProcessing: "Verarbeitung wird gestartet...",
+            percentComplete: "abgeschlossen",
+            stepsProcess: "Prozessschritte",
+            inProgressLabel: "in Bearbeitung",
+            bookPagesLabel: "Buchseiten",
+            generatingPage: "Seite wird generiert",
+            pagesCompleted: "Seiten abgeschlossen",
+            connectedServer: "Mit Server verbunden • Job ID",
+            photo: "Foto",
+            photosWord: "Fotos",
+            ofPrompts: "von",
+            promptsWord: "Fragen beantwortet"
+        },
+        // Delete Confirmation
+        deleteConfirm: {
+            aboutToDelete: "Sie sind dabei zu löschen",
+            permanentAction: "Diese Aktion ist dauerhaft und kann nicht rückgängig gemacht werden.",
+            lostForever: "Alle Seiten, Bilder und Erinnerungen dieses Buches gehen für immer verloren.",
+            cancel: "Abbrechen",
+            deleting: "Wird gelöscht...",
+            deletePermanently: "Dauerhaft löschen"
+        },
+        // Physical Characteristics
+        physicalCharacteristics: {
+            personName: "Name der Person",
+            namePlaceholder: "z.B.: Oma Maria",
+            gender: "Geschlecht",
+            male: "Männlich",
+            female: "Weiblich",
+            skinColor: "Hautfarbe",
+            hairColor: "Haarfarbe",
+            hairStyle: "Frisur",
+            accessories: "Zubehör",
+            wearsGlasses: "Trägt Brille",
+            facialHair: "Bart/Schnurrbart",
+            light: "Hell",
+            fair: "Blass",
+            medium: "Mittel",
+            olive: "Oliv",
+            tan: "Gebräunt",
+            brown: "Braun",
+            dark: "Dunkel",
+            blonde: "Blond",
+            golden: "Golden",
+            brownHair: "Braun",
+            darkBrown: "Dunkelbraun",
+            black: "Schwarz",
+            red: "Rot",
+            gray: "Grau",
+            white: "Weiß",
+            short: "Kurz",
+            mediumHair: "Mittel",
+            long: "Lang",
+            curly: "Lockig",
+            wavy: "Wellig",
+            bald: "Kahl",
+            buzzCut: "Raspelschnitt",
+            ponytail: "Pferdeschwanz",
+            bun: "Dutt"
+        },
+        // Navbar
+        navbar: {
+            searchPlaceholder: "Erinnerungen suchen...",
+            createBook: "Buch erstellen",
+            myBooks: "Meine Bücher",
+            favorites: "Favoriten",
+            myProfile: "Mein Profil",
+            settings: "Einstellungen",
+            logout: "Abmelden"
+        },
+        // Home Page
+        home: {
+            seeResult: "Sehen Sie das Ergebnis",
+            bookCreatedWithLove: "Ein Buch mit Liebe erstellt",
+            sampleDesc1: "Dieses Buch wurde von einer Tochter für ihren Vater mit Alzheimer erstellt.",
+            sampleDesc2: "Jede Seite bringt echte Erinnerungen, verwandelt in Aquarell-Illustrationen.",
+            watercolor: "Aquarell",
+            pages: "Seiten",
+            viewBook: "Buch ansehen",
+            pagePreview: "Seitenvorschau",
+            createYours: "Erstellen Sie Ihr Memory Book",
+            example: "Beispiel"
         },
         // Upload
         upload: {
@@ -1169,6 +1921,61 @@ export const translations = {
             photo: "Foto",
             toContinue: "hinzu, um fortzufahren",
             add: "Hinzufügen"
+        },
+        // Info Modals
+        infoModals: {
+            close: "Schließen",
+            privacy: {
+                title: "Datenschutzrichtlinie",
+                sections: [
+                    { heading: "Ihre Daten, Ihre Kontrolle", body: "Memory Book wurde mit Datenschutz im Kern entwickelt. Alle persönlichen Daten, Fotos und Erinnerungen, die Sie teilen, werden verschlüsselt und sicher gespeichert. Wir verkaufen, teilen oder verwenden Ihre Daten niemals für Werbung." },
+                    { heading: "Was wir sammeln", body: "Wir sammeln nur das Notwendige, um den Service bereitzustellen: Ihre Kontoinformationen (Name, E-Mail), hochgeladene Fotos zur Illustrationsgenerierung und die Texterinnerungen, die Sie bereitstellen. Fotos werden temporär verarbeitet und nach der Buchgenerierung von unseren Servern gelöscht." },
+                    { heading: "Verschlüsselung & Speicherung", body: "Alle Daten werden über HTTPS mit TLS 1.3-Verschlüsselung übertragen. Dateien werden in verschlüsseltem Cloud-Speicher gespeichert. Der Zugriff auf Ihre Daten wird durch Ihre Anmeldedaten und unsere internen Sicherheitsprotokolle geschützt." },
+                    { heading: "Drittanbieterdienste", body: "Wir verwenden Firebase (Google) für Authentifizierung und Speicherung sowie KI-Dienste für die Illustrationsgenerierung. Diese Anbieter haben eigene Datenschutzrichtlinien und sind DSGVO-konform." },
+                    { heading: "Ihre Rechte", body: "Sie können jederzeit eine Kopie Ihrer Daten anfordern, Ungenauigkeiten korrigieren oder Ihr Konto und alle zugehörigen Daten löschen. Kontaktieren Sie uns unter privacy@memorybook.app." },
+                    { heading: "Kontakt", body: "Für datenschutzbezogene Fragen senden Sie eine E-Mail an privacy@memorybook.app. Wir antworten innerhalb von 48 Stunden." }
+                ]
+            },
+            accessibility: {
+                title: "Barrierefreiheit",
+                sections: [
+                    { heading: "Unser Engagement", body: "Memory Book ist so konzipiert, dass es für alle zugänglich ist, einschließlich älterer Benutzer und Personen mit visuellen, motorischen oder kognitiven Beeinträchtigungen. Wir folgen den WCAG 2.1 AA-Richtlinien." },
+                    { heading: "Visuelles Design", body: "Kontrastreicher Text, große Berührungsziele und klare Typografie gewährleisten die Lesbarkeit. Unsere Farbpalette wurde so gewählt, dass sie von Menschen mit Farbsehschwäche unterscheidbar ist." },
+                    { heading: "Navigation", body: "Alle interaktiven Elemente sind per Tastatur zugänglich. Die Oberfläche unterstützt Bildschirmlesegeräte mit geeigneten ARIA-Labels. Die Seitennavigation im Buchbetrachter funktioniert mit den Pfeiltasten." },
+                    { heading: "Schrift & Textgröße", body: "Der Buchbetrachter verwendet lesbare Serifenschriften (Playfair Display und Lora), die für Lesbarkeit optimiert sind. Textgrößen sind responsiv und passen sich verschiedenen Bildschirmgrößen an." },
+                    { heading: "Feedback", body: "Wir verbessern unsere Barrierefreiheit kontinuierlich. Wenn Sie auf Hindernisse stoßen, teilen Sie uns dies bitte unter accessibility@memorybook.app mit." }
+                ]
+            },
+            support: {
+                title: "Support",
+                sections: [
+                    { heading: "Erste Schritte", body: "Ein Memory Book zu erstellen ist einfach: Melden Sie sich an, klicken Sie auf 'Buch erstellen', füllen Sie Erinnerungen über Ihren geliebten Menschen in verschiedenen Lebensphasen aus, wählen Sie einen Illustrationsstil und generieren Sie Ihr Buch. Der gesamte Prozess dauert etwa 10-15 Minuten." },
+                    { heading: "Häufige Fragen", body: "Wie lange dauert die Generierung? Normalerweise 3-5 Minuten. Kann ich nach der Generierung bearbeiten? Ja, verwenden Sie den Editor, um Text und Bilder zu ändern. Kann ich drucken? Der PDF-Download ist für alle fertiggestellten Bücher verfügbar." },
+                    { heading: "Technische Anforderungen", body: "Memory Book funktioniert in jedem modernen Browser (Chrome, Firefox, Safari, Edge). Für das beste Erlebnis verwenden Sie einen Bildschirm mit mindestens 768px Breite. Eine Internetverbindung ist erforderlich." },
+                    { heading: "Fehlerbehebung", body: "Wenn Bilder nicht geladen werden, versuchen Sie die Seite zu aktualisieren. Wenn die Generierung festzuhängen scheint, überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut. Leeren Sie den Browser-Cache bei Anzeigeproblemen." },
+                    { heading: "Kontaktieren Sie uns", body: "Brauchen Sie Hilfe? Senden Sie eine E-Mail an support@memorybook.app oder verwenden Sie den Feedback-Button in der App. Unser Team antwortet normalerweise innerhalb von 24 Stunden an Werktagen." }
+                ]
+            }
+        },
+        // Sample Book
+        sampleBook: {
+            bookTitle: "Papas Erinnerungen",
+            bookDescription: "Ein Erinnerungsbuch mit Liebe erstellt, damit jede Seite ein Lächeln zurückbringt.",
+            displayDate: "14. Februar 2026",
+            displayDescription: "Ein Aquarell-Erinnerungsbuch, erstellt von einer Tochter für ihren Vater — eine Hommage an die Liebe, die das Vergessen überwindet.",
+            pages: [
+                { title: "Der Hinterhof des Gelben Hauses", description: "Als Kind verbrachte Papa die Nachmittage spielend im Hinterhof des gelben Hauses auf dem Land. Er rannte barfuß zwischen den Mangobäumen, jagte Schmetterlinge und erfand Abenteuer mit seinen Geschwistern." },
+                { title: "Der Erste Schultag", description: "Mit seinem neuen Rucksack und den von Oma gekämmten Haaren ging Papa zu seinem ersten Schultag. Er kam voller Geschichten über neue Freunde und die Lehrerin, die Blumen an die Tafel malte, nach Hause." },
+                { title: "Fußballnachmittage auf dem Feld", description: "Als Teenager lebte Papa auf dem Nachbarschaftsfeld. Er spielte mit Freunden Fußball bis zum Sonnenuntergang und kam verschwitzt und glücklich nach Hause, träumend davon, Profispieler zu werden." },
+                { title: "Der Abschluss, der die Familie stolz machte", description: "Papa war der Erste in der Familie, der die Schule abschloss. Am Abschlusstag weinte Oma vor Freude und Opa sagte, es sei der glücklichste Tag seines Lebens." },
+                { title: "Der Tag, an dem Alles begann", description: "Papa und Mama heirateten an einem sonnigen Morgen. Er erzählt immer, dass er, als er sie am Altar sah, die einstudierte Rede vergaß und nur lächeln konnte." },
+                { title: "Die Ankunft der kleinen Prinzessin", description: "Als ich geboren wurde, hielt Papa mich zum ersten Mal in seinen Armen und versprach, immer für mich da zu sein. Mama sagte, er ließ mich stundenlang nicht los und schaute nur und lächelte." },
+                { title: "Fahrradfahren lernen", description: "Papa rannte neben mir und hielt den Fahrradsitz fest und wiederholte: 'Ich bin hier, ich lass dich nicht los.' Bis er in einem magischen Moment losließ — und ich zum ersten Mal alleine flog." },
+                { title: "Der Lehrer, der Zahlen in Geschichten verwandelte", description: "35 Jahre lang war Papa Mathematiklehrer. Seine Schüler liebten, wie er komplizierte Zahlen in einfache Geschichten verwandelte. Er war mehr als ein Lehrer — er war ein Geschichtenerzähler mit Kreide in der Hand." },
+                { title: "Morgendlicher Kaffee im Garten", description: "Jeden Morgen trinkt Papa Kaffee im Garten und betrachtet die Blumen, die er über die Jahre gepflanzt hat. Die Veranda, die alte Musik, der Duft des Kaffees — das sind die Rituale, die seinem Tag Frieden bringen." },
+                { title: "Das Weihnachten, das Alle vereinte", description: "Beim letzten Familienweihnachten saß Papa am Kopfende des Tisches, umgeben von Kindern und Enkeln. Auch wenn Worte fehlen, sagt sein Lächeln alles. Dieses Lächeln, das sich nie ändert." }
+            ],
+            backCoverDescription: "Erinnerungen sind wie Samen, die im Herzen gepflanzt werden. Selbst wenn der Geist vergisst, bleibt die Liebe bestehen."
         },
         // Common
         common: {
@@ -1184,9 +1991,9 @@ export const translations = {
             subtitle: "Préserver les héritages",
             title_start: "Gardez leur histoire",
             title_gradient: "proche, toujours",
-            description: "Une façon axée sur la famille de préserver et de partager des souvenirs pour les êtres chers atteints de la maladie d'Alzheimer.",
+            description: "Transformez les histoires de vie d'un être cher en un magnifique livre de souvenirs illustré — un cadeau qui apporte réconfort, lien et sourires.",
             cta_primary: "Créer un livre de souvenirs",
-            cta_secondary: "Voir comment ça aide"
+            cta_secondary: "Voir comment ça marche"
         },
         // Navigation
         nav: {
@@ -1204,27 +2011,27 @@ export const translations = {
         // How it Works Section
         howItWorks: {
             title: "Comment ça marche",
-            description: "Nous avons conçu un processus simple en trois étapes pour vous aider à capturer chaque moment précieux sans stress.",
-            step1Title: "Ajoutez des souvenirs",
-            step1Desc: "Téléchargez des photos et partagez des histoires depuis votre téléphone ou ordinateur. La conversion voix-texte facilite la contribution de tous.",
-            step2Title: "Organisez",
-            step2Desc: "Catégorisez les moments par membres de la famille, années ou événements spéciaux. Notre IA aide à trier et suggérer des connexions.",
-            step3Title: "Générez",
-            step3Desc: "Créez instantanément un beau livre de souvenirs numérique ou physique. Parfait pour les séances de thérapie ou les moments de réminiscence."
+            description: "Un processus simple pour transformer les souvenirs les plus précieux de votre famille en un beau livre illustré.",
+            step1Title: "Racontez les histoires",
+            step1Desc: "Répondez à des questions simples sur l'enfance, la jeunesse et les moments qui ont marqué la vie de votre proche. Chaque souvenir aide à construire quelque chose de vraiment spécial.",
+            step2Title: "Personnalisez le livre",
+            step2Desc: "Choisissez le style d'illustration, ajoutez des photos ou décrivez les caractéristiques physiques. Chaque détail aide à créer un livre de souvenirs unique.",
+            step3Title: "Recevez votre livre",
+            step3Desc: "En quelques minutes, recevez un livre illustré avec soin, prêt à consulter, imprimer et partager avec toute la famille."
         },
         // Privacy Section
         privacySection: {
-            title: "Confidentialité en laquelle vous pouvez avoir confiance",
-            description: "Nous utilisons le chiffrement de bout en bout pour garantir que les souvenirs de votre famille restent privés pour toujours.",
+            title: "Vos souvenirs sont en sécurité avec nous",
+            description: "Les histoires de votre famille sont précieuses. Nous protégeons chaque photo et souvenir avec un chiffrement de bout en bout, pour qu'ils restent toujours les vôtres.",
             learnMore: "En savoir plus sur la sécurité"
         },
         // CTA Section
         cta: {
             title_start: "Commencez le",
             title_gradient: "Livre de Souvenirs de votre famille Aujourd'hui",
-            description: "Rejoignez des milliers de familles qui gardent leurs histoires vivantes et renforcent leurs liens chaque jour.",
+            description: "Préservez les souvenirs et les histoires qui relient votre famille à travers les générations. Un beau cadeau d'amour et de mémoire.",
             button: "Commencer gratuitement",
-            lovedBy: "Aimé par plus de 10 000 familles"
+            lovedBy: ""
         },
         // Footer
         footer: {
@@ -1232,7 +2039,7 @@ export const translations = {
             privacyPolicy: "Politique de confidentialité",
             helpCenter: "Centre d'aide",
             contact: "Contact",
-            copyright: "© 2024 Memory Book. Tous droits réservés."
+            copyright: "© 2026 Memory Book. Tous droits réservés."
         },
         // Auth Modal
         auth: {
@@ -1267,7 +2074,31 @@ export const translations = {
             pages: "pages",
             searchMemories: "Rechercher des souvenirs...",
             memoryAdded: "Souvenir ajouté avec succès !",
-            memorySaved: "Votre dernier souvenir a été enregistré dans l'album."
+            memorySaved: "Votre dernier souvenir a été enregistré dans l'album.",
+            coverLabel: "Couverture",
+            backCoverLabel: "Quatrième de couverture",
+            memoryN: "Souvenir",
+            coverDescription: "Couverture du livre",
+            pageDescription: "Cette page sera générée avec vos souvenirs",
+            bookEndDescription: "Fin du livre",
+            bookDeleted: "Memory Book supprimé",
+            removedPermanently: "a été supprimé définitivement",
+            deleteError: "Erreur de suppression",
+            deleteErrorMsg: "Impossible de supprimer le livre. Veuillez réessayer.",
+            createFirst: "Créez votre premier Memory Book",
+            createFirstDesc: "Consultez l'exemple ci-dessous pour vous inspirer et créez le vôtre !",
+            createMemoryBook: "Créer un Memory Book",
+            example: "Exemple",
+            bookGenerated: "Memory Book Généré !",
+            bookGeneratedMsg: "Votre Memory Book a été créé avec succès !",
+            deleteModalTitle: "Supprimer le Memory Book",
+            loading: "Chargement de vos memory books...",
+            tryAgain: "Réessayer",
+            generating: "Génération en cours...",
+            generationFailed: "Échec de la génération",
+            draft: "Brouillon",
+            noResults: "Aucun résultat trouvé",
+            noResultsDesc: "Essayez de chercher avec d'autres mots."
         },
         // Profile Settings
         profile: {
@@ -1297,7 +2128,8 @@ export const translations = {
             guidelineSize: "Taille maximale : 5 Mo",
             guidelineFormat: "Formats supportés : JPG, PNG",
             clickToUpload: "Cliquez sur l'icône de l'appareil photo pour télécharger une nouvelle photo",
-            selectLanguage: "Sélectionner la Langue"
+            selectLanguage: "Sélectionner la Langue",
+            comingSoon: "Bientôt"
         },
         // Book Viewer
         bookViewer: {
@@ -1305,7 +2137,24 @@ export const translations = {
             of: "sur",
             editBook: "Modifier le Livre",
             downloadPdf: "Télécharger en PDF",
-            deleteBook: "Supprimer le Livre"
+            deleteBook: "Supprimer le Livre",
+            cover: "Couverture",
+            backCover: "Quatrième de couverture",
+            openBook: "Ouvrir le Livre",
+            returnToStart: "Retour au début",
+            favorite: "Favori",
+            closeViewer: "Fermer la visualisation",
+            prevPage: "Page précédente",
+            nextPage: "Page suivante",
+            goToSpread: "Aller à",
+            emptyBookTitle: "Livre Vide",
+            emptyBookDesc: "Ce livre est encore en cours de génération ou n'a pas de pages.",
+            back: "Retour",
+            imageUnavailable: "Image non disponible",
+            childhood: "Enfance",
+            teenage: "Adolescence",
+            adultLife: "Vie Adulte",
+            goldenAge: "Âge d'Or"
         },
         // Book Editor
         bookEditor: {
@@ -1366,44 +2215,21 @@ export const translations = {
             subtitle: "Sous-titre",
             subtitlePlaceholder: "ex., Un voyage à travers des moments précieux",
             creationDate: "Date de Création",
+            memoriesTitle: "Souvenirs",
+            memoriesDesc: "Partagez leur histoire",
+            memoriesIntro: "Écrivez librement sur chaque phase de leur vie. Quelques phrases suffisent — l'IA créera une belle histoire à partir de vos mots.",
+            memoriesTip: "Ne vous inquiétez pas d'écrire parfaitement — notre IA transformera vos mots en un beau récit.",
+            childhoodMemoriesPlaceholder: "Où est-il/elle né(e) ? Parents, frères et sœurs, souvenirs heureux, ce qu'il/elle aimait faire...",
+            teenageMemoriesPlaceholder: "École, amis, loisirs, événements mémorables, où il/elle vivait...",
+            adultMemoriesPlaceholder: "Carrière, partenaire, enfants, loisirs, étapes, moments de fierté...",
+            laterMemoriesPlaceholder: "Routines, traditions, moments familiaux, ce qui apporte réconfort et joie aujourd'hui...",
+            editSetup: "Modifier la configuration",
+            editMemories: "Modifier les souvenirs",
+            noMemoriesYet: "Aucun souvenir ajouté pour l'instant. L'IA créera une histoire générique basée sur le titre du livre.",
             childhood: "Enfance",
-            childhoodDesc: "Premiers souvenirs",
-            childhoodIntro: "Parlez-nous de ses premières années. Écrivez peu ou beaucoup, comme vous préférez.",
-            whereBorn: "Où est-il/elle né(e) ?",
-            whoParents: "Qui étaient ses parents ?",
-            siblings: "Avait-il/elle des frères et sœurs ?",
-            happyMemory: "Un souvenir heureux d'enfance",
-            whatEnjoy: "Qu'aimait-il/elle faire ?",
-            addChildhoodPhotos: "Ajouter des photos d'enfance",
-            childhoodPhotosHelper: "Les vieilles photos de famille nous aident à capturer les premières années",
             teenage: "Adolescence",
-            teenageDesc: "Grandir",
-            teenageIntro: "Souvenirs de croissance. Écrivez peu ou beaucoup, comme vous préférez.",
-            whereLiveTeenage: "Où vivait-il/elle pendant l'adolescence ?",
-            schoolExperiences: "Expériences scolaires",
-            friendsInterests: "Amis, intérêts et loisirs",
-            memorableEvents: "Des événements mémorables ?",
-            addTeenagePhotos: "Ajouter des photos d'adolescence",
-            teenagePhotosHelper: "Photos d'école, avec des amis ou de moments spéciaux",
             adultLife: "Vie Adulte",
-            adultLifeDesc: "Carrière et famille",
-            adultLifeIntro: "Carrière, famille et aventures de la vie. Écrivez peu ou beaucoup, comme vous préférez.",
-            workCareer: "Travail et carrière",
-            hobbiesPassions: "Loisirs et passions",
-            marriagePartner: "Mariage ou partenaire",
-            childrenFamily: "Enfants et famille",
-            milestones: "Étapes importantes et moments de fierté",
-            addAdultPhotos: "Ajouter des photos de la vie adulte",
-            adultPhotosHelper: "Photos de travail, famille, voyages ou célébrations",
             laterLife: "Vie Plus Tardive",
-            laterLifeDesc: "Années dorées",
-            laterLifeIntro: "Les années dorées et aujourd'hui. Écrivez peu ou beaucoup, comme vous préférez.",
-            whereLiveLater: "Où vivait-il/elle plus tard dans la vie ?",
-            routinesTraditions: "Routines, traditions et lieux préférés",
-            familyMoments: "Moments en famille",
-            comfortJoy: "Qu'est-ce qui apporte du réconfort et de la joie aujourd'hui ?",
-            addLaterPhotos: "Ajouter des photos récentes",
-            laterPhotosHelper: "Photos récentes ou des dernières années",
             review: "Réviser et Générer",
             reviewDesc: "Révision finale",
             reviewIntro: "Révisez votre contenu et personnalisez comment votre Livre de Souvenirs sera créé.",
@@ -1442,7 +2268,133 @@ export const translations = {
             bookCreatedDesc: "Nous avons créé un beau livre personnalisé rempli de souvenirs précieux. Il est prêt à être consulté, imprimé ou partagé avec la famille.",
             openViewer: "Ouvrir le Visualiseur",
             backToDashboard: "Tableau de bord",
-            accessAnytime: "Vous pouvez accéder à votre Livre de Souvenirs à tout moment depuis le tableau de bord"
+            accessAnytime: "Vous pouvez accéder à votre Livre de Souvenirs à tout moment depuis le tableau de bord",
+            visualReference: "Référence Visuelle",
+            visualReferenceDesc: "Choisissez comment vous souhaitez nous aider à personnaliser les illustrations",
+            uploadPhotos: "Télécharger des Photos",
+            uploadPhotosDesc: "Minimum 3 photos sous différents angles",
+            describeCharacteristics: "Décrire les Caractéristiques",
+            describeCharacteristicsDesc: "Couleur des cheveux, peau, lunettes, etc.",
+            referencePhotosLabel: "Photos de Référence",
+            referencePhotosHelperText: "Téléchargez au moins 3 photos claires de la personne sous différents angles. Cela nous aide à créer des illustrations personnalisées.",
+            birthPlacePlaceholder: "ex : São Paulo, Brésil",
+            parentsPlaceholder: "ex : João et Maria Silva",
+            siblingsPlaceholder: "ex : Deux frères, Pedro et Paulo",
+            happyMemoryPlaceholder: "Partagez un souvenir heureux d'enfance...",
+            enjoyedPlaceholder: "ex : Jouer dans le jardin, lire des livres, aider en cuisine...",
+            teenLivePlaceholder: "ex : Rio de Janeiro, dans le quartier de Copacabana",
+            schoolPlaceholder: "ex : Matières préférées, enseignants dont on se souvient, activités scolaires...",
+            friendsPlaceholder: "ex : Meilleurs amis, activités favorites, clubs ou groupes...",
+            eventsPlaceholder: "ex : Une remise de diplôme, premier emploi, voyages spéciaux...",
+            workPlaceholder: "ex : Où ils ont travaillé, ce qu'ils faisaient, collègues...",
+            hobbiesPlaceholder: "ex : Jardinage, cuisine, musique, sport, voyages...",
+            partnerPlaceholder: "ex : Comment ils se sont rencontrés, moments spéciaux ensemble...",
+            childrenPlaceholder: "ex : Noms des enfants, activités familiales préférées...",
+            milestonesPlaceholder: "ex : Réalisations, voyages, célébrations spéciales...",
+            laterLivePlaceholder: "ex : Même maison depuis 40 ans, déménagement pour être près de la famille...",
+            routinesPlaceholder: "ex : Rituel du café matinal, déjeuners du dimanche, banc préféré au parc...",
+            familyMomentsPlaceholder: "ex : Temps avec les petits-enfants, réunions familiales...",
+            comfortPlaceholder: "ex : Écouter de vieilles chansons, regarder des photos, visites des proches...",
+            validationTitle: "Veuillez entrer un titre pour votre Memory Book",
+            validationPhotos: "Veuillez ajouter au moins 3 photos",
+            validationName: "Veuillez entrer le nom de la personne",
+            validationGender: "Veuillez sélectionner un genre",
+            draftTitle: "Reprendre là où vous en étiez ?",
+            draftSubtitle: "Nous avons trouvé un brouillon sauvegardé",
+            draftMessage: "Vous avez un Memory Book inachevé. Souhaitez-vous continuer à le modifier ou recommencer ?",
+            startFresh: "Recommencer",
+            continueDraft: "Continuer le Brouillon",
+            somethingWentWrong: "Quelque Chose s'est Mal Passé",
+            generationFailed: "Échec de la Génération",
+            generationFailedMsg: "Quelque chose s'est mal passé lors de la création de votre Memory Book. Veuillez réessayer.",
+            tryAgain: "Réessayer",
+            persistMsg: "Si le problème persiste, réessayez plus tard ou contactez le support.",
+            connectingServer: "Connexion au Serveur",
+            waitingConnection: "Veuillez patienter pendant que nous établissons la connexion...",
+            attempt: "Tentative",
+            connectionSlow: "La connexion prend du temps. Veuillez patienter ou réessayer.",
+            startingProcessing: "Démarrage du traitement...",
+            percentComplete: "terminé",
+            stepsProcess: "Étapes du Processus",
+            inProgressLabel: "en cours",
+            bookPagesLabel: "Pages du Livre",
+            generatingPage: "Génération de la page",
+            pagesCompleted: "pages terminées",
+            connectedServer: "Connecté au serveur • Job ID",
+            photo: "photo",
+            photosWord: "photos",
+            ofPrompts: "de",
+            promptsWord: "questions répondues"
+        },
+        // Delete Confirmation
+        deleteConfirm: {
+            aboutToDelete: "Vous êtes sur le point de supprimer",
+            permanentAction: "Cette action est permanente et ne peut pas être annulée.",
+            lostForever: "Toutes les pages, images et souvenirs de ce livre seront perdus à jamais.",
+            cancel: "Annuler",
+            deleting: "Suppression...",
+            deletePermanently: "Supprimer Définitivement"
+        },
+        // Physical Characteristics
+        physicalCharacteristics: {
+            personName: "Nom de la personne",
+            namePlaceholder: "Ex : Grand-mère Marie",
+            gender: "Genre",
+            male: "Masculin",
+            female: "Féminin",
+            skinColor: "Couleur de Peau",
+            hairColor: "Couleur des Cheveux",
+            hairStyle: "Style de Coiffure",
+            accessories: "Accessoires",
+            wearsGlasses: "Porte des Lunettes",
+            facialHair: "Barbe/Moustache",
+            light: "Clair",
+            fair: "Pâle",
+            medium: "Moyen",
+            olive: "Olive",
+            tan: "Bronzé",
+            brown: "Brun",
+            dark: "Foncé",
+            blonde: "Blond",
+            golden: "Doré",
+            brownHair: "Châtain",
+            darkBrown: "Châtain Foncé",
+            black: "Noir",
+            red: "Roux",
+            gray: "Gris",
+            white: "Blanc",
+            short: "Court",
+            mediumHair: "Moyen",
+            long: "Long",
+            curly: "Bouclé",
+            wavy: "Ondulé",
+            bald: "Chauve",
+            buzzCut: "Rasé",
+            ponytail: "Queue de Cheval",
+            bun: "Chignon"
+        },
+        // Navbar
+        navbar: {
+            searchPlaceholder: "Rechercher des souvenirs...",
+            createBook: "Créer un Livre",
+            myBooks: "Mes Livres",
+            favorites: "Favoris",
+            myProfile: "Mon Profil",
+            settings: "Paramètres",
+            logout: "Déconnexion"
+        },
+        // Home Page
+        home: {
+            seeResult: "Voir le résultat",
+            bookCreatedWithLove: "Un livre créé avec amour",
+            sampleDesc1: "Ce livre a été créé par une fille pour son père atteint d'Alzheimer.",
+            sampleDesc2: "Chaque page apporte des souvenirs réels transformés en illustrations aquarelle.",
+            watercolor: "Aquarelle",
+            pages: "pages",
+            viewBook: "Voir le Livre",
+            pagePreview: "Aperçu des pages",
+            createYours: "Créez Votre Memory Book",
+            example: "Exemple"
         },
         // Upload
         upload: {
@@ -1454,6 +2406,61 @@ export const translations = {
             photo: "photo",
             toContinue: "pour continuer",
             add: "Ajouter"
+        },
+        // Info Modals
+        infoModals: {
+            close: "Fermer",
+            privacy: {
+                title: "Politique de Confidentialité",
+                sections: [
+                    { heading: "Vos données, votre contrôle", body: "Memory Book est construit avec la confidentialité au cœur. Toutes les données personnelles, photos et souvenirs que vous partagez sont chiffrés et stockés en toute sécurité. Nous ne vendons, partageons ni utilisons jamais vos données à des fins publicitaires." },
+                    { heading: "Ce que nous collectons", body: "Nous ne collectons que le nécessaire pour fournir le service : vos informations de compte (nom, email), les photos téléchargées pour la génération d'illustrations et les souvenirs textuels que vous fournissez. Les photos sont traitées temporairement et supprimées de nos serveurs après la génération du livre." },
+                    { heading: "Chiffrement et stockage", body: "Toutes les données sont transmises via HTTPS avec chiffrement TLS 1.3. Les fichiers sont stockés dans un stockage cloud chiffré. L'accès à vos données est protégé par vos identifiants et nos protocoles de sécurité internes." },
+                    { heading: "Services tiers", body: "Nous utilisons Firebase (Google) pour l'authentification et le stockage, et des services d'IA pour la génération d'illustrations. Ces fournisseurs ont leurs propres politiques de confidentialité et sont conformes au RGPD." },
+                    { heading: "Vos droits", body: "Vous pouvez demander une copie de vos données, corriger des inexactitudes ou supprimer votre compte et toutes les données associées à tout moment. Contactez-nous à privacy@memorybook.app." },
+                    { heading: "Contact", body: "Pour les questions relatives à la confidentialité, envoyez un email à privacy@memorybook.app. Nous répondons dans les 48 heures." }
+                ]
+            },
+            accessibility: {
+                title: "Accessibilité",
+                sections: [
+                    { heading: "Notre engagement", body: "Memory Book est conçu pour être accessible à tous, y compris les utilisateurs âgés et les personnes ayant des déficiences visuelles, motrices ou cognitives. Nous suivons les directives WCAG 2.1 AA." },
+                    { heading: "Design visuel", body: "Texte à contraste élevé, grandes cibles tactiles et typographie claire garantissent la lisibilité. Notre palette de couleurs a été choisie pour être distinguable par les personnes ayant une déficience de la vision des couleurs." },
+                    { heading: "Navigation", body: "Tous les éléments interactifs sont accessibles au clavier. L'interface prend en charge les lecteurs d'écran avec des labels ARIA appropriés. La navigation des pages dans le visualiseur fonctionne avec les touches fléchées." },
+                    { heading: "Police et taille du texte", body: "Le visualiseur de livres utilise des polices serif lisibles (Playfair Display et Lora) optimisées pour la lisibilité. Les tailles de texte sont réactives et s'adaptent aux différentes tailles d'écran." },
+                    { heading: "Retours", body: "Nous améliorons continuellement notre accessibilité. Si vous rencontrez un obstacle, veuillez nous le signaler à accessibility@memorybook.app." }
+                ]
+            },
+            support: {
+                title: "Support",
+                sections: [
+                    { heading: "Pour commencer", body: "Créer un Memory Book est simple : connectez-vous, cliquez sur 'Créer un Livre', remplissez les souvenirs de votre proche à travers différentes phases de vie, choisissez un style d'illustration et générez votre livre. Le processus complet prend environ 10-15 minutes." },
+                    { heading: "Questions fréquentes", body: "Combien de temps dure la génération ? Généralement 3-5 minutes. Puis-je modifier après ? Oui, utilisez l'éditeur pour modifier le texte et les images. Puis-je imprimer ? Le téléchargement PDF est disponible pour tous les livres terminés." },
+                    { heading: "Exigences techniques", body: "Memory Book fonctionne sur tout navigateur moderne (Chrome, Firefox, Safari, Edge). Pour la meilleure expérience, utilisez un écran d'au moins 768px de large. Une connexion internet est requise." },
+                    { heading: "Dépannage", body: "Si les images ne se chargent pas, essayez de rafraîchir la page. Si la génération semble bloquée, vérifiez votre connexion internet et réessayez. Videz le cache du navigateur en cas de problèmes d'affichage." },
+                    { heading: "Contactez-nous", body: "Besoin d'aide ? Envoyez un email à support@memorybook.app ou utilisez le bouton de feedback dans l'application. Notre équipe répond généralement sous 24 heures les jours ouvrables." }
+                ]
+            }
+        },
+        // Sample Book
+        sampleBook: {
+            bookTitle: "Les Souvenirs de Papa",
+            bookDescription: "Un livre de souvenirs créé avec amour, pour que chaque page ramène un sourire.",
+            displayDate: "14 Février 2026",
+            displayDescription: "Un livre de souvenirs aquarelle créé par une fille pour son père — un hommage à l'amour qui transcende l'oubli.",
+            pages: [
+                { title: "La Cour de la Maison Jaune", description: "Enfant, papa passait ses après-midi à jouer dans la cour de la maison jaune à la campagne. Il courait pieds nus entre les manguiers, chassant les papillons et inventant des aventures avec ses frères et sœurs." },
+                { title: "Le Premier Jour d'École", description: "Avec son nouveau sac à dos et les cheveux coiffés par grand-mère, papa est allé à son premier jour d'école. Il est rentré plein d'histoires sur ses nouveaux amis et la maîtresse qui dessinait des fleurs au tableau." },
+                { title: "Après-midis de Football au Terrain", description: "Adolescent, papa vivait au terrain du quartier. Il jouait au football avec ses amis jusqu'au coucher du soleil, rentrant à la maison en sueur et heureux, rêvant de devenir joueur professionnel." },
+                { title: "La Remise de Diplôme qui a Rendu la Famille Fière", description: "Papa a été le premier de la famille à obtenir son diplôme du lycée. Le jour de la remise, grand-mère a pleuré de joie et grand-père a dit que c'était le plus beau jour de sa vie." },
+                { title: "Le Jour où Tout a Commencé", description: "Papa et maman se sont mariés par un matin ensoleillé. Il raconte toujours que quand il l'a vue à l'autel, il a oublié le discours qu'il avait répété et n'a pu que sourire." },
+                { title: "L'Arrivée de la Petite Princesse", description: "Quand je suis née, papa m'a tenue dans ses bras pour la première fois et a promis qu'il serait toujours là pour moi. Maman a dit qu'il ne m'a pas lâchée pendant des heures, juste en me regardant et en souriant." },
+                { title: "Apprendre à Voler en Vélo", description: "Papa courait à côté de moi en tenant la selle du vélo, répétant 'Je suis là, je ne te lâche pas.' Jusqu'à ce que, dans un moment magique, il lâche — et j'ai volé seule pour la première fois." },
+                { title: "Le Professeur qui Transformait les Nombres en Histoires", description: "Pendant 35 ans, papa a été professeur de mathématiques. Ses élèves adoraient comment il transformait les nombres compliqués en histoires simples. Il était plus qu'un professeur — c'était un conteur avec de la craie à la main." },
+                { title: "Café du Matin dans le Jardin", description: "Chaque matin, papa prend son café dans le jardin en regardant les fleurs qu'il a plantées au fil des ans. La véranda, la musique ancienne, l'odeur du café — ce sont les rituels qui apportent la paix à sa journée." },
+                { title: "Le Noël qui a Réuni Tout le Monde", description: "Au dernier Noël en famille, papa s'est assis en bout de table entouré d'enfants et de petits-enfants. Même quand les mots manquent, son sourire dit tout. Ce sourire qui ne change jamais." }
+            ],
+            backCoverDescription: "Les souvenirs sont comme des graines plantées dans le cœur. Même quand l'esprit oublie, l'amour demeure."
         },
         // Common
         common: {

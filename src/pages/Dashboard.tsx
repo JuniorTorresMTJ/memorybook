@@ -1,183 +1,473 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { DashboardNavbar } from '../components/layout/DashboardNavbar';
 import { DashboardFooter } from '../components/layout/DashboardFooter';
 import { MemoryStoryCard } from '../components/ui/MemoryStoryCard';
 import { SuccessNotification } from '../components/ui/SuccessNotification';
+import { DeleteConfirmModal } from '../components/ui/DeleteConfirmModal';
 import { CreateMemoryBookModal } from '../components/wizard';
 import { BookViewer, BookEditor } from '../components/book';
 import type { BookPage } from '../components/book';
-import { Plus, BookOpen } from 'lucide-react';
+import { Plus, Loader2, BookOpen, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { 
+    getUserMemoryBooks, 
+    deleteMemoryBook,
+    getGenerationJobs,
+} from '../lib/firebase/firestore';
+import type { MemoryBookDocument } from '../lib/firebase/types';
+import { getJobResult, getAssetUrl } from '../lib/api';
+import type { FinalBookPackage, BookPage as APIBookPage } from '../lib/api';
+import { getSampleBookPages, getSampleBookDisplay } from '../data/sampleBook';
 
-// Sample book pages for "Grandpa's 80th Birthday"
-const grandpaBookPages: BookPage[] = [
-    {
-        id: 'p1',
-        imageUrl: 'https://images.unsplash.com/photo-1527525443983-6e60c75fff46?w=800&h=1000&fit=crop',
-        title: "Grandpa's 80th Birthday",
-        description: 'The whole family gathered for cake and singing.',
-        date: 'July 12, 2023',
-    },
-    {
-        id: 'p2',
-        imageUrl: 'https://images.unsplash.com/photo-1529543544277-df48ed28e79e?w=800&h=1000&fit=crop',
-        title: 'The Birthday Cake',
-        description: 'Grandma made his favorite chocolate cake with 80 candles.',
-        date: 'July 12, 2023',
-    },
-    {
-        id: 'p3',
-        imageUrl: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&h=1000&fit=crop',
-        title: 'Family Gathering',
-        description: 'Three generations came together to celebrate.',
-        date: 'July 12, 2023',
-    },
-    {
-        id: 'p4',
-        imageUrl: 'https://images.unsplash.com/photo-1516733968668-dbdce39c0651?w=800&h=1000&fit=crop',
-        title: 'Opening Presents',
-        description: 'The kids helped grandpa unwrap his gifts.',
-        date: 'July 12, 2023',
-    },
-    {
-        id: 'p5',
-        imageUrl: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=800&h=1000&fit=crop',
-        title: 'Story Time',
-        description: 'Grandpa told his favorite story about the old house.',
-        date: 'July 12, 2023',
-    },
-    {
-        id: 'p6',
-        imageUrl: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&h=1000&fit=crop',
-        title: 'Dancing Together',
-        description: 'Grandpa and grandma danced to their wedding song.',
-        date: 'July 12, 2023',
-    },
-    {
-        id: 'p7',
-        imageUrl: 'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=800&h=1000&fit=crop',
-        title: 'Group Photo',
-        description: 'Everyone gathered for the perfect family picture.',
-        date: 'July 12, 2023',
-    },
-    {
-        id: 'p8',
-        imageUrl: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=1000&fit=crop',
-        title: 'The Feast',
-        description: 'A delicious spread of all his favorite dishes.',
-        date: 'July 12, 2023',
-    },
-    {
-        id: 'p9',
-        imageUrl: 'https://images.unsplash.com/photo-1485217988980-11786ced9454?w=800&h=1000&fit=crop',
-        title: 'Precious Moments',
-        description: 'Quiet moments of reflection and gratitude.',
-        date: 'July 12, 2023',
-    },
-    {
-        id: 'p10',
-        imageUrl: 'https://images.unsplash.com/photo-1529543544277-df48ed28e79e?w=800&h=1000&fit=crop',
-        title: 'Forever Memories',
-        description: 'A day we will never forget.',
-        date: 'July 12, 2023',
-    },
-];
+// Interface for display format
+interface MemoryBookDisplay {
+    id: string;
+    title: string;
+    date: string;
+    description: string;
+    imageUrl: string;
+    pageImages: string[]; // Array of all page images for slideshow
+    isFavorite: boolean;
+    pageCount: number;
+    status: string;
+    pages: BookPage[];
+    backendJobId?: string;
+    imageStyle: string;
+    isSample?: boolean;
+}
 
-// Sample data for memory books
-const sampleMemoryBooks = [
-    {
-        id: '1',
-        title: "Grandpa's 80th Birthday",
-        date: 'July 12, 2023',
-        description: 'The whole family gathered for cake and singing. Grandpa told his favorite story about the old house.',
-        imageUrl: 'https://images.unsplash.com/photo-1527525443983-6e60c75fff46?w=400&h=300&fit=crop',
-        isFavorite: true,
-        pageCount: 10,
-        pages: grandpaBookPages,
-    },
-    {
-        id: '2',
-        title: 'Summer at the Lake',
-        date: 'June 2022',
-        description: 'The water was sparkling and the air was fresh. We spent all day fishing and swimming in the clear blue water.',
-        imageUrl: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=400&h=300&fit=crop',
+// Generate a meaningful title from narrative text
+function generateTitleFromNarrative(narrative: string | undefined): string | null {
+    if (!narrative || narrative.trim() === '') return null;
+    
+    // Try to extract a title from the first sentence (up to ~50 chars)
+    const firstSentence = narrative.split(/[.!?]/)[0]?.trim();
+    if (firstSentence && firstSentence.length > 0) {
+        // If the first sentence is too long, truncate it
+        if (firstSentence.length > 50) {
+            const words = firstSentence.split(' ');
+            let title = '';
+            for (const word of words) {
+                if ((title + ' ' + word).length > 47) break;
+                title += (title ? ' ' : '') + word;
+            }
+            return title + '...';
+        }
+        return firstSentence;
+    }
+    return null;
+}
+
+// Convert backend BookPage to viewer BookPage
+function convertAPIPageToViewerPage(page: APIBookPage, jobId: string): BookPage {
+    // Check if image was actually generated
+    let imageUrl = '';
+    
+    if (page.image_path && page.image_path.trim() !== '') {
+        // Extract filename from image_path (handle both Windows and Unix paths)
+        const pathParts = page.image_path.replace(/\\/g, '/').split('/');
+        const filename = pathParts.pop() || page.image_path;
+        imageUrl = getAssetUrl(jobId, 'outputs', filename);
+    }
+    
+    // Generate meaningful title based on content
+    let title: string;
+    if (page.page_type === 'cover') {
+        title = 'Capa';
+    } else if (page.page_type === 'back_cover') {
+        title = 'Contracapa';
+    } else {
+        // Try to get a meaningful title from narrative or memory reference
+        const narrativeTitle = generateTitleFromNarrative(page.narrative_text);
+        const memoryTitle = page.memory_reference?.trim();
+        
+        // Use narrative title if available, otherwise memory reference, otherwise fallback
+        title = narrativeTitle || memoryTitle || `Memória ${page.page_number}`;
+    }
+    
+    return {
+        id: `page-${page.page_number}`,
+        imageUrl,
+        title,
+        description: page.narrative_text || page.memory_reference || '',
+        date: page.life_phase,
+    };
+}
+
+// Convert FinalBookPackage to viewer pages
+function convertBookPackageToPages(pkg: FinalBookPackage, jobId: string): BookPage[] {
+    const pages: BookPage[] = [];
+    
+    // Add cover
+    pages.push(convertAPIPageToViewerPage(pkg.cover, jobId));
+    
+    // Add content pages
+    for (const page of pkg.pages) {
+        pages.push(convertAPIPageToViewerPage(page, jobId));
+    }
+    
+    // Add back cover
+    pages.push(convertAPIPageToViewerPage(pkg.back_cover, jobId));
+    
+    return pages;
+}
+
+// Placeholder images for different styles
+const styleImages: Record<string, string> = {
+    watercolor: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&h=600&fit=crop',
+    cartoon: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=600&fit=crop',
+    anime: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=600&fit=crop',
+    coloring: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&h=600&fit=crop',
+};
+
+// Generate placeholder pages for a book
+function generatePlaceholderPages(pageCount: number, style: string, title: string): BookPage[] {
+    const baseImage = styleImages[style] || styleImages.watercolor;
+    const pages: BookPage[] = [];
+    
+    // Cover page
+    pages.push({
+        id: 'cover',
+        imageUrl: baseImage,
+        title: title,
+        description: 'Capa do livro',
+    });
+    
+    // Internal pages
+    for (let i = 1; i < pageCount - 1; i++) {
+        pages.push({
+            id: `page-${i}`,
+            imageUrl: `https://images.unsplash.com/photo-${1500000000000 + i * 1000}?w=800&h=600&fit=crop`,
+            title: `Página ${i}`,
+            description: 'Esta página será gerada com suas memórias',
+        });
+    }
+    
+    // Back cover
+    if (pageCount > 1) {
+        pages.push({
+            id: 'back-cover',
+            imageUrl: baseImage,
+            title: 'Contracapa',
+            description: 'Final do livro',
+        });
+    }
+    
+    return pages;
+}
+
+// Convert Firebase document to display format
+function convertToDisplayFormat(doc: MemoryBookDocument, backendJobId?: string): MemoryBookDisplay {
+    const date = doc.bookDate?.toDate?.() 
+        ? doc.bookDate.toDate().toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          })
+        : 'No date';
+
+    // Generate placeholder pages (will be replaced with real pages when viewing)
+    const pages = generatePlaceholderPages(doc.pageCount, doc.imageStyle, doc.title);
+
+    return {
+        id: doc.id || '',
+        title: doc.title,
+        date,
+        description: doc.subtitle || `A ${doc.imageStyle} style memory book with ${doc.pageCount} pages`,
+        imageUrl: styleImages[doc.imageStyle] || styleImages.watercolor,
+        pageImages: [], // Will be populated with real images when available
         isFavorite: false,
-        pageCount: 15,
-        pages: grandpaBookPages.slice(0, 15),
-    },
-    {
-        id: '3',
-        title: 'Baking with Mom',
-        date: 'October 15, 2023',
-        description: 'Making the secret family apple pie recipe together. The kitchen smelled like cinnamon all afternoon.',
-        imageUrl: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop',
-        isFavorite: false,
-        pageCount: 10,
-        pages: grandpaBookPages.slice(0, 10),
-    },
-    {
-        id: '4',
-        title: 'Our First Garden',
-        date: 'May 2021',
-        description: 'The roses were in full bloom this year. We spent every morning watering them before the heat set in.',
-        imageUrl: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400&h=300&fit=crop',
-        isFavorite: false,
-        pageCount: 20,
-        pages: grandpaBookPages,
-    },
-    {
-        id: '5',
-        title: 'Sunday Morning Coffee',
-        date: 'September 2023',
-        description: 'Enjoying the quiet morning sun on the porch with a fresh brew. This was the memory just added.',
-        imageUrl: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop',
-        isFavorite: true,
-        pageCount: 10,
-        pages: grandpaBookPages.slice(0, 10),
-    },
-    {
-        id: '6',
-        title: 'Holiday Dinner 2023',
-        date: 'December 25, 2023',
-        description: 'A beautiful evening filled with laughter and joy. We all stayed up late playing board games.',
-        imageUrl: 'https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=400&h=300&fit=crop',
-        isFavorite: false,
-        pageCount: 15,
-        pages: grandpaBookPages.slice(0, 15),
-    },
-];
+        pageCount: doc.pageCount,
+        status: doc.status,
+        pages,
+        backendJobId,
+        imageStyle: doc.imageStyle,
+    };
+}
 
 export const Dashboard = () => {
-    const [showNotification, setShowNotification] = useState(true);
+    const { user } = useAuth();
+    const { t, language } = useLanguage();
+    const db = t.dashboard;
+
+    // Sample book adapts to the selected language
+    const sampleBookPages = getSampleBookPages(language);
+    const sampleBookDisplay = getSampleBookDisplay(language);
+    const [showNotification, setShowNotification] = useState(false);
+    const [notificationData, setNotificationData] = useState({ title: '', message: '' });
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-    const [selectedBook, setSelectedBook] = useState<typeof sampleMemoryBooks[0] | null>(null);
+    const [selectedBook, setSelectedBook] = useState<MemoryBookDisplay | null>(null);
     const [isViewerOpen, setIsViewerOpen] = useState(false);
     const [isEditorOpen, setIsEditorOpen] = useState(false);
     const [bookPages, setBookPages] = useState<BookPage[]>([]);
+    
+    // Firebase state
+    const [memoryBooks, setMemoryBooks] = useState<MemoryBookDisplay[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    
+    // Delete confirmation state
+    const [bookToDelete, setBookToDelete] = useState<MemoryBookDisplay | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
-    const handleOpenBook = (book: typeof sampleMemoryBooks[0]) => {
+    // Fetch books with their backend job IDs and real images
+    const fetchBooksWithJobs = useCallback(async () => {
+        if (!user) {
+            setMemoryBooks([]);
+            setIsLoading(false);
+            return;
+        }
+
+        try {
+            setIsLoading(true);
+            setError(null);
+            const docs = await getUserMemoryBooks(user.uid);
+            
+            // Fetch generation jobs for each book to get backendJobId
+            const displayBooks = await Promise.all(
+                docs.map(async (doc) => {
+                    let backendJobId: string | undefined;
+                    let pageImages: string[] = [];
+                    
+                    try {
+                        const jobs = await getGenerationJobs(doc.id || '');
+                        if (jobs.length > 0 && jobs[0].inputSnapshot?.backendJobId) {
+                            backendJobId = jobs[0].inputSnapshot.backendJobId;
+                            
+                            // Try to load real images for completed books
+                            if (doc.status === 'completed' || doc.status === 'ready') {
+                                try {
+                                    const result = await getJobResult(backendJobId);
+                                    const realPages = convertBookPackageToPages(result, backendJobId);
+                                    pageImages = realPages
+                                        .map(page => page.imageUrl)
+                                        .filter(url => url && url.trim() !== '');
+                                } catch (imgErr) {
+                                    console.warn('Backend unavailable for book:', doc.id, imgErr);
+                                    
+                                    // Fallback: use resultSnapshot from Firestore
+                                    if (jobs[0].resultSnapshot) {
+                                        try {
+                                            const savedResult = jobs[0].resultSnapshot as unknown as FinalBookPackage;
+                                            const savedPages = convertBookPackageToPages(savedResult, backendJobId);
+                                            pageImages = savedPages
+                                                .map(page => page.imageUrl)
+                                                .filter(url => url && url.trim() !== '');
+                                            console.log('Using cached result from Firestore for book:', doc.id);
+                                        } catch (cacheErr) {
+                                            console.warn('Failed to use cached result:', cacheErr);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('Failed to get generation jobs for book:', doc.id, e);
+                    }
+                    
+                    const displayBook = convertToDisplayFormat(doc, backendJobId);
+                    
+                    // Update with real images if available
+                    if (pageImages.length > 0) {
+                        displayBook.imageUrl = pageImages[0]; // Cover image
+                        displayBook.pageImages = pageImages;
+                    }
+                    
+                    return displayBook;
+                })
+            );
+            
+            setMemoryBooks(displayBooks);
+        } catch (err) {
+            console.error('Failed to fetch memory books:', err);
+            setError('Failed to load memory books');
+        } finally {
+            setIsLoading(false);
+        }
+    }, [user]);
+
+    // Create sample book as MemoryBookDisplay (language-aware)
+    const sampleBookAsDisplay: MemoryBookDisplay = {
+        id: sampleBookDisplay.id,
+        title: sampleBookDisplay.title,
+        date: sampleBookDisplay.date,
+        description: sampleBookDisplay.description,
+        imageUrl: sampleBookDisplay.imageUrl,
+        pageImages: sampleBookDisplay.pageImages,
+        isFavorite: true,
+        pageCount: sampleBookDisplay.pageCount,
+        status: 'completed',
+        pages: sampleBookPages,
+        imageStyle: 'watercolor',
+        isSample: true,
+    };
+
+    // Search state
+    const [searchQuery, setSearchQuery] = useState('');
+
+    // All books including the sample
+    const allBooksUnfiltered = [...memoryBooks, sampleBookAsDisplay];
+    
+    // Filter books by search query
+    const allBooks = searchQuery.trim() === '' 
+        ? allBooksUnfiltered 
+        : allBooksUnfiltered.filter(book => {
+            const query = searchQuery.toLowerCase().trim();
+            return (
+                book.title.toLowerCase().includes(query) ||
+                book.description.toLowerCase().includes(query) ||
+                book.date.toLowerCase().includes(query)
+            );
+        });
+
+    // Fetch books from Firebase
+    useEffect(() => {
+        fetchBooksWithJobs();
+    }, [fetchBooksWithJobs]);
+
+    // Refresh books after creation
+    const refreshBooks = useCallback(async () => {
+        await fetchBooksWithJobs();
+    }, [fetchBooksWithJobs]);
+
+    // State for loading pages from backend (used to show loading indicator)
+    const [, setIsLoadingPages] = useState(false);
+
+    const handleOpenBook = useCallback(async (book: MemoryBookDisplay) => {
         setSelectedBook(book);
-        setBookPages(book.pages);
+        
+        // Sample book uses its own static pages
+        if (book.isSample) {
+            setBookPages(sampleBookPages);
+            setIsViewerOpen(true);
+            return;
+        }
+        
+        // If book has backendJobId and is completed, try to load real pages
+        if (book.backendJobId && (book.status === 'completed' || book.status === 'ready')) {
+            setIsLoadingPages(true);
+            try {
+                console.log('Loading pages from backend for job:', book.backendJobId);
+                const result = await getJobResult(book.backendJobId);
+                const realPages = convertBookPackageToPages(result, book.backendJobId);
+                console.log('Loaded', realPages.length, 'pages from backend');
+                setBookPages(realPages);
+            } catch (err) {
+                console.warn('Backend unavailable, trying Firestore cache:', err);
+                
+                // Fallback: try to load from Firestore resultSnapshot
+                let loaded = false;
+                try {
+                    const jobs = await getGenerationJobs(book.id);
+                    if (jobs.length > 0 && jobs[0].resultSnapshot) {
+                        const savedResult = jobs[0].resultSnapshot as unknown as FinalBookPackage;
+                        const savedPages = convertBookPackageToPages(savedResult, book.backendJobId!);
+                        console.log('Loaded', savedPages.length, 'pages from Firestore cache');
+                        setBookPages(savedPages);
+                        loaded = true;
+                    }
+                } catch (cacheErr) {
+                    console.warn('Failed to load from Firestore cache:', cacheErr);
+                }
+                
+                if (!loaded) {
+                    setBookPages(book.pages);
+                }
+            } finally {
+                setIsLoadingPages(false);
+            }
+        } else {
+            // Use placeholder pages
+            setBookPages(book.pages);
+        }
+        
         setIsViewerOpen(true);
-    };
+    }, []);
 
-    const handleEditBook = (book: typeof sampleMemoryBooks[0]) => {
+    const handleEditBook = useCallback(async (book: MemoryBookDisplay) => {
         setSelectedBook(book);
-        setBookPages(book.pages);
+        
+        // If book has backendJobId and is completed, try to load real pages
+        if (book.backendJobId && (book.status === 'completed' || book.status === 'ready')) {
+            try {
+                const result = await getJobResult(book.backendJobId);
+                const realPages = convertBookPackageToPages(result, book.backendJobId);
+                setBookPages(realPages);
+            } catch (err) {
+                console.warn('Backend unavailable for edit, trying cache:', err);
+                
+                let loaded = false;
+                try {
+                    const jobs = await getGenerationJobs(book.id);
+                    if (jobs.length > 0 && jobs[0].resultSnapshot) {
+                        const savedResult = jobs[0].resultSnapshot as unknown as FinalBookPackage;
+                        const savedPages = convertBookPackageToPages(savedResult, book.backendJobId!);
+                        setBookPages(savedPages);
+                        loaded = true;
+                    }
+                } catch (cacheErr) {
+                    console.warn('Cache fallback failed:', cacheErr);
+                }
+                
+                if (!loaded) {
+                    setBookPages(book.pages);
+                }
+            }
+        } else {
+            setBookPages(book.pages);
+        }
+        
         setIsEditorOpen(true);
-    };
+    }, []);
 
-    const handlePrintBook = (book: typeof sampleMemoryBooks[0]) => {
-        // In a real app, this would generate a PDF
+    const handlePrintBook = (book: MemoryBookDisplay) => {
         console.log('Printing book:', book.title);
         alert(`Downloading "${book.title}" as PDF...`);
     };
 
-    const handleDeleteBook = (book: typeof sampleMemoryBooks[0]) => {
-        // In a real app, this would delete the book
-        if (confirm(`Are you sure you want to delete "${book.title}"?`)) {
-            console.log('Deleting book:', book.title);
+    const handleDeleteBook = (book: MemoryBookDisplay) => {
+        setBookToDelete(book);
+    };
+
+    const confirmDeleteBook = async () => {
+        if (!bookToDelete) return;
+        
+        setIsDeleting(true);
+        try {
+            await deleteMemoryBook(bookToDelete.id);
+            setMemoryBooks(prev => prev.filter(b => b.id !== bookToDelete.id));
+            setNotificationData({ 
+                title: db?.bookDeleted || 'Memory Book excluído', 
+                message: `"${bookToDelete.title}" ${db?.removedPermanently || 'foi removido permanentemente.'}` 
+            });
+            setShowNotification(true);
+            setBookToDelete(null);
+        } catch (err) {
+            console.error('Failed to delete book:', err);
+            setNotificationData({
+                title: db?.deleteError || 'Erro ao excluir',
+                message: db?.deleteErrorMsg || 'Não foi possível excluir o livro. Tente novamente.'
+            });
+            setShowNotification(true);
+        } finally {
+            setIsDeleting(false);
         }
+    };
+
+    const handleToggleFavorite = async (bookId: string) => {
+        const book = memoryBooks.find(b => b.id === bookId);
+        if (!book) return;
+
+        const newFavorite = !book.isFavorite;
+        
+        // Optimistic update
+        setMemoryBooks(prev => prev.map(b => 
+            b.id === bookId ? { ...b, isFavorite: newFavorite } : b
+        ));
+
+        // Note: isFavorite is not stored in Firebase yet, only local state
     };
 
     const handleSavePages = (pages: BookPage[]) => {
@@ -185,89 +475,181 @@ export const Dashboard = () => {
         console.log('Saved pages:', pages);
     };
 
+    const userName = user?.displayName || 'Guest';
+    const userEmail = user?.email || 'guest@guest.com';
+
     return (
         <div className="min-h-screen bg-bg-soft flex flex-col">
-            <DashboardNavbar userName="Maria" />
+            <DashboardNavbar 
+                userName={userName} 
+                userEmail={userEmail} 
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+            />
 
             <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8 py-8">
                 {/* Success Notification */}
                 <SuccessNotification
                     isVisible={showNotification}
-                    title="Memory successfully added!"
-                    message='Your latest memory "Sunday Morning Coffee" has been saved to the album.'
+                    title={notificationData.title}
+                    message={notificationData.message}
                     onClose={() => setShowNotification(false)}
-                    onViewDetails={() => console.log('View details')}
                 />
 
                 {/* Header Section */}
                 <div className="mb-8">
                     <h1 className="text-4xl md:text-5xl font-bold text-text-main mb-2">
-                        Our Family Album
+                        {db?.title || 'Our Family Album'}
                     </h1>
                     <p className="text-text-muted text-lg">
-                        A gentle collection of your favorite moments and stories.
+                        {db?.description || 'A gentle collection of your favorite moments and stories.'}
                     </p>
                 </div>
 
                 {/* Recent Stories Section */}
                 <section>
-                    <h2 className="text-2xl font-bold text-text-main mb-6">My Memory Books</h2>
+                    <h2 className="text-2xl font-bold text-text-main mb-6">{db?.myMemoryBooks || 'My Memory Books'}</h2>
 
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                    >
-                        {sampleMemoryBooks.map((book, index) => (
-                            <motion.div
-                                key={book.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.3, delay: index * 0.1 }}
+                    {/* Loading State */}
+                    {isLoading && (
+                        <div className="flex flex-col items-center justify-center py-16">
+                            <Loader2 className="w-10 h-10 text-primary-teal animate-spin mb-4" />
+                            <p className="text-text-muted">{db?.loading || 'Loading your memory books...'}</p>
+                        </div>
+                    )}
+
+                    {/* Error State */}
+                    {error && !isLoading && (
+                        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+                            <p className="text-red-600">{error}</p>
+                            <button 
+                                onClick={refreshBooks}
+                                className="mt-4 px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors"
                             >
-                                <MemoryStoryCard
-                                    id={book.id}
-                                    title={book.title}
-                                    date={book.date}
-                                    description={book.description}
-                                    imageUrl={book.imageUrl}
-                                    isFavorite={book.isFavorite}
-                                    pageCount={book.pageCount}
-                                    onClick={() => handleOpenBook(book)}
-                                    onEdit={() => handleEditBook(book)}
-                                    onPrint={() => handlePrintBook(book)}
-                                    onDelete={() => handleDeleteBook(book)}
-                                />
-                            </motion.div>
-                        ))}
-                    </motion.div>
-                </section>
+                                {db?.tryAgain || 'Try Again'}
+                            </button>
+                        </div>
+                    )}
 
-                {/* Empty State / Create New Book CTA */}
-                <section className="mt-16 mb-8">
-                    <div className="bg-gradient-to-br from-primary-teal/5 to-accent-coral/5 rounded-3xl border border-primary-teal/20 p-8 md:p-12 text-center">
-                        <div className="max-w-xl mx-auto">
-                            <div className="w-16 h-16 bg-primary-teal/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                                <BookOpen className="w-8 h-8 text-primary-teal" />
+                    {/* Empty State - only when no user books (sample always shows) */}
+                    {!isLoading && !error && memoryBooks.length === 0 && (
+                        <div className="bg-gray-50 rounded-2xl p-8 text-center mb-6">
+                            <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <BookOpen className="w-7 h-7 text-gray-400" />
                             </div>
-                            <h3 className="text-2xl md:text-3xl font-bold text-text-main mb-3">
-                                Create New Memory Book
+                            <h3 className="text-lg font-semibold text-gray-600 mb-2">
+                                {db?.createFirst || 'Crie seu primeiro Memory Book'}
                             </h3>
-                            <p className="text-text-muted mb-8">
-                                Start a new collection of precious moments. Perfect for special occasions, 
-                                family milestones, or everyday treasures.
+                            <p className="text-gray-500 mb-4 max-w-md mx-auto text-sm">
+                                {db?.createFirstDesc || 'Veja o exemplo abaixo para inspiração e depois crie o seu!'}
                             </p>
                             <button 
                                 onClick={() => setIsCreateModalOpen(true)}
-                                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#00E5E5] to-[#FF9E91] text-white rounded-xl font-semibold hover:from-[#00d4d4] hover:to-[#ff8f80] transition-all shadow-lg shadow-primary-teal/20 hover:shadow-xl hover:shadow-primary-teal/30"
+                                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-teal to-teal-400 text-white rounded-xl font-semibold hover:from-teal-500 hover:to-teal-400 transition-all shadow-lg shadow-primary-teal/20"
                             >
                                 <Plus className="w-5 h-5" />
-                                Create New Memory Book
+                                {db?.createMemoryBook || 'Criar Memory Book'}
                             </button>
                         </div>
-                    </div>
+                    )}
+
+                    {/* No search results */}
+                    {!isLoading && !error && searchQuery.trim() !== '' && allBooks.length === 0 && (
+                        <div className="bg-gray-50 dark:bg-white/5 rounded-2xl p-8 text-center mb-6">
+                            <div className="w-14 h-14 bg-gray-100 dark:bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <Search className="w-7 h-7 text-gray-400" />
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-2">
+                                {db?.noResults || 'Nenhum resultado encontrado'}
+                            </h3>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">
+                                {db?.noResultsDesc || 'Tente buscar com outras palavras.'}
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Books Grid - always shows (includes sample book) */}
+                    {!isLoading && !error && allBooks.length > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.5 }}
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        >
+                            {allBooks.map((book, index) => (
+                                <motion.div
+                                    key={book.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                                    className="relative"
+                                >
+                                    {/* Sample Badge */}
+                                    {book.isSample && (
+                                        <div className="absolute -top-2 -right-2 z-30 px-3 py-1 bg-accent-coral text-white text-xs font-bold rounded-full shadow-lg">
+                                            {db?.example || 'Exemplo'}
+                                        </div>
+                                    )}
+                                    <MemoryStoryCard
+                                        id={book.id}
+                                        title={book.title}
+                                        date={book.date}
+                                        description={book.description}
+                                        imageUrl={book.imageUrl}
+                                        pageImages={book.pageImages}
+                                        isFavorite={book.isFavorite}
+                                        pageCount={book.pageCount}
+                                        onClick={() => handleOpenBook(book)}
+                                        onEdit={book.isSample ? undefined : () => handleEditBook(book)}
+                                        onPrint={book.isSample ? undefined : () => handlePrintBook(book)}
+                                        onDelete={book.isSample ? undefined : () => handleDeleteBook(book)}
+                                        onToggleFavorite={book.isSample ? undefined : () => handleToggleFavorite(book.id)}
+                                    />
+                                    {/* Status Badge */}
+                                    {!book.isSample && book.status !== 'completed' && book.status !== 'ready' && (
+                                        <div className={`mt-2 text-center text-sm font-medium px-3 py-1 rounded-full ${
+                                            book.status === 'generating' 
+                                                ? 'bg-yellow-100 text-yellow-700' 
+                                                : book.status === 'error'
+                                                ? 'bg-red-100 text-red-700'
+                                                : 'bg-gray-100 text-gray-600'
+                                        }`}>
+                                            {book.status === 'generating' ? (db?.generating || 'Generating...') :
+                                             book.status === 'error' ? (db?.generationFailed || 'Generation Failed') :
+                                             book.status === 'draft' ? (db?.draft || 'Draft') : book.status}
+                                        </div>
+                                    )}
+                                </motion.div>
+                            ))}
+                        </motion.div>
+                    )}
                 </section>
+
+                {/* Create New Book CTA - Only show if there are books */}
+                {!isLoading && memoryBooks.length > 0 && (
+                    <section className="mt-16 mb-8">
+                        <div className="bg-gradient-to-br from-primary-teal/5 to-accent-coral/5 rounded-3xl border border-primary-teal/20 p-8 md:p-12 text-center">
+                            <div className="max-w-xl mx-auto">
+                                <div className="w-16 h-16 bg-primary-teal/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                                    <BookOpen className="w-8 h-8 text-primary-teal" />
+                                </div>
+                                <h3 className="text-2xl md:text-3xl font-bold text-text-main mb-3">
+                                    {db?.createNewBook || 'Create New Memory Book'}
+                                </h3>
+                                <p className="text-text-muted mb-8">
+                                    {db?.createNewBookDesc || 'Start a new collection of precious moments. Perfect for special occasions, family milestones, or everyday treasures.'}
+                                </p>
+                                <button 
+                                    onClick={() => setIsCreateModalOpen(true)}
+                                    className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#00E5E5] to-[#FF9E91] text-white rounded-xl font-semibold hover:from-[#00d4d4] hover:to-[#ff8f80] transition-all shadow-lg shadow-primary-teal/20 hover:shadow-xl hover:shadow-primary-teal/30"
+                                >
+                                    <Plus className="w-5 h-5" />
+                                    {db?.createNewBook || 'Create New Memory Book'}
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                )}
             </main>
 
             <DashboardFooter />
@@ -276,9 +658,19 @@ export const Dashboard = () => {
             <CreateMemoryBookModal
                 isOpen={isCreateModalOpen}
                 onClose={() => setIsCreateModalOpen(false)}
-                onComplete={(data) => {
-                    console.log('Memory Book created:', data);
-                    setIsCreateModalOpen(false);
+                onComplete={() => {
+                    // Refresh books list when wizard completes
+                    refreshBooks();
+                }}
+                onSuccess={(bookTitle) => {
+                    // Show success notification when book is generated
+                    setNotificationData({ 
+                        title: db?.bookGenerated || 'Memory Book Gerado!', 
+                        message: `${db?.bookGeneratedMsg || 'Seu Memory Book foi criado com sucesso!'} "${bookTitle}"` 
+                    });
+                    setShowNotification(true);
+                    // Refresh books list
+                    refreshBooks();
                 }}
             />
 
@@ -290,21 +682,21 @@ export const Dashboard = () => {
                         setIsViewerOpen(false);
                         setSelectedBook(null);
                     }}
-                    title={selectedBook.title}
-                    pages={bookPages}
-                    isFavorite={selectedBook.isFavorite}
-                    onToggleFavorite={() => console.log('Toggle favorite')}
-                    onEdit={() => {
+                    title={selectedBook.isSample ? sampleBookDisplay.title : selectedBook.title}
+                    pages={selectedBook.isSample ? sampleBookPages : bookPages}
+                    isFavorite={selectedBook.isSample ? true : (memoryBooks.find(b => b.id === selectedBook.id)?.isFavorite ?? false)}
+                    onToggleFavorite={selectedBook.isSample ? undefined : () => handleToggleFavorite(selectedBook.id)}
+                    onEdit={selectedBook.isSample ? undefined : () => {
                         setIsViewerOpen(false);
                         setIsEditorOpen(true);
                     }}
-                    onPrint={() => handlePrintBook(selectedBook)}
-                    onDelete={() => {
+                    onPrint={selectedBook.isSample ? undefined : () => handlePrintBook(selectedBook)}
+                    onDelete={selectedBook.isSample ? undefined : () => {
                         handleDeleteBook(selectedBook);
                         setIsViewerOpen(false);
                         setSelectedBook(null);
                     }}
-                    onPageEdit={(pageIndex) => {
+                    onPageEdit={selectedBook.isSample ? undefined : (pageIndex) => {
                         console.log('Edit page:', pageIndex);
                         setIsViewerOpen(false);
                         setIsEditorOpen(true);
@@ -325,6 +717,16 @@ export const Dashboard = () => {
                     onSave={handleSavePages}
                 />
             )}
+
+            {/* Delete Confirmation Modal */}
+            <DeleteConfirmModal
+                isOpen={!!bookToDelete}
+                onClose={() => setBookToDelete(null)}
+                onConfirm={confirmDeleteBook}
+                title={db?.deleteModalTitle || "Excluir Memory Book"}
+                bookTitle={bookToDelete?.title || ''}
+                isDeleting={isDeleting}
+            />
         </div>
     );
 };

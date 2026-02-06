@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface FormTextAreaProps {
     id: string;
@@ -24,6 +24,8 @@ export const FormTextArea = ({
     helperText,
     icon,
 }: FormTextAreaProps) => {
+    const { t } = useLanguage();
+
     const [isFocused, setIsFocused] = useState(false);
 
     return (
@@ -36,7 +38,7 @@ export const FormTextArea = ({
                 {required ? (
                     <span className="text-red-500 ml-1">*</span>
                 ) : (
-                    <span className="text-text-muted font-normal ml-1">(optional)</span>
+                    <span className="text-text-muted font-normal ml-1">({t.common?.optional || 'optional'})</span>
                 )}
             </label>
             <div className="relative">
@@ -90,6 +92,8 @@ export const FormInput = ({
     icon,
     type = 'text',
 }: FormInputProps) => {
+    const { t } = useLanguage();
+
     const [isFocused, setIsFocused] = useState(false);
 
     return (
@@ -102,7 +106,7 @@ export const FormInput = ({
                 {required ? (
                     <span className="text-red-500 ml-1">*</span>
                 ) : (
-                    <span className="text-text-muted font-normal ml-1">(optional)</span>
+                    <span className="text-text-muted font-normal ml-1">({t.common?.optional || 'optional'})</span>
                 )}
             </label>
             <div className="relative">

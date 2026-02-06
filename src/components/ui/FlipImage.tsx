@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface FlipImageProps {
@@ -19,7 +19,7 @@ export const FlipImage: React.FC<FlipImageProps> = ({ images, descriptions = [],
     }, [images.length, interval]);
 
     const variants = {
-        enter: (direction: number) => ({
+        enter: () => ({
             rotateY: -90,
             opacity: 0,
         }),
@@ -28,7 +28,7 @@ export const FlipImage: React.FC<FlipImageProps> = ({ images, descriptions = [],
             rotateY: 0,
             opacity: 1,
         },
-        exit: (direction: number) => ({
+        exit: () => ({
             zIndex: 0,
             rotateY: 90,
             opacity: 0,
@@ -36,7 +36,7 @@ export const FlipImage: React.FC<FlipImageProps> = ({ images, descriptions = [],
     };
 
     return (
-        <div className="relative w-full h-[500px] perspective-1000">
+        <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] perspective-1000">
             <AnimatePresence initial={false} mode="popLayout">
                 <motion.img
                     key={currentIndex}
