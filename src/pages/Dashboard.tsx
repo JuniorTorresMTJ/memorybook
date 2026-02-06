@@ -15,6 +15,7 @@ import {
     getUserMemoryBooks, 
     deleteMemoryBook,
     getGenerationJobs,
+    getPersistedImages,
 } from '../lib/firebase/firestore';
 import type { MemoryBookDocument } from '../lib/firebase/types';
 import { getJobResult, getAssetUrl } from '../lib/api';
@@ -61,15 +62,28 @@ function generateTitleFromNarrative(narrative: string | undefined): string | nul
 }
 
 // Convert backend BookPage to viewer BookPage
-function convertAPIPageToViewerPage(page: APIBookPage, jobId: string): BookPage {
+// imageOverride: optional data URL from persisted images
+function convertAPIPageToViewerPage(page: APIBookPage, jobId: string, imageOverride?: string): BookPage {
     // Check if image was actually generated
     let imageUrl = '';
     
-    if (page.image_path && page.image_path.trim() !== '') {
-        // Extract filename from image_path (handle both Windows and Unix paths)
-        const pathParts = page.image_path.replace(/\\/g, '/').split('/');
-        const filename = pathParts.pop() || page.image_path;
-        imageUrl = getAssetUrl(jobId, 'outputs', filename);
+    // Priority: 1) persisted image override, 2) embedded image_data from backend, 
+    // 3) data URL in image_path, 4) backend asset URL
+    if (imageOverride) {
+        imageUrl = imageOverride;
+    } else if (page.image_data) {
+        // Use base64 data URL embedded by backend in the result
+        imageUrl = page.image_data;
+    } else if (page.image_path && page.image_path.trim() !== '') {
+        // If image_path is already a full URL or data URL, use directly
+        if (page.image_path.startsWith('http') || page.image_path.startsWith('data:')) {
+            imageUrl = page.image_path;
+        } else {
+            // Extract filename from image_path (handle both Windows and Unix paths)
+            const pathParts = page.image_path.replace(/\\/g, '/').split('/');
+            const filename = pathParts.pop() || page.image_path;
+            imageUrl = getAssetUrl(jobId, 'outputs', filename);
+        }
     }
     
     // Generate meaningful title based on content
@@ -96,20 +110,24 @@ function convertAPIPageToViewerPage(page: APIBookPage, jobId: string): BookPage 
     };
 }
 
-// Convert FinalBookPackage to viewer pages
-function convertBookPackageToPages(pkg: FinalBookPackage, jobId: string): BookPage[] {
+// Convert FinalBookPackage to viewer pages, optionally using persisted images
+function convertBookPackageToPages(
+    pkg: FinalBookPackage,
+    jobId: string,
+    persistedImages?: Map<string, string>
+): BookPage[] {
     const pages: BookPage[] = [];
     
     // Add cover
-    pages.push(convertAPIPageToViewerPage(pkg.cover, jobId));
+    pages.push(convertAPIPageToViewerPage(pkg.cover, jobId, persistedImages?.get('cover')));
     
     // Add content pages
-    for (const page of pkg.pages) {
-        pages.push(convertAPIPageToViewerPage(page, jobId));
+    for (let i = 0; i < pkg.pages.length; i++) {
+        pages.push(convertAPIPageToViewerPage(pkg.pages[i], jobId, persistedImages?.get(`page_${i}`)));
     }
     
     // Add back cover
-    pages.push(convertAPIPageToViewerPage(pkg.back_cover, jobId));
+    pages.push(convertAPIPageToViewerPage(pkg.back_cover, jobId, persistedImages?.get('back_cover')));
     
     return pages;
 }
@@ -238,20 +256,32 @@ export const Dashboard = () => {
                             
                             // Try to load real images for completed books
                             if (doc.status === 'completed' || doc.status === 'ready') {
+                                // First try to load persisted images from Firestore subcollection
+                                let persistedImages: Map<string, string> | undefined;
+                                const jobDocId = jobs[0].id || backendJobId;
+                                try {
+                                    persistedImages = await getPersistedImages(doc.id || '', jobDocId);
+                                    if (persistedImages.size > 0) {
+                                        console.log(`Loaded ${persistedImages.size} persisted images for book:`, doc.id);
+                                    }
+                                } catch (piErr) {
+                                    console.warn('Failed to load persisted images:', piErr);
+                                }
+
                                 try {
                                     const result = await getJobResult(backendJobId);
-                                    const realPages = convertBookPackageToPages(result, backendJobId);
+                                    const realPages = convertBookPackageToPages(result, backendJobId, persistedImages);
                                     pageImages = realPages
                                         .map(page => page.imageUrl)
                                         .filter(url => url && url.trim() !== '');
                                 } catch (imgErr) {
                                     console.warn('Backend unavailable for book:', doc.id, imgErr);
                                     
-                                    // Fallback: use resultSnapshot from Firestore
+                                    // Fallback: use resultSnapshot from Firestore + persisted images
                                     if (jobs[0].resultSnapshot) {
                                         try {
                                             const savedResult = jobs[0].resultSnapshot as unknown as FinalBookPackage;
-                                            const savedPages = convertBookPackageToPages(savedResult, backendJobId);
+                                            const savedPages = convertBookPackageToPages(savedResult, backendJobId, persistedImages);
                                             pageImages = savedPages
                                                 .map(page => page.imageUrl)
                                                 .filter(url => url && url.trim() !== '');

@@ -83,6 +83,7 @@ export interface BookPage {
   page_number: number;
   page_type: string;
   image_path: string;
+  image_data?: string;  // Base64 data URL embedded by backend
   thumbnail_path?: string;
   narrative_text?: string;
   life_phase?: string;

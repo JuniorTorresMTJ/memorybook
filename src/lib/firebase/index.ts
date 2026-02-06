@@ -46,6 +46,7 @@ export {
     completeGenerationJob,
     failGenerationJob,
     getGenerationJobs,
+    getPersistedImages,
 } from './firestore';
 
 // Storage functions
@@ -60,6 +61,7 @@ export {
     deleteBookFiles,
     getFileUrl,
     getFileUrls,
+    downloadBookImages,
     type UploadResult,
 } from './storage';
 

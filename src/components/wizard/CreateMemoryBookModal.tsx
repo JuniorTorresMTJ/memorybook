@@ -26,6 +26,7 @@ import {
     transformWizardDataToPayload,
     getReferencePhotos,
     detectUserLanguage,
+    getAssetUrl,
     type FinalBookPackage,
 } from '../../lib/api';
 import {
@@ -35,6 +36,7 @@ import {
     failGenerationJob,
     updateMemoryBookStatus,
 } from '../../lib/firebase/firestore';
+import { downloadBookImages } from '../../lib/firebase/storage';
 import { ensureAuthenticated } from '../../lib/firebase/auth';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -324,13 +326,45 @@ export const CreateMemoryBookModal = ({
     const handleGenerationComplete = useCallback(async (bookResult: FinalBookPackage) => {
         setResult(bookResult);
         
-        // Update Firebase - save result snapshot for persistence
+        // Update Firebase - persist images to Firebase Storage, then save result
         if (bookId && jobId) {
             try {
-                // Save the entire book package to Firestore so the dashboard
-                // can display the book even if the backend restarts and loses data
                 const resultSnapshot = bookResult as unknown as Record<string, unknown>;
-                await completeGenerationJob(bookId, jobId, resultSnapshot);
+                
+                // Try to get image data for persistence
+                // First: check if backend embedded image_data in the result
+                const imageMap = new Map<string, string>();
+                const extractImageData = (page: Record<string, unknown> | undefined, key: string) => {
+                    if (page && typeof page.image_data === 'string' && page.image_data.startsWith('data:')) {
+                        imageMap.set(key, page.image_data);
+                    }
+                };
+                extractImageData(resultSnapshot.cover as Record<string, unknown>, 'cover');
+                extractImageData(resultSnapshot.back_cover as Record<string, unknown>, 'back_cover');
+                if (Array.isArray(resultSnapshot.pages)) {
+                    (resultSnapshot.pages as Record<string, unknown>[]).forEach((p, i) => {
+                        extractImageData(p, `page_${i}`);
+                    });
+                }
+                
+                // Fallback: if no embedded images, try downloading from backend 
+                // (works if same Cloud Run instance is still alive)
+                if (imageMap.size === 0) {
+                    try {
+                        const downloaded = await downloadBookImages(
+                            resultSnapshot,
+                            (filename: string) => getAssetUrl(jobId, 'outputs', filename),
+                        );
+                        downloaded.forEach((v, k) => imageMap.set(k, v));
+                        console.log(`Downloaded ${imageMap.size} images from backend`);
+                    } catch (dlErr) {
+                        console.warn('Failed to download images from backend:', dlErr);
+                    }
+                } else {
+                    console.log(`Using ${imageMap.size} embedded images from backend`);
+                }
+                
+                await completeGenerationJob(bookId, jobId, resultSnapshot, imageMap.size > 0 ? imageMap : undefined);
                 await updateMemoryBookStatus(bookId, 'completed');
             } catch (error) {
                 console.error('Failed to update Firebase:', error);

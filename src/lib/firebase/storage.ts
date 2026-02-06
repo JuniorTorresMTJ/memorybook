@@ -215,6 +215,111 @@ export const deleteBookFiles = async (
 };
 
 // ============================================
+// PERSIST BOOK IMAGES AS BASE64 DATA URLS
+// ============================================
+
+/**
+ * Download an image from the backend API, compress it, and return as a base64 data URL.
+ * Images are resized to max 800px and converted to JPEG at 70% quality to keep
+ * the total Firestore document under 1MB.
+ */
+const fetchImageAsDataUrl = async (imageUrl: string): Promise<string> => {
+    const response = await fetch(imageUrl);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch image: ${response.status}`);
+    }
+    const blob = await response.blob();
+
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const MAX_SIZE = 800;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > MAX_SIZE || height > MAX_SIZE) {
+                const ratio = Math.min(MAX_SIZE / width, MAX_SIZE / height);
+                width = Math.round(width * ratio);
+                height = Math.round(height * ratio);
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                reject(new Error('Failed to get canvas context'));
+                return;
+            }
+            ctx.drawImage(img, 0, 0, width, height);
+            // JPEG at 70% quality for good compression
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+            URL.revokeObjectURL(img.src);
+            resolve(dataUrl);
+        };
+        img.onerror = () => {
+            URL.revokeObjectURL(img.src);
+            reject(new Error('Failed to load image'));
+        };
+        img.crossOrigin = 'anonymous';
+        img.src = URL.createObjectURL(blob);
+    });
+};
+
+/**
+ * Download all images from a FinalBookPackage and return a map of
+ * page key -> base64 data URL. The book package is NOT modified.
+ */
+export const downloadBookImages = async (
+    bookPackage: Record<string, unknown>,
+    getBackendAssetUrl: (filename: string) => string,
+): Promise<Map<string, string>> => {
+    const imageMap = new Map<string, string>();
+
+    const processPage = async (page: Record<string, unknown>, key: string) => {
+        const imagePath = page.image_path as string | undefined;
+        if (!imagePath || imagePath.trim() === '') return;
+
+        // If already a data URL or full http URL, skip downloading
+        if (typeof imagePath === 'string' && (imagePath.startsWith('data:') || imagePath.startsWith('http'))) return;
+
+        // Extract filename
+        const pathParts = imagePath.replace(/\\/g, '/').split('/');
+        const filename = pathParts.pop() || imagePath;
+
+        try {
+            const backendUrl = getBackendAssetUrl(filename);
+            const dataUrl = await fetchImageAsDataUrl(backendUrl);
+            imageMap.set(key, dataUrl);
+        } catch (err) {
+            console.warn(`Failed to download image ${filename}:`, err);
+        }
+    };
+
+    const promises: Promise<void>[] = [];
+
+    // Process cover
+    if (bookPackage.cover && typeof bookPackage.cover === 'object') {
+        promises.push(processPage(bookPackage.cover as Record<string, unknown>, 'cover'));
+    }
+
+    // Process back cover
+    if (bookPackage.back_cover && typeof bookPackage.back_cover === 'object') {
+        promises.push(processPage(bookPackage.back_cover as Record<string, unknown>, 'back_cover'));
+    }
+
+    // Process pages
+    if (Array.isArray(bookPackage.pages)) {
+        (bookPackage.pages as Record<string, unknown>[]).forEach((page, idx) => {
+            promises.push(processPage(page, `page_${idx}`));
+        });
+    }
+
+    await Promise.all(promises);
+    return imageMap;
+};
+
+// ============================================
 // URL FUNCTIONS
 // ============================================
 

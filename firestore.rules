@@ -158,6 +158,17 @@ service cloud.firestore {
         
         // Generation jobs should generally not be deleted by users
         allow delete: if false;
+        
+        // Persisted book images subcollection
+        match /images/{imageId} {
+          allow read: if isAuthenticated() &&
+            get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
+          
+          allow create, update: if isAuthenticated() &&
+            get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
+          
+          allow delete: if false;
+        }
       }
     }
     

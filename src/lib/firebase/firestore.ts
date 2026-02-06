@@ -421,11 +421,13 @@ export const createGenerationJob = async (
  * @param bookId - Memory book ID
  * @param jobId - Backend job ID
  * @param resultSnapshot - Optional: the FinalBookPackage data to persist for later display
+ * @param imageMap - Optional: map of image_path -> data URL for persisted images
  */
 export const completeGenerationJob = async (
     bookId: string,
     jobId: string,
-    resultSnapshot?: Record<string, unknown>
+    resultSnapshot?: Record<string, unknown>,
+    imageMap?: Map<string, string>
 ): Promise<void> => {
     const jobRef = doc(db, 'memoryBooks', bookId, 'generationJobs', jobId);
     const updateData: Record<string, unknown> = {
@@ -437,6 +439,34 @@ export const completeGenerationJob = async (
     }
     
     await updateDoc(jobRef, updateData);
+
+    // Save images in a separate subcollection to avoid the 1MB document limit
+    if (imageMap && imageMap.size > 0) {
+        const imagesRef = collection(db, 'memoryBooks', bookId, 'generationJobs', jobId, 'images');
+        const promises = Array.from(imageMap.entries()).map(([key, dataUrl]) =>
+            setDoc(doc(imagesRef, key), { dataUrl })
+        );
+        await Promise.all(promises);
+    }
+};
+
+/**
+ * Get persisted images for a generation job
+ */
+export const getPersistedImages = async (
+    bookId: string,
+    jobId: string,
+): Promise<Map<string, string>> => {
+    const imagesRef = collection(db, 'memoryBooks', bookId, 'generationJobs', jobId, 'images');
+    const snapshot = await getDocs(imagesRef);
+    const imageMap = new Map<string, string>();
+    snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        if (data.dataUrl) {
+            imageMap.set(docSnap.id, data.dataUrl);
+        }
+    });
+    return imageMap;
 };
 
 /**
