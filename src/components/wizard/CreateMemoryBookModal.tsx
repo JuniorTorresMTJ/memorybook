@@ -573,7 +573,13 @@ export const CreateMemoryBookModal = ({
                                     )}
 
                                     {modalState === 'wizard' && !showRestoreDialog && (
-                                        <>
+                                        <motion.div
+                                            key="wizard-content"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
                                             {currentStep === 1 && (
                                                 <BookSetupStep
                                                     key="step1"
@@ -598,7 +604,7 @@ export const CreateMemoryBookModal = ({
                                                     completedSteps={completedSteps}
                                                 />
                                             )}
-                                        </>
+                                        </motion.div>
                                     )}
                                 </AnimatePresence>
                             </div>
