@@ -149,12 +149,50 @@ export const updateMemoryBookStatus = async (
 };
 
 /**
- * Delete a Memory Book
+ * Delete a Memory Book and all its subcollections.
+ * Returns backendJobIds so the caller can clean up Storage.
  */
-export const deleteMemoryBook = async (bookId: string): Promise<void> => {
-    // Note: In production, you should also delete subcollections and storage files
+export const deleteMemoryBook = async (bookId: string): Promise<string[]> => {
+    const backendJobIds: string[] = [];
+
+    // 1. Read generation jobs to collect backendJobIds + delete images subcollection
+    try {
+        const jobsRef = collection(db, 'memoryBooks', bookId, 'generationJobs');
+        const jobsSnap = await getDocs(jobsRef);
+        for (const jobDoc of jobsSnap.docs) {
+            const jobData = jobDoc.data();
+            const bjId = jobData.inputSnapshot?.backendJobId;
+            if (bjId) backendJobIds.push(bjId);
+
+            // Delete images subcollection
+            const imagesRef = collection(db, 'memoryBooks', bookId, 'generationJobs', jobDoc.id, 'images');
+            const imagesSnap = await getDocs(imagesRef);
+            for (const imgDoc of imagesSnap.docs) {
+                await deleteDoc(imgDoc.ref);
+            }
+            // Delete the job document itself
+            await deleteDoc(jobDoc.ref);
+        }
+    } catch (e) {
+        console.warn('[deleteMemoryBook] Failed to clean generationJobs:', e);
+    }
+
+    // 2. Delete sections subcollection
+    try {
+        const sectionsRef = collection(db, 'memoryBooks', bookId, 'sections');
+        const sectionsSnap = await getDocs(sectionsRef);
+        for (const secDoc of sectionsSnap.docs) {
+            await deleteDoc(secDoc.ref);
+        }
+    } catch (e) {
+        console.warn('[deleteMemoryBook] Failed to clean sections:', e);
+    }
+
+    // 3. Delete the main document
     const bookRef = doc(db, 'memoryBooks', bookId);
     await deleteDoc(bookRef);
+
+    return backendJobIds;
 };
 
 // ============================================

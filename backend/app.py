@@ -293,11 +293,11 @@ async def run_pipeline_with_tracking(
             
             # Determine filename
             if prompt.prompt_type == "cover":
-                filename = "cover.png"
+                filename = "cover.jpg"
             elif prompt.prompt_type == "back_cover":
-                filename = "back_cover.png"
+                filename = "back_cover.jpg"
             else:
-                filename = f"page_{prompt.page_number:02d}.png"
+                filename = f"page_{prompt.page_number:02d}.jpg"
             
             output_path = os.path.join(output_dir, filename)
             
@@ -494,7 +494,9 @@ async def get_job_status(job_id: str):
 
 @app.get("/jobs/{job_id}/result")
 async def get_job_result(job_id: str):
-    """Get job result (final book package) with embedded image data."""
+    """Get job result (final book package). 
+    Images are returned as public URLs in image_path when available.
+    The /assets/ endpoint remains as fallback."""
     job = job_store.get_job(job_id)
     
     if not job:
@@ -511,7 +513,6 @@ async def get_job_result(job_id: str):
     
     # Convert datetime objects to ISO strings for JSON serialization
     import json
-    import base64
     from datetime import datetime
     
     def json_serial(obj):
@@ -519,35 +520,25 @@ async def get_job_result(job_id: str):
             return obj.isoformat()
         raise TypeError(f"Type {type(obj)} not serializable")
     
-    # Embed images as base64 data URLs in the result
     result = json.loads(json.dumps(job.result_json, default=json_serial))
     
-    def embed_image(page_data):
-        """Read image file and embed as base64 data URL."""
+    # Add asset_url hints so frontend knows where to fetch images
+    def add_asset_url(page_data):
+        """Add asset URL hint for each page's image."""
         if not page_data or not isinstance(page_data, dict):
             return
         image_path = page_data.get("image_path", "")
-        if not image_path or image_path.startswith("data:"):
+        if not image_path or image_path.startswith("data:") or image_path.startswith("http"):
             return
-        # Try to find the actual file
-        try:
-            # Extract filename
-            filename = os.path.basename(image_path.replace("\\", "/"))
-            asset_path = get_asset_path(job_id, "outputs", filename)
-            if asset_path and os.path.exists(asset_path):
-                with open(asset_path, "rb") as f:
-                    img_bytes = f.read()
-                mime = get_mime_type(filename)
-                data_url = f"data:{mime};base64,{base64.b64encode(img_bytes).decode()}"
-                page_data["image_data"] = data_url
-        except Exception as e:
-            logger.warning(f"Failed to embed image {image_path}: {e}")
+        filename = os.path.basename(image_path.replace("\\", "/"))
+        page_data["asset_url"] = f"/assets/{job_id}/outputs/{filename}"
     
-    # Embed images for all pages
-    embed_image(result.get("cover"))
-    embed_image(result.get("back_cover"))
+    add_asset_url(result.get("cover"))
+    add_asset_url(result.get("back_cover"))
     for page in result.get("pages", []):
-        embed_image(page)
+        add_asset_url(page)
+    
+    logger.info(f"[{job_id}] Returning result (public URLs when available)")
     
     return JSONResponse(content=result)
 
@@ -577,32 +568,18 @@ async def list_job_assets_endpoint(job_id: str):
 
 @app.get("/assets/{job_id}/{folder}/{filename}")
 async def serve_asset(job_id: str, folder: str, filename: str):
-    """Serve an asset file (image or JSON)."""
-    # Validate folder
+    """Serve an asset file directly. Images are already compressed at generation time."""
     if folder not in ["references", "outputs"]:
         raise HTTPException(status_code=400, detail="Invalid folder")
     
-    # Check job exists
-    job = job_store.get_job(job_id)
-    if not job:
-        raise HTTPException(status_code=404, detail="Job not found")
-    
-    # Get asset path
     from store.file_storage import get_references_dir, get_outputs_dir
-    
-    if folder == "references":
-        base_dir = get_references_dir(job_id)
-    else:
-        base_dir = get_outputs_dir(job_id)
-    
+    base_dir = get_references_dir(job_id) if folder == "references" else get_outputs_dir(job_id)
     filepath = os.path.join(base_dir, filename)
     
     if not os.path.exists(filepath):
         raise HTTPException(status_code=404, detail="Asset not found")
     
-    # Serve file
-    mime_type = get_mime_type(filename)
-    return FileResponse(filepath, media_type=mime_type)
+    return FileResponse(filepath, media_type=get_mime_type(filename))
 
 
 @app.get("/jobs")
@@ -659,6 +636,69 @@ async def get_supported_languages():
     }
 
 
+class EnhanceTextRequest(BaseModel):
+    """Request body for text enhancement."""
+    text: str = Field(..., min_length=1, max_length=5000, description="Text to enhance")
+    field_context: str = Field(default="memory", description="Context hint: childhood, teenage, adultLife, laterLife, or generic memory field name")
+    language: str = Field(default="pt-BR", description="Target language code")
+
+
+class EnhanceTextResponse(BaseModel):
+    """Response from text enhancement."""
+    enhanced_text: str
+    original_text: str
+
+
+@app.post("/enhance-text", response_model=EnhanceTextResponse, tags=["utilities"])
+async def enhance_text(request: EnhanceTextRequest):
+    """
+    Enhance user-written memory text using Gemini.
+    Makes the text more detailed, personal and vivid while preserving the original meaning.
+    """
+    logger.info(f"[enhance-text] Enhancing text ({len(request.text)} chars, context={request.field_context}, lang={request.language})")
+
+    lang = resolve_language(request.language)
+    lang_instruction = {
+        "pt": "Responda em português brasileiro.",
+        "en": "Respond in English.",
+        "es": "Responda en español.",
+        "de": "Antworte auf Deutsch.",
+        "fr": "Réponds en français.",
+    }.get(lang, "Respond in the same language as the input text.")
+
+    system_prompt = f"""You are a warm, empathetic writing assistant for a Memory Book application.
+Your job is to take a user's rough notes about someone's life memories and expand them into a richer, more vivid, personal narrative — while keeping the SAME facts, names, places, and events.
+
+Rules:
+- Keep ALL original facts, names, dates, and details. Do NOT invent new facts.
+- Expand the text to be 2-3x longer with sensory details, emotions, and atmosphere.
+- Write in first person if the original is in first person, or third person if original is third person.
+- Use a warm, loving, nostalgic tone.
+- Do NOT add any prefixes, headers, or explanations. Return ONLY the enhanced text.
+- {lang_instruction}"""
+
+    user_prompt = f"Context: this text describes the '{request.field_context}' phase/aspect of someone's life.\n\nOriginal text:\n{request.text}"
+
+    try:
+        gemini_client = GeminiClient(
+            api_key=config.google_api_key,
+            model=config.gemini_model
+        )
+        enhanced = await gemini_client.generate_text(system_prompt, user_prompt)
+
+        if not enhanced or len(enhanced.strip()) < 10:
+            raise HTTPException(status_code=500, detail="AI returned an empty or too-short response")
+
+        logger.info(f"[enhance-text] Enhanced from {len(request.text)} to {len(enhanced)} chars")
+        return EnhanceTextResponse(enhanced_text=enhanced.strip(), original_text=request.text)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception(f"[enhance-text] Failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Text enhancement failed: {str(e)}")
+
+
 @app.get("/")
 async def root():
     """Root endpoint with API information."""
@@ -675,6 +715,7 @@ async def root():
             "serve_asset": "GET /assets/{job_id}/{folder}/{filename}",
             "list_jobs": "GET /jobs",
             "delete_job": "DELETE /jobs/{job_id}",
+            "enhance_text": "POST /enhance-text",
             "languages": "GET /languages"
         }
     }

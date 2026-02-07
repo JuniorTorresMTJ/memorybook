@@ -224,6 +224,30 @@ export function detectUserLanguage(): string {
  * @param files - Files to validate
  * @returns Validation result
  */
+/**
+ * Enhance text using AI
+ * 
+ * Sends text to the backend /enhance-text endpoint for Gemini-powered enhancement.
+ */
+export async function enhanceText(
+  text: string,
+  fieldContext: string,
+  language: string = 'pt-BR'
+): Promise<string> {
+  const response = await fetch(`${API_BASE_URL}/enhance-text`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      text,
+      field_context: fieldContext,
+      language,
+    }),
+  });
+  
+  const data = await handleResponse<{ enhanced_text: string }>(response);
+  return data.enhanced_text;
+}
+
 export function validateReferenceImages(files: File[]): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB

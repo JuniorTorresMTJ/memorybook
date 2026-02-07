@@ -1,0 +1,615 @@
+{
+  "book_id": "a9572a83-c78d-489d-a9b5-57b2a29c32e6",
+  "title": "Junior book",
+  "style": "watercolor",
+  "created_at": "2026-02-04 00:39:38.827749",
+  "cover": {
+    "page_number": 0,
+    "page_type": "cover",
+    "image_path": "",
+    "thumbnail_path": null,
+    "narrative_text": null,
+    "life_phase": null,
+    "memory_reference": null,
+    "generation_attempts": 1
+  },
+  "back_cover": {
+    "page_number": -1,
+    "page_type": "back_cover",
+    "image_path": "",
+    "thumbnail_path": null,
+    "narrative_text": null,
+    "life_phase": null,
+    "memory_reference": null,
+    "generation_attempts": 1
+  },
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "content",
+      "image_path": "",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Playing in the street until late afternoon with friends.",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 2,
+      "page_type": "content",
+      "image_path": "",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Family weekends",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 3,
+      "page_type": "content",
+      "image_path": "",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "adolescent",
+      "memory_reference": "Participating in school activities",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 4,
+      "page_type": "content",
+      "image_path": "",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "adolescent",
+      "memory_reference": "Close friendships",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 5,
+      "page_type": "content",
+      "image_path": "",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "adult",
+      "memory_reference": "Career milestones",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 6,
+      "page_type": "content",
+      "image_path": "",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "adult",
+      "memory_reference": "Met my partner",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 7,
+      "page_type": "content",
+      "image_path": "",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "adult",
+      "memory_reference": "Family meals",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 8,
+      "page_type": "content",
+      "image_path": "",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "elderly",
+      "memory_reference": "Quiet coffee in the morning",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 9,
+      "page_type": "content",
+      "image_path": "",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "elderly",
+      "memory_reference": "Sunday family lunches",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 10,
+      "page_type": "content",
+      "image_path": "",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "elderly",
+      "memory_reference": "Feeling that I am in a safe and welcoming environment.",
+      "generation_attempts": 1
+    }
+  ],
+  "total_pages": 12,
+  "narrative_plan": {
+    "book_title": "Junior's Journey: A Watercolor Life",
+    "total_pages": 10,
+    "cover": {
+      "main_subject_pose": "Smiling portrait, holding a musical instrument (guitar or cavaquinho)",
+      "background_elements": [
+        "Sao Paulo skyline silhouette",
+        "watercolor splashes",
+        "family photo collage subtly blended"
+      ],
+      "color_scheme": [
+        "warm yellows",
+        "soft blues",
+        "earthy greens"
+      ],
+      "mood": "Warm, reflective, and joyful",
+      "title_placement": "top-center",
+      "title_space_reserved": true,
+      "symbolic_elements": [
+        "Musical notes representing a lifelong passion",
+        "A silhouette of a family representing his family-oriented personality"
+      ],
+      "composition_notes": "The cover should feel inviting and personal, capturing Junior's love for music and family."
+    },
+    "back_cover": {
+      "design_type": "symbolic",
+      "main_elements": [
+        "Watercolor brushstrokes",
+        "A stylized family tree",
+        "A silhouette of the Sao Paulo skyline"
+      ],
+      "color_scheme": [
+        "muted blues",
+        "grays",
+        "hints of yellow"
+      ],
+      "symbolic_meaning": "Represents the roots and growth of Junior's life, grounded in family and his hometown.",
+      "text_area": false,
+      "text_content": null
+    },
+    "pages": [
+      {
+        "page_number": 1,
+        "life_phase": "young",
+        "memory_reference": "Playing in the street until late afternoon with friends.",
+        "scene_description": "Children playing soccer in a cobblestone street in Sao Paulo, bathed in the late afternoon sun. Watercolor style, capturing the energy and joy of childhood.",
+        "emotional_tone": "Joyful, carefree, energetic",
+        "key_elements": [
+          "Cobblestone street",
+          "Children playing soccer",
+          "Late afternoon sun",
+          "Traditional Sao Paulo houses"
+        ],
+        "setting": "Sao Paulo street",
+        "characters_present": [
+          "Junior as a child",
+          "Neighborhood friends"
+        ],
+        "suggested_composition": "Wide shot capturing the street scene and the children's activity.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 2,
+        "life_phase": "young",
+        "memory_reference": "Family weekends",
+        "scene_description": "A family gathered around a table, sharing a meal and laughing. Warm colors, capturing the closeness and happiness of family time.",
+        "emotional_tone": "Warm, loving, nostalgic",
+        "key_elements": [
+          "Family meal",
+          "Laughter",
+          "Warm colors",
+          "Traditional Brazilian food"
+        ],
+        "setting": "Family home",
+        "characters_present": [
+          "Junior as a child",
+          "Parents (Marivaldo and Ines)",
+          "Siblings"
+        ],
+        "suggested_composition": "Close-up shot of the family around the table, focusing on their expressions.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 3,
+        "life_phase": "adolescent",
+        "memory_reference": "Participating in school activities",
+        "scene_description": "Junior participating in a school presentation or play, with his family in the audience. Proud and supportive atmosphere.",
+        "emotional_tone": "Proud, supportive, encouraging",
+        "key_elements": [
+          "School stage",
+          "Junior presenting",
+          "Family in the audience",
+          "School decorations"
+        ],
+        "setting": "School auditorium",
+        "characters_present": [
+          "Junior as a teenager",
+          "Parents",
+          "Teachers",
+          "Friends"
+        ],
+        "suggested_composition": "Medium shot capturing Junior on stage and his family in the audience.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 4,
+        "life_phase": "adolescent",
+        "memory_reference": "Close friendships",
+        "scene_description": "Junior and his close friends sharing laughter and conversation in a park. Relaxed and joyful scene.",
+        "emotional_tone": "Joyful, friendly, lighthearted",
+        "key_elements": [
+          "Park setting",
+          "Friends laughing",
+          "Casual clothing",
+          "Sunshine"
+        ],
+        "setting": "Park in Sao Paulo",
+        "characters_present": [
+          "Junior as a teenager",
+          "Close friends"
+        ],
+        "suggested_composition": "Group shot of Junior and his friends, capturing their camaraderie.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 5,
+        "life_phase": "adult",
+        "memory_reference": "Career milestones",
+        "scene_description": "Junior receiving recognition at work, surrounded by colleagues. A sense of accomplishment and pride.",
+        "emotional_tone": "Proud, accomplished, respected",
+        "key_elements": [
+          "Office setting",
+          "Recognition award",
+          "Colleagues congratulating",
+          "Professional attire"
+        ],
+        "setting": "Workplace in Sao Paulo",
+        "characters_present": [
+          "Junior as an adult",
+          "Colleagues",
+          "Supervisors"
+        ],
+        "suggested_composition": "Medium shot capturing Junior receiving the award and the support of his colleagues.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 6,
+        "life_phase": "adult",
+        "memory_reference": "Met my partner",
+        "scene_description": "Junior meeting his partner in a simple, everyday setting, like a coffee shop or park. A sense of connection and potential.",
+        "emotional_tone": "Hopeful, romantic, serendipitous",
+        "key_elements": [
+          "Coffee shop or park setting",
+          "Eye contact between Junior and his partner",
+          "Soft lighting",
+          "Natural environment"
+        ],
+        "setting": "Coffee shop or park",
+        "characters_present": [
+          "Junior as an adult",
+          "Partner"
+        ],
+        "suggested_composition": "Close-up shot focusing on the connection between Junior and his partner.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 7,
+        "life_phase": "adult",
+        "memory_reference": "Family meals",
+        "scene_description": "Junior with his children, sharing a family lunch and celebrating a special occasion. Joyful and loving atmosphere.",
+        "emotional_tone": "Loving, joyful, celebratory",
+        "key_elements": [
+          "Family meal",
+          "Children laughing",
+          "Celebration decorations",
+          "Delicious food"
+        ],
+        "setting": "Family home",
+        "characters_present": [
+          "Junior as an adult",
+          "Children",
+          "Partner"
+        ],
+        "suggested_composition": "Wide shot capturing the family around the table, enjoying their time together.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 8,
+        "life_phase": "elderly",
+        "memory_reference": "Quiet coffee in the morning",
+        "scene_description": "Junior enjoying a quiet coffee in the morning, looking peaceful and content. Warm and comforting scene.",
+        "emotional_tone": "Peaceful, content, reflective",
+        "key_elements": [
+          "Coffee cup",
+          "Comfortable chair",
+          "Sunlight streaming in",
+          "Book or newspaper"
+        ],
+        "setting": "Home",
+        "characters_present": [
+          "Junior as an elderly man"
+        ],
+        "suggested_composition": "Close-up shot of Junior enjoying his coffee, capturing his peaceful expression.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 9,
+        "life_phase": "elderly",
+        "memory_reference": "Sunday family lunches",
+        "scene_description": "Junior surrounded by his family at a Sunday lunch, sharing stories and laughter. A celebration of family bonds.",
+        "emotional_tone": "Loving, joyful, connected",
+        "key_elements": [
+          "Large family gathering",
+          "Delicious food",
+          "Laughter and conversation",
+          "Warm atmosphere"
+        ],
+        "setting": "Family home",
+        "characters_present": [
+          "Junior as an elderly man",
+          "Children",
+          "Grandchildren",
+          "Partner"
+        ],
+        "suggested_composition": "Wide shot capturing the entire family gathered around the table.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 10,
+        "life_phase": "elderly",
+        "memory_reference": "Feeling that I am in a safe and welcoming environment.",
+        "scene_description": "Junior resting in his favorite corner of the house, surrounded by family photos and comforting objects. A sense of peace and security.",
+        "emotional_tone": "Safe, secure, loved",
+        "key_elements": [
+          "Comfortable corner of the house",
+          "Family photos",
+          "Comforting objects",
+          "Soft lighting"
+        ],
+        "setting": "Home",
+        "characters_present": [
+          "Junior as an elderly man"
+        ],
+        "suggested_composition": "Close-up shot of Junior in his favorite spot, conveying a sense of peace and contentment.",
+        "narrative_text": null
+      }
+    ],
+    "narrative_arc": "The book follows Junior's life chronologically, highlighting key moments of joy, love, and connection with family and friends. It emphasizes his love for music, the importance of family, and the enjoyment of simple pleasures, ultimately portraying a life well-lived.",
+    "visual_themes": [
+      "Family gatherings",
+      "Musical instruments",
+      "Cozy home interiors",
+      "Sao Paulo landmarks"
+    ],
+    "color_progression": "The color palette starts with bright and vibrant colors in the 'young' phase, gradually transitioning to warmer and more subdued tones in the 'elderly' phase, reflecting the passage of time and the deepening of emotions."
+  },
+  "visual_fingerprint": {
+    "subject_id": "unknown",
+    "facial_features": {
+      "face_shape": "",
+      "eye_color": "",
+      "eye_shape": "",
+      "hair_color": "",
+      "hair_style": "",
+      "skin_tone": "",
+      "distinctive_features": [],
+      "estimated_age_range": ""
+    },
+    "body_characteristics": {
+      "body_type": "",
+      "height_estimate": "",
+      "posture": "",
+      "clothing_style": []
+    },
+    "style_attributes": {
+      "color_palette": [
+        "muted",
+        "warm"
+      ],
+      "line_weight": "none",
+      "shading_style": "watercolor-wash",
+      "detail_level": "low"
+    },
+    "reference_image_analysis": [],
+    "consistency_notes": [
+      "Unable to analyze reference images - using generic representation"
+    ],
+    "age_variations": {}
+  },
+  "design_review": {
+    "overall_cohesion": 1.0,
+    "style_consistency_score": 1.0,
+    "color_palette_harmony": 1.0,
+    "narrative_flow": 1.0,
+    "character_consistency": 1.0,
+    "page_reviews": [
+      {
+        "page_number": 0,
+        "artistic_assessment": "Generation failed - regeneration required",
+        "composition_notes": "No image to review",
+        "color_harmony": "poor",
+        "emotional_impact": "weak",
+        "style_adherence": "inconsistent",
+        "strengths": [],
+        "areas_for_improvement": [
+          "Image generation failed"
+        ],
+        "recommended_action": "regenerate"
+      },
+      {
+        "page_number": 1,
+        "artistic_assessment": "Generation failed - regeneration required",
+        "composition_notes": "No image to review",
+        "color_harmony": "poor",
+        "emotional_impact": "weak",
+        "style_adherence": "inconsistent",
+        "strengths": [],
+        "areas_for_improvement": [
+          "Image generation failed"
+        ],
+        "recommended_action": "regenerate"
+      },
+      {
+        "page_number": 2,
+        "artistic_assessment": "Generation failed - regeneration required",
+        "composition_notes": "No image to review",
+        "color_harmony": "poor",
+        "emotional_impact": "weak",
+        "style_adherence": "inconsistent",
+        "strengths": [],
+        "areas_for_improvement": [
+          "Image generation failed"
+        ],
+        "recommended_action": "regenerate"
+      },
+      {
+        "page_number": 3,
+        "artistic_assessment": "Generation failed - regeneration required",
+        "composition_notes": "No image to review",
+        "color_harmony": "poor",
+        "emotional_impact": "weak",
+        "style_adherence": "inconsistent",
+        "strengths": [],
+        "areas_for_improvement": [
+          "Image generation failed"
+        ],
+        "recommended_action": "regenerate"
+      },
+      {
+        "page_number": 4,
+        "artistic_assessment": "Generation failed - regeneration required",
+        "composition_notes": "No image to review",
+        "color_harmony": "poor",
+        "emotional_impact": "weak",
+        "style_adherence": "inconsistent",
+        "strengths": [],
+        "areas_for_improvement": [
+          "Image generation failed"
+        ],
+        "recommended_action": "regenerate"
+      },
+      {
+        "page_number": 5,
+        "artistic_assessment": "Generation failed - regeneration required",
+        "composition_notes": "No image to review",
+        "color_harmony": "poor",
+        "emotional_impact": "weak",
+        "style_adherence": "inconsistent",
+        "strengths": [],
+        "areas_for_improvement": [
+          "Image generation failed"
+        ],
+        "recommended_action": "regenerate"
+      },
+      {
+        "page_number": 6,
+        "artistic_assessment": "Generation failed - regeneration required",
+        "composition_notes": "No image to review",
+        "color_harmony": "poor",
+        "emotional_impact": "weak",
+        "style_adherence": "inconsistent",
+        "strengths": [],
+        "areas_for_improvement": [
+          "Image generation failed"
+        ],
+        "recommended_action": "regenerate"
+      },
+      {
+        "page_number": 7,
+        "artistic_assessment": "Generation failed - regeneration required",
+        "composition_notes": "No image to review",
+        "color_harmony": "poor",
+        "emotional_impact": "weak",
+        "style_adherence": "inconsistent",
+        "strengths": [],
+        "areas_for_improvement": [
+          "Image generation failed"
+        ],
+        "recommended_action": "regenerate"
+      },
+      {
+        "page_number": 8,
+        "artistic_assessment": "Generation failed - regeneration required",
+        "composition_notes": "No image to review",
+        "color_harmony": "poor",
+        "emotional_impact": "weak",
+        "style_adherence": "inconsistent",
+        "strengths": [],
+        "areas_for_improvement": [
+          "Image generation failed"
+        ],
+        "recommended_action": "regenerate"
+      },
+      {
+        "page_number": 9,
+        "artistic_assessment": "Generation failed - regeneration required",
+        "composition_notes": "No image to review",
+        "color_harmony": "poor",
+        "emotional_impact": "weak",
+        "style_adherence": "inconsistent",
+        "strengths": [],
+        "areas_for_improvement": [
+          "Image generation failed"
+        ],
+        "recommended_action": "regenerate"
+      },
+      {
+        "page_number": 10,
+        "artistic_assessment": "Generation failed - regeneration required",
+        "composition_notes": "No image to review",
+        "color_harmony": "poor",
+        "emotional_impact": "weak",
+        "style_adherence": "inconsistent",
+        "strengths": [],
+        "areas_for_improvement": [
+          "Image generation failed"
+        ],
+        "recommended_action": "regenerate"
+      },
+      {
+        "page_number": 11,
+        "artistic_assessment": "Generation failed - regeneration required",
+        "composition_notes": "No image to review",
+        "color_harmony": "poor",
+        "emotional_impact": "weak",
+        "style_adherence": "inconsistent",
+        "strengths": [],
+        "areas_for_improvement": [
+          "Image generation failed"
+        ],
+        "recommended_action": "regenerate"
+      }
+    ],
+    "global_issues": [
+      "Complete generation failure across all pages.",
+      "Inconsistent style adherence.",
+      "Poor color harmony.",
+      "Lack of narrative flow.",
+      "No character consistency."
+    ],
+    "global_suggestions": [
+      "Regenerate all pages.",
+      "Ensure consistent style and color palette across all pages during regeneration.",
+      "Verify that the narrative flows logically from page to page.",
+      "Check character consistency after regeneration."
+    ],
+    "pages_needing_attention": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "approved": false
+  },
+  "total_generation_time_ms": 0,
+  "total_retries": 0,
+  "output_directory": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\a9572a83-c78d-489d-a9b5-57b2a29c32e6\\outputs",
+  "pdf_path": null
+}

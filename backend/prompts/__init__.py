@@ -1,0 +1,38 @@
+"""
+MemoryBook Prompts Module
+
+Contains master prompts and language utilities for all agents.
+"""
+
+from .master_prompts import (
+    ORCHESTRATOR_PROMPT,
+    NORMALIZER_PROMPT,
+    NARRATIVE_PLANNER_PROMPT,
+    VISUAL_ANALYZER_PROMPT,
+    COVER_CREATOR_PROMPT,
+    BACK_COVER_CREATOR_PROMPT,
+    PROMPT_WRITER_PROMPT,
+    PROMPT_REVIEWER_PROMPT,
+    ILLUSTRATOR_REVIEWER_PROMPT,
+    DESIGNER_REVIEWER_PROMPT,
+    IMAGE_VALIDATOR_PROMPT,
+    ITERATIVE_FIX_PROMPT,
+)
+from .language_utils import resolve_language, get_language_instruction
+
+__all__ = [
+    "ORCHESTRATOR_PROMPT",
+    "NORMALIZER_PROMPT",
+    "NARRATIVE_PLANNER_PROMPT",
+    "VISUAL_ANALYZER_PROMPT",
+    "COVER_CREATOR_PROMPT",
+    "BACK_COVER_CREATOR_PROMPT",
+    "PROMPT_WRITER_PROMPT",
+    "PROMPT_REVIEWER_PROMPT",
+    "ILLUSTRATOR_REVIEWER_PROMPT",
+    "DESIGNER_REVIEWER_PROMPT",
+    "IMAGE_VALIDATOR_PROMPT",
+    "ITERATIVE_FIX_PROMPT",
+    "resolve_language",
+    "get_language_instruction",
+]

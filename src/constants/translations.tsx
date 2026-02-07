@@ -43,6 +43,20 @@ export const translations = {
             manReading: "An elderly man sharing stories and reading a book with his daughter in a warm, cozy living room.",
             womanReading: "An elderly woman smiling while looking at a photo album with her daughter, sharing precious memories."
         },
+        // Problem Section
+        problemSection: {
+            badge: "Why it matters",
+            title: "Every 3 seconds,",
+            titleHighlight: "someone loses a memory",
+            description: "More than 55 million people worldwide live with Alzheimer's or dementia. As the disease progresses, precious memories of a lifetime begin to fade — the sound of a mother's voice, the story of a first love, the recipe passed down for generations.",
+            stat1Number: "55M+",
+            stat1Label: "people living with dementia worldwide",
+            stat2Number: "10M",
+            stat2Label: "new cases every year",
+            stat3Number: "70%",
+            stat3Label: "of families wish they had preserved more memories",
+            cta: "Memory Book helps families preserve these stories before they disappear — transforming fleeting memories into a beautiful, lasting legacy.",
+        },
         // How it Works Section
         howItWorks: {
             title: "How it Works",
@@ -120,6 +134,9 @@ export const translations = {
             removedPermanently: "was permanently removed",
             deleteError: "Error deleting",
             deleteErrorMsg: "Could not delete the book. Please try again.",
+            pdfReady: "PDF Ready!",
+            pdfDownloaded: "has been downloaded successfully.",
+            generatingPdf: "Generating PDF...",
             createFirst: "Create your first Memory Book",
             createFirstDesc: "See the example below for inspiration and then create yours!",
             createMemoryBook: "Create Memory Book",
@@ -373,7 +390,70 @@ export const translations = {
             photo: "photo",
             photosWord: "photos",
             ofPrompts: "of",
-            promptsWord: "prompts answered"
+            promptsWord: "prompts answered",
+            // Childhood step labels
+            childhoodIntro: "Tell us about their early years. Write as little or as much as you'd like.",
+            whereBorn: "Where were they born?",
+            whoParents: "Who were their parents?",
+            siblings: "Did they have siblings?",
+            happyMemory: "A happy childhood memory",
+            whatEnjoy: "What did they enjoy doing?",
+            addChildhoodPhotos: "Add childhood photos",
+            childhoodPhotosHelper: "Old family photos help us capture their early years",
+            // Teenage step labels
+            teenageIntro: "Tell us about their teenage years — school, friends, and adventures.",
+            whereLiveTeenage: "Where did they live?",
+            schoolExperiences: "School experiences",
+            friendsInterests: "Friends and interests",
+            memorableEvents: "Memorable events",
+            addTeenagePhotos: "Add teenage photos",
+            teenagePhotosHelper: "Photos from their teenage years help bring this chapter to life",
+            // Adult life step labels
+            adultLifeIntro: "Share about their adult life — work, family, and passions.",
+            workCareer: "Work and career",
+            hobbiesPassions: "Hobbies and passions",
+            marriagePartner: "Marriage or partner",
+            childrenFamily: "Children and family",
+            milestones: "Important milestones",
+            addAdultPhotos: "Add adult life photos",
+            adultPhotosHelper: "Photos from their adult years help illustrate this period",
+            // Later life step labels
+            laterLifeIntro: "Tell us about their later years — routines, family, and what brings joy.",
+            whereLiveLater: "Where do they live now?",
+            routinesTraditions: "Routines and traditions",
+            familyMoments: "Family moments",
+            comfortJoy: "What brings comfort and joy",
+            addLaterPhotos: "Add later life photos",
+            laterPhotosHelper: "Recent photos help us capture their current chapter",
+            // Mode Selection
+            modeSelectionTitle: "How would you like to create your book?",
+            modeSelectionDesc: "Choose how you'd like to share the memories.",
+            modeDetailedTitle: "Describe the story",
+            modeDetailedDesc: "Tell in detail about each life phase — childhood, teenage years, adult life, and present day. The more details, the more special the book.",
+            modeBriefTitle: "Brief version",
+            modeBriefDesc: "Write freely about each phase in a text field. Ideal when you want something quick and simple.",
+            modeAudioTitle: "Describe by audio",
+            modeAudioDesc: "Record your voice telling the memories and the AI transcribes automatically.",
+            comingSoon: "Coming soon",
+            detailedMemoriesTitle: "Tell the story in detail",
+            detailedMemoriesIntro: "The more details you share, the richer and more personal the book will be. Fill in what you know — every field is optional.",
+            detailedMemoriesTip: "Don't worry about filling everything — every detail you share makes the book more special.",
+            whereYoung: "Where did they live as a teenager?",
+            youngLivingPlaceholder: "e.g., Moved to the city for school",
+            schoolExperience: "School experiences",
+            career: "Career / profession",
+            careerPlaceholder: "e.g., Worked as a teacher for 35 years...",
+            partner: "Life partner",
+            children: "Children",
+            whereNow: "Where do they live now?",
+            nowLivingPlaceholder: "e.g., In the same house where they raised the kids",
+            familyPlaceholder: "e.g., Last Christmas together...",
+            eventPlaceholder: "e.g., Graduation, the day they moved...",
+            enhanceWithAI: "Enhance with AI",
+            enhanceBtn: "AI",
+            enhancing: "Enhancing...",
+            undoEnhance: "Undo enhancement",
+            minimize: "Minimize"
         },
         // Delete Confirmation
         deleteConfirm: {
@@ -430,7 +510,8 @@ export const translations = {
             favorites: "Favorites",
             myProfile: "My Profile",
             settings: "Settings",
-            logout: "Logout"
+            logout: "Logout",
+            language: "Language"
         },
         // Home Page
         home: {
@@ -498,18 +579,18 @@ export const translations = {
             displayDate: "February 14, 2026",
             displayDescription: "A watercolor memory book created by a daughter for her father — a tribute to love that transcends forgetting.",
             pages: [
-                { title: "The Yellow House Backyard in Ouro Fino", description: "In Ouro Fino, a small town in southern Minas Gerais, Brazil, dad grew up in a yellow house with an enormous backyard. He spent his afternoons running barefoot among the mango trees, chasing butterflies with his siblings Pedro, Ana, and João while Dona Rosa called everyone in for afternoon coffee." },
-                { title: "First Day at the Local School", description: "With his brand-new backpack and hair combed by Grandma Rosa, dad went to his first day at the Ouro Fino State School. He came home bursting with stories about new friends and his teacher Dona Lúcia, who drew colorful flowers on the blackboard." },
-                { title: "Football Afternoons at the Neighborhood Field", description: "As a teenager, after moving to the city for school, dad practically lived at the neighborhood field. He played football with his friends until sunset, coming home sweaty and happy, dreaming of becoming a professional player — though fate had other plans for him." },
-                { title: "The Graduation that Made the Whole Family Proud", description: "Dad was the first in the family to graduate — from Ouro Fino State School. On graduation day, Grandma Rosa cried tears of joy and Grandpa Antônio said it was the happiest day of his life. The whole family came from the countryside to celebrate." },
-                { title: "The Day Everything Began", description: "Dad and mom Maria Helena got married on a sunny morning. He always says that when he saw her at the altar, he forgot the speech he'd been rehearsing for weeks and could only smile — a smile that didn't leave his face all day." },
-                { title: "The Arrival of Ana Clara", description: "When I, Ana Clara, was born, dad held me in his arms for the first time and promised he'd always be there for me. Mom says he didn't let go for hours, just gazing and smiling, whispering softly: 'My little princess.'" },
-                { title: "Learning to Fly on a Bicycle", description: "Dad ran beside me at the Municipal Park holding the bike seat, repeating 'I'm here, I won't let go.' Until in a magical moment, he let go — and I flew on my own for the first time. When I looked back, he had tears in his eyes." },
-                { title: "The Teacher Who Turned Numbers into Stories", description: "For 35 years, dad was a math teacher at the Municipal School. His students loved how he turned complicated numbers into stories that made everyone laugh. He was more than a teacher — he was a storyteller with chalk in his hand and love in his heart." },
-                { title: "Morning Coffee in the Garden", description: "Every morning, dad has his fresh-brewed coffee in the garden he planted over the years. The porch, the radio music, the smell of coffee — these are the rituals that bring peace and a smile to his day, even when memories grow more distant." },
-                { title: "The Christmas that Brought Everyone Together", description: "At the last family Christmas, dad sat at the head of the table surrounded by all of us — children, grandchildren, cousins. Even when words fail, his smile says everything. That smile we've known forever and that never, ever changes." }
+                { title: "The Yellow House Backyard in Ouro Fino", description: "In Ouro Fino, a small town nestled in the hills of southern Minas Gerais, Brazil, dad grew up in a yellow house with a backyard that seemed to stretch on forever. Every summer afternoon, he'd run barefoot through the red earth between mango trees heavy with fruit, his heart bursting with joy. His siblings Pedro, Ana, and João would chase after him, and together they'd invent entire worlds among the trees. Their mother, Dona Rosa, would appear at the kitchen window calling everyone in for afternoon coffee — freshly brewed with cornmeal cake she made every Friday. The smell of that coffee mixed with the perfume of ripe mangoes, and to this day, whenever I catch that aroma, I think of dad as a little boy smiling in that backyard." },
+                { title: "First Day at the Local School", description: "With his brand-new canvas backpack and hair carefully combed by Grandma Rosa, dad walked to the Ouro Fino State School on that February morning. He was so nervous he held his mother's hand all the way to the classroom door. When he came home that day, he wouldn't stop talking — he told us about his friend Zé who sat next to him, about his teacher Dona Lúcia who drew colorful flowers on the blackboard to teach the alphabet, and about the snack Grandma had prepared with so much care that all his classmates asked for a piece. Grandpa Antônio listened to every word with shining eyes, proud of the boy who was learning to read." },
+                { title: "Football Afternoons at the Neighborhood Field", description: "As a teenager, after moving to the city to attend high school, dad found his second home on the dirt football field in the neighborhood. Monday through Saturday, as soon as class ended and his shift at Uncle's grocery store was over, he'd be there. He played left wing, dribbling with that elegant style his friends admired. He'd come home sweaty, knees scraped, with a grin from ear to ear. He dreamed of becoming a professional player — he'd paste newspaper clippings of Pelé on his bedroom wall. Fate had other plans for him, but that passion for football, that joy of running free, never left his heart." },
+                { title: "The Graduation that Made the Whole Family Proud", description: "Dad was the very first in the entire family to complete his studies. On graduation day at the State School, Grandma Rosa wore her finest floral dress and cried from the beginning to the end of the ceremony. Grandpa Antônio, a man of few words, hugged dad so hard they nearly fell over, and said with a trembling voice: 'This is the happiest day of my life.' The whole family came from the countryside — uncles, cousins, godmother Aparecida — all packed into a bus to watch Carlos receive his diploma. That night, they had a barbecue in the backyard and danced forró until late. Dad kept that framed diploma on the living room wall for the rest of his life." },
+                { title: "The Day Everything Began", description: "Dad and mom Maria Helena met at a São João festival in the town square. He says she was dancing quadrilha in a red chintz dress, and in that moment, he knew. They married on a sunny October morning at the little São Sebastião church. He always tells this story: when he saw her at the altar, he completely forgot the speech he'd been rehearsing for weeks. His hands were shaking, his voice disappeared, and all he could do was smile — a smile so wide and so genuine that mom started laughing too. The whole church laughed along. And that smile didn't leave his face all day, or the next day, or in all the years that followed." },
+                { title: "The Arrival of Ana Clara", description: "When I was born, on a rainy Tuesday in March, dad was in the waiting room pacing back and forth. Mom says that when the nurse called him in, he ran so fast he nearly tripped at the door. He held me in his arms for the first time with such care, as if I were made of crystal. He stayed there for hours, just looking at me, counting my tiny fingers, stroking my cheek. He whispered softly 'My little princess, my little princess' with tears welling in his eyes. That night, when he finally laid me in the crib, he sat in the chair beside it and made a promise, in the most serious voice I would ever hear: 'I will always be here for you, always.'" },
+                { title: "Learning to Fly on a Bicycle", description: "It was a golden Sunday afternoon at the Municipal Park. Dad ran beside me holding the seat of my red bicycle, breathless but never stopping, repeating 'I'm here, sweetheart, I won't let go, I'm here.' I pedaled with my heart pounding, feeling the wind on my face and fear mixed with excitement. Until in a magical moment — the kind of moment you keep forever — he let go. And I flew. I pedaled on my own for the first time, the whole world opening up before me. When I looked back, triumphant, I saw dad standing in the middle of the path. Tears were streaming down his face and his hands were pressed to his chest, as if his heart might burst with pride." },
+                { title: "The Teacher Who Turned Numbers into Stories", description: "For 35 years, dad woke up early, put on his dress shirt, and walked to the Municipal School with his brown leather briefcase under his arm. He was a math teacher — but not just any math teacher. His students loved how he turned complicated equations into funny stories. 'If Seu João has 50 cows and sells 12 to Seu Manoel, how many are left?' — and then he'd spin a whole soap opera about Seu João and Seu Manoel that had the entire class in stitches. Former students still stop him on the street to say 'Professor Carlos, you changed my life.' He was more than a teacher — he was a storyteller with chalk in his hand and infinite love in his heart." },
+                { title: "Morning Coffee in the Garden", description: "Every morning, without exception, dad rises with the sun, puts the water on to boil, and brews his coffee the way his mother taught him — slowly, patiently, letting the aroma fill the entire kitchen. Then he carries his cup to the garden he planted over decades. There are roses, jasmine, basil, and a lemon tree that bears fruit all year round. He sits in the wicker chair on the porch, tunes the radio to an MPB station, and stays there, at peace, watching the flowers while his coffee cools. Sometimes he closes his eyes and smiles to himself, as if he's having a conversation with his memories. Even when memory grows more distant, these rituals remain — the body remembers what the mind sometimes forgets." },
+                { title: "The Christmas that Brought Everyone Together", description: "At the last family Christmas, the table was set with the white crocheted tablecloth that Grandma Rosa made, and dad sat at the head, as always. The house was full — me, the grandchildren running down the hallway, the cousins, Aunt Ana with her famous Greek rice. Dad looked at each one of us with those eyes that say more than any words could. When Pedrinho, my five-year-old son, climbed into his lap and said 'I love you, Grandpa,' dad held him tight against his chest and was silent for a long moment. Even when words fail, his smile says everything. That smile we've known forever — the same smile as the boy who ran barefoot in Ouro Fino — and that never, ever changes." }
             ],
-            backCoverDescription: "Memories are like seeds planted in the heart. Even when the mind forgets, love remains."
+            backCoverDescription: "Memories are like seeds planted in the heart. Even when the mind forgets, love remains. This book was made for you, Dad — so that each page brings back the warmth of those moments that made us who we are. With all my love, your daughter Ana Clara."
         },
         // Common
         common: {
@@ -541,6 +622,20 @@ export const translations = {
         images: {
             manReading: "Um senhor idoso compartilhando histórias e lendo um livro com sua filha em uma sala de estar aconchegante.",
             womanReading: "Uma senhora idosa sorrindo enquanto olha um álbum de fotos com sua filha, compartilhando memórias preciosas."
+        },
+        // Problem Section
+        problemSection: {
+            badge: "Por que isso importa",
+            title: "A cada 3 segundos,",
+            titleHighlight: "alguém perde uma memória",
+            description: "Mais de 55 milhões de pessoas no mundo vivem com Alzheimer ou demência. À medida que a doença avança, memórias preciosas de uma vida inteira começam a desaparecer — a voz da mãe, a história do primeiro amor, a receita passada por gerações.",
+            stat1Number: "55M+",
+            stat1Label: "pessoas vivem com demência no mundo",
+            stat2Number: "10M",
+            stat2Label: "novos casos a cada ano",
+            stat3Number: "70%",
+            stat3Label: "das famílias gostariam de ter preservado mais memórias",
+            cta: "O Memory Book ajuda famílias a preservar essas histórias antes que desapareçam — transformando memórias passageiras em um legado lindo e duradouro.",
         },
         // How it Works Section
         howItWorks: {
@@ -619,6 +714,9 @@ export const translations = {
             removedPermanently: "foi removido permanentemente",
             deleteError: "Erro ao excluir",
             deleteErrorMsg: "Não foi possível excluir o livro. Tente novamente.",
+            pdfReady: "PDF Gerado!",
+            pdfDownloaded: "foi baixado com sucesso.",
+            generatingPdf: "Gerando PDF...",
             createFirst: "Crie seu primeiro Memory Book",
             createFirstDesc: "Veja o exemplo abaixo para inspiração e depois crie o seu!",
             createMemoryBook: "Criar Memory Book",
@@ -867,7 +965,73 @@ export const translations = {
             photo: "foto",
             photosWord: "fotos",
             ofPrompts: "de",
-            promptsWord: "perguntas respondidas"
+            promptsWord: "perguntas respondidas",
+            // Childhood step labels
+            childhoodIntro: "Conte-nos sobre os primeiros anos. Escreva pouco ou muito, como preferir.",
+            whereBorn: "Onde nasceu?",
+            whoParents: "Quem eram os pais?",
+            siblings: "Tinha irmãos?",
+            happyMemory: "Uma memória feliz da infância",
+            whatEnjoy: "O que gostava de fazer?",
+            addChildhoodPhotos: "Adicionar fotos da infância",
+            childhoodPhotosHelper: "Fotos antigas da família ajudam a capturar os primeiros anos",
+            // Teenage step labels
+            teenageIntro: "Conte-nos sobre a adolescência — escola, amigos e aventuras.",
+            whereLiveTeenage: "Onde morava?",
+            schoolExperiences: "Experiências escolares",
+            friendsInterests: "Amigos e interesses",
+            memorableEvents: "Eventos marcantes",
+            addTeenagePhotos: "Adicionar fotos da adolescência",
+            teenagePhotosHelper: "Fotos da adolescência ajudam a dar vida a este capítulo",
+            // Adult life step labels
+            adultLifeIntro: "Compartilhe sobre a vida adulta — trabalho, família e paixões.",
+            workCareer: "Trabalho e carreira",
+            hobbiesPassions: "Hobbies e paixões",
+            marriagePartner: "Casamento ou parceiro(a)",
+            childrenFamily: "Filhos e família",
+            milestones: "Conquistas importantes",
+            addAdultPhotos: "Adicionar fotos da vida adulta",
+            adultPhotosHelper: "Fotos da vida adulta ajudam a ilustrar este período",
+            // Later life step labels
+            laterLifeIntro: "Conte-nos sobre os anos mais recentes — rotinas, família e o que traz alegria.",
+            whereLiveLater: "Onde mora atualmente?",
+            routinesTraditions: "Rotinas e tradições",
+            familyMoments: "Momentos em família",
+            comfortJoy: "O que traz conforto e alegria",
+            addLaterPhotos: "Adicionar fotos recentes",
+            laterPhotosHelper: "Fotos recentes ajudam a capturar o capítulo atual",
+            // Mode Selection
+            modeSelectionTitle: "Como deseja criar seu livro?",
+            modeSelectionDesc: "Escolha a forma que preferir para contar as memórias.",
+            modeDetailedTitle: "Descrever a história",
+            modeDetailedDesc: "Conte com detalhes cada fase da vida — infância, juventude, vida adulta e momento atual. Quanto mais detalhes, mais especial será o livro.",
+            modeBriefTitle: "Versão mais breve",
+            modeBriefDesc: "Escreva livremente sobre cada fase em um campo de texto. Ideal para quando você quer algo rápido e simples.",
+            modeAudioTitle: "Descrever por áudio",
+            modeAudioDesc: "Grave sua voz contando as memórias e a IA transcreve automaticamente.",
+            comingSoon: "Em breve",
+            // Detailed Memories Step
+            detailedMemoriesTitle: "Conte a história com detalhes",
+            detailedMemoriesIntro: "Quanto mais detalhes compartilhar, mais rico e pessoal será o livro. Preencha o que souber — cada campo é opcional.",
+            detailedMemoriesTip: "Não se preocupe em preencher tudo — cada detalhe que compartilhar torna o livro mais especial.",
+            whereYoung: "Onde morava na adolescência?",
+            youngLivingPlaceholder: "Ex: Mudou para a cidade para estudar",
+            schoolExperience: "Experiências na escola",
+            career: "Carreira / profissão",
+            careerPlaceholder: "Ex: Trabalhou como professor por 35 anos...",
+            partner: "Parceiro(a) de vida",
+            children: "Filhos",
+            whereNow: "Onde mora atualmente?",
+            nowLivingPlaceholder: "Ex: Na mesma casa onde criou os filhos",
+            familyPlaceholder: "Ex: O último Natal todos juntos...",
+            eventPlaceholder: "Ex: A formatura, o dia da mudança...",
+            // AI Enhancement
+            enhanceWithAI: "Melhorar com IA",
+            enhanceBtn: "IA",
+            enhancing: "Melhorando...",
+            undoEnhance: "Desfazer melhoria",
+            // Minimize
+            minimize: "Minimizar"
         },
         // Delete Confirmation
         deleteConfirm: {
@@ -924,7 +1088,8 @@ export const translations = {
             favorites: "Favoritos",
             myProfile: "Meu Perfil",
             settings: "Configurações",
-            logout: "Sair"
+            logout: "Sair",
+            language: "Idioma"
         },
         // Home Page
         home: {
@@ -992,18 +1157,18 @@ export const translations = {
             displayDate: "14 de Fevereiro, 2026",
             displayDescription: "Um livro de memórias em aquarela criado por uma filha para seu pai — uma homenagem ao amor que transcende o esquecimento.",
             pages: [
-                { title: "O Quintal da Casa Amarela em Ouro Fino", description: "Lá em Ouro Fino, no sul de Minas Gerais, papai cresceu numa casa amarela com um quintal enorme. Passava as tardes correndo descalço entre as mangueiras, perseguindo borboletas com os irmãos Pedro, Ana e João enquanto dona Rosa chamava todos para o café da tarde." },
-                { title: "O Primeiro Dia na Escola Estadual", description: "Com a mochila nova e o cabelo penteado pela vovó Rosa, papai foi para o seu primeiro dia na Escola Estadual de Ouro Fino. Voltou para casa cheio de histórias sobre os novos amigos e a professora Dona Lúcia, que desenhava flores coloridas no quadro-negro." },
-                { title: "Tardes de Futebol no Campinho do Bairro", description: "Na adolescência, quando se mudou para a cidade para estudar, papai vivia no campinho do bairro. Jogava futebol com os amigos até o sol se pôr, voltava suado e feliz, sonhando em ser jogador profissional — mas o destino tinha outros planos." },
-                { title: "A Formatura que Orgulhou a Família Inteira", description: "Papai foi o primeiro da família a se formar — no Colégio Estadual de Ouro Fino. No dia da formatura, a vovó Rosa chorou de alegria e o vovô Antônio disse que era o dia mais feliz da vida dele. A família inteira veio do interior para assistir." },
-                { title: "O Dia em que Tudo Começou", description: "Papai e mamãe Maria Helena se casaram numa manhã de sol. Ele sempre conta que quando a viu no altar, esqueceu o discurso que tinha ensaiado por semanas e só conseguiu sorrir — um sorriso que não saiu do rosto o dia inteiro." },
-                { title: "A Chegada da Ana Clara", description: "Quando eu, Ana Clara, nasci, papai segurou-me nos braços pela primeira vez e prometeu que estaria sempre ali para mim. Mamãe conta que ele não me largou por horas, só olhando e sorrindo, repetindo baixinho: 'Minha princesinha'." },
-                { title: "Aprendendo a Voar de Bicicleta", description: "Papai corria ao meu lado no Parque Municipal segurando o banco da bicicleta, repetindo 'Eu estou aqui, não vou te soltar.' Até que num momento mágico, ele soltou — e eu voei sozinha pela primeira vez. Quando olhei para trás, ele tinha lágrimas nos olhos." },
-                { title: "O Professor que Transformava Números em Histórias", description: "Por 35 anos, papai foi professor de matemática na Escola Municipal. Seus alunos adoravam como ele transformava números complicados em histórias que faziam todo mundo rir. Era mais que um professor — era um contador de histórias com giz na mão e amor no coração." },
-                { title: "Manhãs no Jardim com Café Coado", description: "Todas as manhãs, papai toma seu café coado no jardim que ele mesmo plantou ao longo dos anos. A varanda, a música do rádio, o cheiro do café — são os rituais que trazem paz e um sorriso ao seu dia, mesmo quando as lembranças ficam mais distantes." },
-                { title: "O Natal que Reuniu Todos", description: "No último Natal em família, papai sentou na cabeceira da mesa cercado por todos nós — filhos, netos, primos. Mesmo quando as palavras faltam, o sorriso dele diz tudo. Aquele sorriso que a gente conhece desde sempre e que nunca, nunca muda." }
+                { title: "O Quintal da Casa Amarela em Ouro Fino", description: "Lá em Ouro Fino, no sul de Minas Gerais, papai cresceu numa casa amarela com um quintal que parecia não ter fim. Todas as tardes de verão, ele corria descalço entre as mangueiras carregadas de frutos, com os pés sujos de terra vermelha e o coração cheio de alegria. Os irmãos Pedro, Ana e João corriam atrás dele, e juntos inventavam mundos inteiros entre as árvores. Dona Rosa, a mãe dele, aparecia na janela da cozinha chamando todos para o café da tarde — um café coado na hora com bolo de fubá que ela fazia toda sexta-feira. O cheiro daquele café se misturava com o perfume das mangas maduras, e até hoje, quando sinto esse aroma, penso no papai menino sorrindo naquele quintal." },
+                { title: "O Primeiro Dia na Escola Estadual", description: "Com a mochila de lona nova e o cabelo cuidadosamente penteado pela vovó Rosa, papai caminhou até a Escola Estadual de Ouro Fino naquela manhã de fevereiro. Ele estava tão nervoso que segurou a mão da mãe até a porta da sala. Quando voltou para casa naquele dia, não parava de falar — contou sobre o amigo Zé, que sentou do lado dele, sobre a professora Dona Lúcia, que desenhava flores coloridas no quadro-negro para ensinar as letras, e sobre o lanche que a vovó tinha preparado com tanto carinho que todos os colegas pediram um pedaço. O vovô Antônio ouviu cada palavra com os olhos brilhando, orgulhoso do menino que estava aprendendo a ler." },
+                { title: "Tardes de Futebol no Campinho do Bairro", description: "Na adolescência, quando se mudou para a cidade para estudar no colegial, papai encontrou sua segunda casa no campinho de terra batida do bairro. De segunda a sábado, assim que a aula terminava e o turno na mercearia do tio acabava, ele já estava lá. Jogava de ponta-esquerda, driblando com aquele jeito elegante que os amigos admiravam. Voltava para casa suado, com os joelhos ralados e um sorriso de orelha a orelha. Sonhava em ser jogador profissional — colava recortes de jornal do Pelé na parede do quarto. O destino tinha outros planos para ele, mas aquela paixão pelo futebol, aquela alegria de correr livre, nunca saiu do coração dele." },
+                { title: "A Formatura que Orgulhou a Família Inteira", description: "Papai foi o primeiro da família inteira a completar os estudos. No dia da formatura no Colégio Estadual, a vovó Rosa vestiu seu melhor vestido florido e chorou do começo ao fim da cerimônia. O vovô Antônio, que era um homem de poucas palavras, abraçou o papai com tanta força que os dois quase caíram, e disse com a voz embargada: 'Esse é o dia mais feliz da minha vida.' A família inteira veio do interior — tios, primos, a madrinha Aparecida — todos espremidos num ônibus para ver o Carlos receber o diploma. Naquela noite, fizeram um churrasco no quintal e dançaram forró até tarde. Papai guardou o diploma emoldurado na sala pelo resto da vida." },
+                { title: "O Dia em que Tudo Começou", description: "Papai e mamãe Maria Helena se conheceram numa festa de São João na praça da cidade. Ele conta que ela estava dançando quadrilha com um vestido de chita vermelho, e que naquele momento ele soube. Se casaram numa manhã ensolarada de outubro, na igrejinha de São Sebastião. Ele sempre repete essa história: quando a viu no altar, esqueceu completamente o discurso que tinha ensaiado por semanas. As mãos tremiam, a voz sumiu, e tudo que conseguiu fazer foi sorrir — um sorriso tão grande e tão genuíno que a mamãe começou a rir também. A igreja inteira riu junto. E aquele sorriso não saiu do rosto dele o dia inteiro, nem no dia seguinte, nem em todos os anos que vieram depois." },
+                { title: "A Chegada da Ana Clara", description: "Quando eu nasci, numa terça-feira chuvosa de março, papai estava na sala de espera andando de um lado para o outro. Mamãe conta que quando a enfermeira o chamou, ele entrou correndo e quase tropeçou na porta. Me segurou nos braços pela primeira vez com tanto cuidado que parecia que eu era feita de cristal. Ficou horas ali, só olhando para mim, contando meus dedinhos, acariciando minha bochecha. Repetia baixinho 'Minha princesinha, minha princesinha' com os olhos cheios d'água. Naquela noite, quando finalmente me colocou no berço, ele sentou na cadeira ao lado e prometeu, com a voz mais séria que eu jamais ouviria: 'Eu vou estar sempre aqui para você, sempre.'" },
+                { title: "Aprendendo a Voar de Bicicleta", description: "Era uma tarde dourada de domingo no Parque Municipal. Papai corria ao meu lado segurando o banco da minha bicicleta vermelha, sem fôlego mas sem parar, repetindo 'Eu estou aqui, filha, não vou te soltar, eu estou aqui.' Eu pedalava com o coração disparado, sentindo o vento no rosto e o medo misturado com emoção. Até que num momento mágico — aquele tipo de momento que a gente guarda para sempre — ele soltou. E eu voei. Pedalei sozinha pela primeira vez, o mundo inteiro se abrindo na minha frente. Quando olhei para trás, triunfante, vi o papai parado no meio do caminho. Ele tinha lágrimas escorrendo pelo rosto e as mãos no peito, como se o coração fosse explodir de orgulho." },
+                { title: "O Professor que Transformava Números em Histórias", description: "Por 35 anos, papai acordou cedo, vestiu sua camisa social e caminhou até a Escola Municipal com a pasta de couro marrom debaixo do braço. Era professor de matemática — mas não era um professor qualquer. Seus alunos adoravam como ele transformava equações complicadas em histórias engraçadas. 'Se o Seu João tem 50 vacas e vende 12 pro Seu Manoel, quantas sobram?' — e aí vinha toda uma novela sobre o Seu João e o Seu Manoel que fazia a turma inteira gargalhar. Ex-alunos ainda param ele na rua para dizer 'Professor Carlos, o senhor mudou minha vida.' Ele era mais que um professor — era um contador de histórias com giz na mão e amor infinito no coração." },
+                { title: "Manhãs no Jardim com Café Coado", description: "Todas as manhãs, sem exceção, papai levanta com o sol, coloca a água para ferver e coa o café do jeito que a mãe dele ensinava — devagar, com paciência, deixando o aroma tomar conta da cozinha. Depois, leva a xícara para o jardim que ele mesmo plantou ao longo de décadas. São rosas, jasmins, manjericão e um pé de limão que dá frutos o ano inteiro. Ele se senta na cadeira de vime na varanda, liga o rádio numa estação de MPB, e fica ali, em paz, olhando as flores enquanto o café esfria. Às vezes fecha os olhos e sorri sozinho, como se estivesse conversando com as lembranças. Mesmo quando a memória fica mais distante, esses rituais permanecem — o corpo lembra o que a mente às vezes esquece." },
+                { title: "O Natal que Reuniu Todos", description: "No último Natal em família, a mesa estava posta com a toalha branca de crochê que a vovó Rosa fez, e papai sentou na cabeceira, como sempre. A casa estava cheia — eu, os netos correndo pelo corredor, os primos, a tia Ana com seu arroz à grega famoso. Papai olhou para cada um de nós com aquele olhar que diz mais que qualquer palavra. Quando o Pedrinho, meu filho de cinco anos, subiu no colo dele e disse 'Te amo, vovô', o papai apertou ele contra o peito e ficou em silêncio por um longo momento. Mesmo quando as palavras faltam, o sorriso dele diz tudo. Aquele sorriso que a gente conhece desde sempre — o mesmo sorriso do menino que corria descalço em Ouro Fino — e que nunca, nunca muda." }
             ],
-            backCoverDescription: "As memórias são como sementes plantadas no coração. Mesmo quando a mente esquece, o amor permanece."
+            backCoverDescription: "As memórias são como sementes plantadas no coração. Mesmo quando a mente esquece, o amor permanece. Este livro foi feito para você, papai — para que cada página traga de volta o calor daqueles momentos que nos fizeram quem somos. Com todo o meu amor, sua filha Ana Clara."
         },
         // Common
         common: {
@@ -1035,6 +1200,20 @@ export const translations = {
         images: {
             manReading: "Un anciano compartiendo historias y leyendo un libro con su hija en una sala de estar acogedora.",
             womanReading: "Una anciana sonriendo mientras mira un álbum de fotos con su hija, compartiendo recuerdos preciosos."
+        },
+        // Problem Section
+        problemSection: {
+            badge: "Por qué importa",
+            title: "Cada 3 segundos,",
+            titleHighlight: "alguien pierde un recuerdo",
+            description: "Más de 55 millones de personas en el mundo viven con Alzheimer o demencia. A medida que la enfermedad avanza, recuerdos preciosos de toda una vida comienzan a desvanecerse — la voz de una madre, la historia de un primer amor, la receta transmitida por generaciones.",
+            stat1Number: "55M+",
+            stat1Label: "personas viven con demencia en el mundo",
+            stat2Number: "10M",
+            stat2Label: "nuevos casos cada año",
+            stat3Number: "70%",
+            stat3Label: "de las familias desearían haber preservado más recuerdos",
+            cta: "Memory Book ayuda a las familias a preservar estas historias antes de que desaparezcan — transformando recuerdos fugaces en un legado hermoso y duradero.",
         },
         // How it Works Section
         howItWorks: {
@@ -1113,6 +1292,9 @@ export const translations = {
             removedPermanently: "fue eliminado permanentemente",
             deleteError: "Error al eliminar",
             deleteErrorMsg: "No se pudo eliminar el libro. Inténtalo de nuevo.",
+            pdfReady: "¡PDF Listo!",
+            pdfDownloaded: "se descargó con éxito.",
+            generatingPdf: "Generando PDF...",
             createFirst: "Crea tu primer Memory Book",
             createFirstDesc: "Mira el ejemplo a continuación para inspiración y luego crea el tuyo.",
             createMemoryBook: "Crear Memory Book",
@@ -1354,7 +1536,69 @@ export const translations = {
             photo: "foto",
             photosWord: "fotos",
             ofPrompts: "de",
-            promptsWord: "preguntas respondidas"
+            promptsWord: "preguntas respondidas",
+            // Childhood step labels
+            childhoodIntro: "Cuéntanos sobre sus primeros años. Escribe poco o mucho, como prefieras.",
+            whereBorn: "¿Dónde nació?",
+            whoParents: "¿Quiénes eran sus padres?",
+            siblings: "¿Tenía hermanos?",
+            happyMemory: "Un recuerdo feliz de la infancia",
+            whatEnjoy: "¿Qué le gustaba hacer?",
+            addChildhoodPhotos: "Agregar fotos de la infancia",
+            childhoodPhotosHelper: "Las fotos familiares antiguas ayudan a capturar los primeros años",
+            // Teenage step labels
+            teenageIntro: "Cuéntanos sobre su adolescencia — escuela, amigos y aventuras.",
+            whereLiveTeenage: "¿Dónde vivía?",
+            schoolExperiences: "Experiencias escolares",
+            friendsInterests: "Amigos e intereses",
+            memorableEvents: "Eventos memorables",
+            addTeenagePhotos: "Agregar fotos de la adolescencia",
+            teenagePhotosHelper: "Las fotos de la adolescencia ayudan a dar vida a este capítulo",
+            // Adult life step labels
+            adultLifeIntro: "Comparte sobre su vida adulta — trabajo, familia y pasiones.",
+            workCareer: "Trabajo y carrera",
+            hobbiesPassions: "Hobbies y pasiones",
+            marriagePartner: "Matrimonio o pareja",
+            childrenFamily: "Hijos y familia",
+            milestones: "Logros importantes",
+            addAdultPhotos: "Agregar fotos de la vida adulta",
+            adultPhotosHelper: "Las fotos de la vida adulta ayudan a ilustrar este período",
+            // Later life step labels
+            laterLifeIntro: "Cuéntanos sobre sus años recientes — rutinas, familia y lo que trae alegría.",
+            whereLiveLater: "¿Dónde vive actualmente?",
+            routinesTraditions: "Rutinas y tradiciones",
+            familyMoments: "Momentos familiares",
+            comfortJoy: "Lo que trae confort y alegría",
+            addLaterPhotos: "Agregar fotos recientes",
+            laterPhotosHelper: "Las fotos recientes ayudan a capturar el capítulo actual",
+            modeSelectionTitle: "¿Cómo deseas crear tu libro?",
+            modeSelectionDesc: "Elige la forma que prefieras para contar los recuerdos.",
+            modeDetailedTitle: "Describir la historia",
+            modeDetailedDesc: "Cuenta con detalle cada fase de la vida. Cuantos más detalles, más especial será el libro.",
+            modeBriefTitle: "Versión breve",
+            modeBriefDesc: "Escribe libremente sobre cada fase en un campo de texto. Ideal para algo rápido y sencillo.",
+            modeAudioTitle: "Describir por audio",
+            modeAudioDesc: "Graba tu voz contando los recuerdos y la IA los transcribe automáticamente.",
+            comingSoon: "Próximamente",
+            detailedMemoriesTitle: "Cuenta la historia con detalle",
+            detailedMemoriesIntro: "Cuantos más detalles compartas, más rico y personal será el libro. Completa lo que sepas — cada campo es opcional.",
+            detailedMemoriesTip: "No te preocupes por rellenar todo — cada detalle que compartas hace el libro más especial.",
+            whereYoung: "¿Dónde vivía en la adolescencia?",
+            youngLivingPlaceholder: "Ej: Se mudó a la ciudad para estudiar",
+            schoolExperience: "Experiencias escolares",
+            career: "Carrera / profesión",
+            careerPlaceholder: "Ej: Trabajó como profesor por 35 años...",
+            partner: "Pareja de vida",
+            children: "Hijos",
+            whereNow: "¿Dónde vive actualmente?",
+            nowLivingPlaceholder: "Ej: En la misma casa donde crió a los hijos",
+            familyPlaceholder: "Ej: La última Navidad todos juntos...",
+            eventPlaceholder: "Ej: La graduación, el día de la mudanza...",
+            enhanceWithAI: "Mejorar con IA",
+            enhanceBtn: "IA",
+            enhancing: "Mejorando...",
+            undoEnhance: "Deshacer mejora",
+            minimize: "Minimizar"
         },
         // Delete Confirmation
         deleteConfirm: {
@@ -1411,7 +1655,8 @@ export const translations = {
             favorites: "Favoritos",
             myProfile: "Mi Perfil",
             settings: "Configuración",
-            logout: "Cerrar Sesión"
+            logout: "Cerrar Sesión",
+            language: "Idioma"
         },
         // Home Page
         home: {
@@ -1479,18 +1724,18 @@ export const translations = {
             displayDate: "14 de Febrero, 2026",
             displayDescription: "Un libro de recuerdos en acuarela creado por una hija para su padre — un homenaje al amor que trasciende el olvido.",
             pages: [
-                { title: "El Patio de la Casa Amarilla", description: "De pequeño, papá pasaba las tardes jugando en el patio de la casa amarilla en el campo. Corría descalzo entre los árboles de mango, persiguiendo mariposas e inventando aventuras con sus hermanos." },
-                { title: "El Primer Día de Escuela", description: "Con su mochila nueva y el pelo peinado por la abuela, papá fue a su primer día de escuela. Volvió a casa lleno de historias sobre nuevos amigos y la maestra que dibujaba flores en la pizarra." },
-                { title: "Tardes de Fútbol en el Campito", description: "En la adolescencia, papá vivía en el campo del barrio. Jugaba fútbol con los amigos hasta la puesta del sol, y volvía a casa sudado y feliz, soñando con ser jugador profesional." },
-                { title: "La Graduación que Enorgulleció a la Familia", description: "Papá fue el primero de la familia en graduarse del colegio. El día de la graduación, la abuela lloró de alegría y el abuelo dijo que era el día más feliz de su vida." },
-                { title: "El Día en que Todo Comenzó", description: "Papá y mamá se casaron en una mañana soleada. Siempre cuenta que cuando la vio en el altar, olvidó el discurso que había ensayado y solo pudo sonreír." },
-                { title: "La Llegada de la Princesita", description: "Cuando nací, papá me sostuvo en sus brazos por primera vez y prometió que siempre estaría ahí para mí. Mamá dijo que no me soltó por horas, solo mirándome y sonriendo." },
-                { title: "Aprendiendo a Volar en Bicicleta", description: "Papá corría a mi lado sosteniendo el asiento de la bicicleta, repitiendo 'Estoy aquí, no te voy a soltar.' Hasta que en un momento mágico, soltó — y volé sola por primera vez." },
-                { title: "El Profesor que Convertía Números en Historias", description: "Por 35 años, papá fue profesor de matemáticas. Sus alumnos adoraban cómo convertía números complicados en historias simples. Era más que un profesor — era un narrador con tiza en la mano." },
-                { title: "Mañanas de Café en el Jardín", description: "Todas las mañanas, papá toma café en el jardín mirando las flores que plantó a lo largo de los años. El porche, la música antigua, el aroma del café — son los rituales que traen paz a su día." },
-                { title: "La Navidad que Reunió a Todos", description: "En la última Navidad en familia, papá se sentó a la cabecera de la mesa rodeado de hijos y nietos. Aunque las palabras falten, su sonrisa lo dice todo. Esa sonrisa que nunca cambia." }
+                { title: "El Patio de la Casa Amarilla", description: "En Ouro Fino, un pueblito en el sur de Minas Gerais, papá creció en una casa amarilla con un patio que parecía no tener fin. Cada tarde de verano, corría descalzo por la tierra roja entre los mangos cargados de fruta, con el corazón lleno de alegría. Sus hermanos Pedro, Ana y João corrían tras él, e inventaban mundos enteros entre los árboles. Doña Rosa, su madre, aparecía en la ventana de la cocina llamando a todos para el café de la tarde — un café recién colado con torta de maíz que preparaba cada viernes. El aroma de ese café se mezclaba con el perfume de los mangos maduros, y hasta hoy, cuando siento ese aroma, pienso en papá de niño sonriendo en aquel patio." },
+                { title: "El Primer Día de Escuela", description: "Con su mochila de lona nueva y el pelo cuidadosamente peinado por la abuela Rosa, papá caminó hasta la Escuela Estatal de Ouro Fino aquella mañana de febrero. Estaba tan nervioso que sostuvo la mano de su madre hasta la puerta del salón. Cuando volvió a casa, no paraba de hablar — contó sobre su amigo Zé, que se sentó a su lado, sobre la maestra Doña Lucía que dibujaba flores coloridas en la pizarra para enseñar las letras, y sobre la merienda que la abuela había preparado con tanto cariño que todos los compañeros pidieron un pedazo. El abuelo Antônio escuchó cada palabra con los ojos brillando, orgulloso del niño que estaba aprendiendo a leer." },
+                { title: "Tardes de Fútbol en el Campito", description: "En la adolescencia, cuando se mudó a la ciudad para estudiar, papá encontró su segunda casa en el campo de tierra del barrio. De lunes a sábado, apenas terminaba la clase y el turno en la tienda del tío, ya estaba allí. Jugaba de extremo izquierdo, driblando con ese estilo elegante que sus amigos admiraban. Volvía a casa sudado, con las rodillas raspadas y una sonrisa de oreja a oreja. Soñaba con ser jugador profesional — pegaba recortes de periódico de Pelé en la pared de su cuarto. El destino tenía otros planes, pero esa pasión por el fútbol, esa alegría de correr libre, nunca salió de su corazón." },
+                { title: "La Graduación que Enorgulleció a la Familia", description: "Papá fue el primero de toda la familia en completar los estudios. El día de la graduación en el Colegio Estatal, la abuela Rosa vistió su mejor vestido florido y lloró de principio a fin de la ceremonia. El abuelo Antônio, un hombre de pocas palabras, abrazó a papá con tanta fuerza que casi se cayeron, y dijo con la voz entrecortada: 'Este es el día más feliz de mi vida.' La familia entera vino del campo — tíos, primos, la madrina Aparecida — todos apretados en un autobús para ver a Carlos recibir el diploma. Esa noche hicieron un asado en el patio y bailaron hasta tarde." },
+                { title: "El Día en que Todo Comenzó", description: "Papá y mamá María Helena se conocieron en una fiesta de San Juan en la plaza del pueblo. Él cuenta que ella estaba bailando con un vestido rojo, y que en ese momento supo. Se casaron una mañana soleada de octubre en la iglesita de San Sebastián. Siempre repite esta historia: cuando la vio en el altar, olvidó completamente el discurso que había ensayado por semanas. Las manos le temblaban, la voz desapareció, y todo lo que pudo hacer fue sonreír — una sonrisa tan grande y tan genuina que mamá empezó a reír también. La iglesia entera rio junta. Y esa sonrisa no salió de su rostro en todo el día, ni al siguiente, ni en todos los años que vinieron después." },
+                { title: "La Llegada de la Princesita", description: "Cuando nací, un martes lluvioso de marzo, papá estaba en la sala de espera caminando de un lado a otro. Mamá cuenta que cuando la enfermera lo llamó, entró corriendo y casi tropezó en la puerta. Me sostuvo en sus brazos por primera vez con tanto cuidado que parecía que yo estaba hecha de cristal. Se quedó horas ahí, solo mirándome, contando mis deditos, acariciando mi mejilla. Repetía bajito 'Mi princesita, mi princesita' con los ojos llenos de lágrimas. Esa noche, cuando finalmente me puso en la cuna, se sentó en la silla al lado y prometió con la voz más seria que jamás escucharía: 'Siempre voy a estar aquí para ti, siempre.'" },
+                { title: "Aprendiendo a Volar en Bicicleta", description: "Era una tarde dorada de domingo en el Parque Municipal. Papá corría a mi lado sosteniendo el asiento de mi bicicleta roja, sin aliento pero sin parar, repitiendo 'Estoy aquí, hija, no te voy a soltar.' Yo pedaleaba con el corazón acelerado, sintiendo el viento en la cara y el miedo mezclado con emoción. Hasta que en un momento mágico — de esos que se guardan para siempre — soltó. Y yo volé. Pedaleé sola por primera vez, el mundo entero abriéndose delante de mí. Cuando miré hacia atrás, vi a papá parado en medio del camino con lágrimas corriéndole por la cara y las manos en el pecho, como si el corazón le fuera a explotar de orgullo." },
+                { title: "El Profesor que Convertía Números en Historias", description: "Durante 35 años, papá se levantó temprano, se puso su camisa y caminó hasta la Escuela Municipal con su maletín de cuero marrón bajo el brazo. Era profesor de matemáticas — pero no uno cualquiera. Sus alumnos adoraban cómo transformaba ecuaciones complicadas en historias divertidas. 'Si Don Juan tiene 50 vacas y le vende 12 a Don Manuel, ¿cuántas quedan?' — y de ahí venía toda una telenovela que hacía reír a toda la clase. Exalumnos aún lo paran en la calle para decirle 'Profesor Carlos, usted me cambió la vida.' Era más que un profesor — era un narrador con tiza en la mano y amor infinito en el corazón." },
+                { title: "Mañanas de Café en el Jardín", description: "Todas las mañanas, sin excepción, papá se levanta con el sol, pone el agua a hervir y cuela el café como su madre le enseñó — despacio, con paciencia, dejando que el aroma llene toda la cocina. Después lleva la taza al jardín que él mismo plantó a lo largo de décadas. Hay rosas, jazmines, albahaca y un limonero que da frutos todo el año. Se sienta en la silla de mimbre en el porche, sintoniza la radio y se queda ahí, en paz, mirando las flores mientras el café se enfría. A veces cierra los ojos y sonríe solo, como si estuviera conversando con los recuerdos. Incluso cuando la memoria se vuelve más distante, estos rituales permanecen." },
+                { title: "La Navidad que Reunió a Todos", description: "En la última Navidad en familia, la mesa estaba puesta con el mantel blanco de crochet que hizo la abuela Rosa, y papá se sentó a la cabecera, como siempre. La casa estaba llena — yo, los nietos corriendo por el pasillo, los primos, la tía Ana con su famoso arroz. Papá miró a cada uno de nosotros con esos ojos que dicen más que cualquier palabra. Cuando Pedrito, mi hijo de cinco años, se subió a su regazo y dijo 'Te quiero, abuelo', papá lo apretó contra su pecho y se quedó en silencio un largo rato. Aunque las palabras falten, su sonrisa lo dice todo. Esa sonrisa que conocemos desde siempre — la misma del niño que corría descalzo en Ouro Fino — y que nunca, nunca cambia." }
             ],
-            backCoverDescription: "Los recuerdos son como semillas plantadas en el corazón. Incluso cuando la mente olvida, el amor permanece."
+            backCoverDescription: "Los recuerdos son como semillas plantadas en el corazón. Incluso cuando la mente olvida, el amor permanece. Este libro fue hecho para ti, papá — para que cada página traiga de vuelta la calidez de esos momentos que nos hicieron quienes somos. Con todo mi amor, tu hija Ana Clara."
         },
         // Common
         common: {
@@ -1522,6 +1767,20 @@ export const translations = {
         images: {
             manReading: "Ein älterer Mann, der Geschichten erzählt und mit seiner Tochter in einem gemütlichen Wohnzimmer ein Buch liest.",
             womanReading: "Eine ältere Frau, die lächelt, während sie mit ihrer Tochter ein Fotoalbum ansieht und kostbare Erinnerungen teilt."
+        },
+        // Problem Section
+        problemSection: {
+            badge: "Warum es wichtig ist",
+            title: "Alle 3 Sekunden",
+            titleHighlight: "verliert jemand eine Erinnerung",
+            description: "Mehr als 55 Millionen Menschen weltweit leben mit Alzheimer oder Demenz. Mit dem Fortschreiten der Krankheit beginnen kostbare Erinnerungen eines ganzen Lebens zu verblassen — die Stimme einer Mutter, die Geschichte der ersten Liebe, das Rezept, das über Generationen weitergegeben wurde.",
+            stat1Number: "55M+",
+            stat1Label: "Menschen leben weltweit mit Demenz",
+            stat2Number: "10M",
+            stat2Label: "neue Fälle jedes Jahr",
+            stat3Number: "70%",
+            stat3Label: "der Familien wünschten, sie hätten mehr Erinnerungen bewahrt",
+            cta: "Memory Book hilft Familien, diese Geschichten zu bewahren, bevor sie verschwinden — und verwandelt flüchtige Erinnerungen in ein wunderschönes, bleibendes Vermächtnis.",
         },
         // How it Works Section
         howItWorks: {
@@ -1600,6 +1859,9 @@ export const translations = {
             removedPermanently: "wurde dauerhaft entfernt",
             deleteError: "Fehler beim Löschen",
             deleteErrorMsg: "Das Buch konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
+            pdfReady: "PDF Fertig!",
+            pdfDownloaded: "wurde erfolgreich heruntergeladen.",
+            generatingPdf: "PDF wird erstellt...",
             createFirst: "Erstellen Sie Ihr erstes Memory Book",
             createFirstDesc: "Sehen Sie sich das Beispiel unten zur Inspiration an und erstellen Sie dann Ihr eigenes!",
             createMemoryBook: "Memory Book erstellen",
@@ -1839,7 +2101,71 @@ export const translations = {
             photo: "Foto",
             photosWord: "Fotos",
             ofPrompts: "von",
-            promptsWord: "Fragen beantwortet"
+            promptsWord: "Fragen beantwortet",
+            savingMemories: "Erinnerungen werden gespeichert...",
+            pendingLabel: "ausstehend",
+            // Childhood step labels
+            childhoodIntro: "Erzählen Sie uns von den frühen Jahren. Schreiben Sie wenig oder viel, ganz wie Sie möchten.",
+            whereBorn: "Wo wurde er/sie geboren?",
+            whoParents: "Wer waren die Eltern?",
+            siblings: "Hatte er/sie Geschwister?",
+            happyMemory: "Eine glückliche Kindheitserinnerung",
+            whatEnjoy: "Was hat er/sie gerne gemacht?",
+            addChildhoodPhotos: "Kindheitsfotos hinzufügen",
+            childhoodPhotosHelper: "Alte Familienfotos helfen, die frühen Jahre festzuhalten",
+            // Teenage step labels
+            teenageIntro: "Erzählen Sie uns von der Jugendzeit — Schule, Freunde und Abenteuer.",
+            whereLiveTeenage: "Wo hat er/sie gelebt?",
+            schoolExperiences: "Schulerfahrungen",
+            friendsInterests: "Freunde und Interessen",
+            memorableEvents: "Denkwürdige Ereignisse",
+            addTeenagePhotos: "Jugendfotos hinzufügen",
+            teenagePhotosHelper: "Fotos aus der Jugendzeit helfen, dieses Kapitel lebendig zu machen",
+            // Adult life step labels
+            adultLifeIntro: "Erzählen Sie über das Erwachsenenleben — Arbeit, Familie und Leidenschaften.",
+            workCareer: "Arbeit und Karriere",
+            hobbiesPassions: "Hobbys und Leidenschaften",
+            marriagePartner: "Ehe oder Partner(in)",
+            childrenFamily: "Kinder und Familie",
+            milestones: "Wichtige Meilensteine",
+            addAdultPhotos: "Fotos aus dem Erwachsenenleben hinzufügen",
+            adultPhotosHelper: "Fotos aus dem Erwachsenenleben helfen, diesen Zeitraum zu illustrieren",
+            // Later life step labels
+            laterLifeIntro: "Erzählen Sie uns über die späteren Jahre — Routinen, Familie und was Freude bringt.",
+            whereLiveLater: "Wo lebt er/sie jetzt?",
+            routinesTraditions: "Routinen und Traditionen",
+            familyMoments: "Familienmomente",
+            comfortJoy: "Was Trost und Freude bringt",
+            addLaterPhotos: "Aktuelle Fotos hinzufügen",
+            laterPhotosHelper: "Aktuelle Fotos helfen, das heutige Kapitel festzuhalten",
+            modeSelectionTitle: "Wie möchten Sie Ihr Buch erstellen?",
+            modeSelectionDesc: "Wählen Sie, wie Sie die Erinnerungen teilen möchten.",
+            modeDetailedTitle: "Geschichte beschreiben",
+            modeDetailedDesc: "Erzählen Sie detailliert über jede Lebensphase. Je mehr Details, desto besonderer wird das Buch.",
+            modeBriefTitle: "Kurzversion",
+            modeBriefDesc: "Schreiben Sie frei über jede Phase in einem Textfeld. Ideal für schnell und einfach.",
+            modeAudioTitle: "Per Audio beschreiben",
+            modeAudioDesc: "Nehmen Sie Ihre Stimme auf und die KI transkribiert automatisch.",
+            comingSoon: "Demnächst",
+            detailedMemoriesTitle: "Erzählen Sie die Geschichte im Detail",
+            detailedMemoriesIntro: "Je mehr Details Sie teilen, desto reicher und persönlicher wird das Buch. Füllen Sie aus, was Sie wissen — jedes Feld ist optional.",
+            detailedMemoriesTip: "Machen Sie sich keine Sorgen, alles auszufüllen — jedes Detail macht das Buch besonderer.",
+            whereYoung: "Wo hat er/sie als Teenager gelebt?",
+            youngLivingPlaceholder: "z.B. Zog in die Stadt zum Studieren",
+            schoolExperience: "Schulerfahrungen",
+            career: "Karriere / Beruf",
+            careerPlaceholder: "z.B. War 35 Jahre lang Lehrer...",
+            partner: "Lebenspartner(in)",
+            children: "Kinder",
+            whereNow: "Wo lebt er/sie jetzt?",
+            nowLivingPlaceholder: "z.B. Im selben Haus, wo die Kinder großgezogen wurden",
+            familyPlaceholder: "z.B. Das letzte Weihnachten zusammen...",
+            eventPlaceholder: "z.B. Der Abschluss, der Umzugstag...",
+            enhanceWithAI: "Mit KI verbessern",
+            enhanceBtn: "KI",
+            enhancing: "Wird verbessert...",
+            undoEnhance: "Verbesserung rückgängig",
+            minimize: "Minimieren"
         },
         // Delete Confirmation
         deleteConfirm: {
@@ -1896,7 +2222,8 @@ export const translations = {
             favorites: "Favoriten",
             myProfile: "Mein Profil",
             settings: "Einstellungen",
-            logout: "Abmelden"
+            logout: "Abmelden",
+            language: "Sprache"
         },
         // Home Page
         home: {
@@ -1964,18 +2291,18 @@ export const translations = {
             displayDate: "14. Februar 2026",
             displayDescription: "Ein Aquarell-Erinnerungsbuch, erstellt von einer Tochter für ihren Vater — eine Hommage an die Liebe, die das Vergessen überwindet.",
             pages: [
-                { title: "Der Hinterhof des Gelben Hauses", description: "Als Kind verbrachte Papa die Nachmittage spielend im Hinterhof des gelben Hauses auf dem Land. Er rannte barfuß zwischen den Mangobäumen, jagte Schmetterlinge und erfand Abenteuer mit seinen Geschwistern." },
-                { title: "Der Erste Schultag", description: "Mit seinem neuen Rucksack und den von Oma gekämmten Haaren ging Papa zu seinem ersten Schultag. Er kam voller Geschichten über neue Freunde und die Lehrerin, die Blumen an die Tafel malte, nach Hause." },
-                { title: "Fußballnachmittage auf dem Feld", description: "Als Teenager lebte Papa auf dem Nachbarschaftsfeld. Er spielte mit Freunden Fußball bis zum Sonnenuntergang und kam verschwitzt und glücklich nach Hause, träumend davon, Profispieler zu werden." },
-                { title: "Der Abschluss, der die Familie stolz machte", description: "Papa war der Erste in der Familie, der die Schule abschloss. Am Abschlusstag weinte Oma vor Freude und Opa sagte, es sei der glücklichste Tag seines Lebens." },
-                { title: "Der Tag, an dem Alles begann", description: "Papa und Mama heirateten an einem sonnigen Morgen. Er erzählt immer, dass er, als er sie am Altar sah, die einstudierte Rede vergaß und nur lächeln konnte." },
-                { title: "Die Ankunft der kleinen Prinzessin", description: "Als ich geboren wurde, hielt Papa mich zum ersten Mal in seinen Armen und versprach, immer für mich da zu sein. Mama sagte, er ließ mich stundenlang nicht los und schaute nur und lächelte." },
-                { title: "Fahrradfahren lernen", description: "Papa rannte neben mir und hielt den Fahrradsitz fest und wiederholte: 'Ich bin hier, ich lass dich nicht los.' Bis er in einem magischen Moment losließ — und ich zum ersten Mal alleine flog." },
-                { title: "Der Lehrer, der Zahlen in Geschichten verwandelte", description: "35 Jahre lang war Papa Mathematiklehrer. Seine Schüler liebten, wie er komplizierte Zahlen in einfache Geschichten verwandelte. Er war mehr als ein Lehrer — er war ein Geschichtenerzähler mit Kreide in der Hand." },
-                { title: "Morgendlicher Kaffee im Garten", description: "Jeden Morgen trinkt Papa Kaffee im Garten und betrachtet die Blumen, die er über die Jahre gepflanzt hat. Die Veranda, die alte Musik, der Duft des Kaffees — das sind die Rituale, die seinem Tag Frieden bringen." },
-                { title: "Das Weihnachten, das Alle vereinte", description: "Beim letzten Familienweihnachten saß Papa am Kopfende des Tisches, umgeben von Kindern und Enkeln. Auch wenn Worte fehlen, sagt sein Lächeln alles. Dieses Lächeln, das sich nie ändert." }
+                { title: "Der Hinterhof des Gelben Hauses", description: "In Ouro Fino, einem kleinen Städtchen im Süden von Minas Gerais, wuchs Papa in einem gelben Haus mit einem Hinterhof auf, der endlos zu sein schien. Jeden Sommernachmittag rannte er barfuß durch die rote Erde zwischen den schwer beladenen Mangobäumen, das Herz voller Freude. Seine Geschwister Pedro, Ana und João rannten ihm hinterher, und zusammen erfanden sie ganze Welten zwischen den Bäumen. Dona Rosa, seine Mutter, erschien am Küchenfenster und rief alle zum Nachmittagskaffee — frisch aufgebrüht mit Maiskuchen, den sie jeden Freitag backte. Der Duft des Kaffees mischte sich mit dem Parfüm der reifen Mangos, und bis heute denke ich, wenn ich dieses Aroma rieche, an Papa als kleinen Jungen, der in diesem Hinterhof lächelte." },
+                { title: "Der Erste Schultag", description: "Mit seinem neuen Leinwandrucksack und den von Oma Rosa sorgfältig gekämmten Haaren ging Papa an jenem Februarmorgen zur Staatlichen Schule von Ouro Fino. Er war so nervös, dass er die Hand seiner Mutter bis zur Klassenzimmertür hielt. Als er an diesem Tag nach Hause kam, hörte er nicht auf zu reden — er erzählte von seinem Freund Zé, der neben ihm saß, von der Lehrerin Dona Lúcia, die bunte Blumen an die Tafel malte, um das Alphabet zu lehren, und von dem Pausenbrot, das Oma mit so viel Liebe vorbereitet hatte, dass alle Mitschüler um ein Stück baten. Opa Antônio hörte jedes Wort mit leuchtenden Augen, stolz auf den Jungen, der lesen lernte." },
+                { title: "Fußballnachmittage auf dem Feld", description: "Als Teenager, nachdem er in die Stadt gezogen war, um die Oberschule zu besuchen, fand Papa sein zweites Zuhause auf dem staubigen Fußballplatz der Nachbarschaft. Montag bis Samstag, sobald der Unterricht endete und seine Schicht im Laden des Onkels vorbei war, war er schon dort. Er spielte Linksaußen und dribbelte mit jenem eleganten Stil, den seine Freunde bewunderten. Er kam verschwitzt nach Hause, mit aufgeschürften Knien und einem breiten Grinsen. Er träumte davon, Profispieler zu werden — er klebte Zeitungsausschnitte von Pelé an seine Zimmerwand. Das Schicksal hatte andere Pläne, aber diese Leidenschaft für Fußball, diese Freude am freien Laufen, verließ nie sein Herz." },
+                { title: "Der Abschluss, der die Familie stolz machte", description: "Papa war der allererste in der gesamten Familie, der seine Ausbildung abschloss. Am Abschlusstag an der Staatlichen Schule trug Oma Rosa ihr bestes Blumenkleid und weinte von Anfang bis Ende der Zeremonie. Opa Antônio, ein Mann weniger Worte, umarmte Papa so fest, dass sie fast umfielen, und sagte mit zitternder Stimme: 'Das ist der glücklichste Tag meines Lebens.' Die ganze Familie kam vom Land — Onkel, Cousins, Patentante Aparecida — alle in einen Bus gequetscht, um Carlos sein Diplom empfangen zu sehen. An diesem Abend machten sie ein Grillfest im Hinterhof und tanzten bis spät in die Nacht." },
+                { title: "Der Tag, an dem Alles begann", description: "Papa und Mama Maria Helena lernten sich auf einem Johannisfest auf dem Marktplatz kennen. Er erzählt, sie tanzte in einem roten Kleid, und in diesem Moment wusste er es. Sie heirateten an einem sonnigen Oktobermorgen in der kleinen Kirche São Sebastião. Er erzählt diese Geschichte immer wieder: Als er sie am Altar sah, vergaß er die Rede, die er wochenlang einstudiert hatte, völlig. Seine Hände zitterten, die Stimme versagte, und alles was er tun konnte, war lächeln — ein so breites und echtes Lächeln, dass Mama anfing zu lachen. Die ganze Kirche lachte mit. Und dieses Lächeln verließ sein Gesicht den ganzen Tag nicht, auch nicht am nächsten Tag, und auch nicht in all den Jahren danach." },
+                { title: "Die Ankunft der kleinen Prinzessin", description: "Als ich an einem regnerischen Dienstag im März geboren wurde, lief Papa im Wartezimmer auf und ab. Mama erzählt, als die Krankenschwester ihn rief, rannte er so schnell, dass er fast an der Tür stolperte. Er hielt mich zum ersten Mal so behutsam in seinen Armen, als wäre ich aus Kristall. Er blieb stundenlang, schaute mich nur an, zählte meine winzigen Finger, streichelte meine Wange. Er flüsterte leise 'Meine kleine Prinzessin, meine kleine Prinzessin' mit Tränen in den Augen. In dieser Nacht, als er mich endlich ins Bettchen legte, setzte er sich auf den Stuhl daneben und versprach mit der ernstesten Stimme, die ich je hören würde: 'Ich werde immer für dich da sein, immer.'" },
+                { title: "Fahrradfahren lernen", description: "Es war ein goldener Sonntagnachmittag im Stadtpark. Papa rannte neben mir und hielt den Sitz meines roten Fahrrads, außer Atem aber ohne aufzuhören, wiederholend 'Ich bin hier, Schatz, ich lass nicht los.' Ich trat in die Pedale mit rasendem Herzen, den Wind im Gesicht und die Angst gemischt mit Aufregung. Bis in einem magischen Moment — der Art von Moment, die man für immer behält — er losließ. Und ich flog. Zum ersten Mal fuhr ich alleine, die ganze Welt öffnete sich vor mir. Als ich triumphierend zurückblickte, sah ich Papa mitten auf dem Weg stehen. Tränen liefen über sein Gesicht und seine Hände lagen auf seiner Brust, als würde sein Herz vor Stolz platzen." },
+                { title: "Der Lehrer, der Zahlen in Geschichten verwandelte", description: "35 Jahre lang stand Papa früh auf, zog sein Hemd an und ging mit seiner braunen Ledertasche unter dem Arm zur Städtischen Schule. Er war Mathematiklehrer — aber kein gewöhnlicher. Seine Schüler liebten, wie er komplizierte Gleichungen in lustige Geschichten verwandelte. 'Wenn Herr João 50 Kühe hat und 12 an Herrn Manoel verkauft, wie viele bleiben übrig?' — und dann kam eine ganze Seifenoper über Herrn João und Herrn Manoel, die die ganze Klasse zum Lachen brachte. Ehemalige Schüler halten ihn noch auf der Straße an, um zu sagen: 'Professor Carlos, Sie haben mein Leben verändert.' Er war mehr als ein Lehrer — er war ein Geschichtenerzähler mit Kreide in der Hand und unendlicher Liebe im Herzen." },
+                { title: "Morgendlicher Kaffee im Garten", description: "Jeden Morgen, ohne Ausnahme, steht Papa mit der Sonne auf, setzt Wasser auf und brüht seinen Kaffee so, wie seine Mutter es ihm beigebracht hat — langsam, geduldig, das Aroma die ganze Küche füllen lassend. Dann trägt er seine Tasse in den Garten, den er über Jahrzehnte selbst gepflanzt hat. Da stehen Rosen, Jasmin, Basilikum und ein Zitronenbaum, der das ganze Jahr Früchte trägt. Er setzt sich in den Korbstuhl auf der Veranda, stellt das Radio auf einen Musiksender und bleibt dort, in Frieden, die Blumen betrachtend, während sein Kaffee abkühlt. Manchmal schließt er die Augen und lächelt vor sich hin, als würde er sich mit den Erinnerungen unterhalten. Selbst wenn das Gedächtnis ferner wird, bleiben diese Rituale — der Körper erinnert sich an das, was der Geist manchmal vergisst." },
+                { title: "Das Weihnachten, das Alle vereinte", description: "Beim letzten Familienweihnachten war der Tisch mit der weißen Häkeldecke gedeckt, die Oma Rosa gemacht hatte, und Papa saß am Kopfende, wie immer. Das Haus war voll — ich, die Enkelkinder, die durch den Flur rannten, die Cousins, Tante Ana mit ihrem berühmten Reis. Papa schaute jeden von uns an mit diesem Blick, der mehr sagt als tausend Worte. Als Pedrinho, mein fünfjähriger Sohn, auf seinen Schoß kletterte und sagte 'Ich hab dich lieb, Opa', drückte Papa ihn fest an seine Brust und schwieg einen langen Moment. Auch wenn die Worte fehlen, sagt sein Lächeln alles. Dieses Lächeln, das wir seit immer kennen — dasselbe Lächeln wie das des Jungen, der barfuß in Ouro Fino rannte — und das sich nie, nie ändert." }
             ],
-            backCoverDescription: "Erinnerungen sind wie Samen, die im Herzen gepflanzt werden. Selbst wenn der Geist vergisst, bleibt die Liebe bestehen."
+            backCoverDescription: "Erinnerungen sind wie Samen, die im Herzen gepflanzt werden. Selbst wenn der Geist vergisst, bleibt die Liebe bestehen. Dieses Buch wurde für dich gemacht, Papa — damit jede Seite die Wärme jener Momente zurückbringt, die uns zu dem gemacht haben, was wir sind. In Liebe, deine Tochter Ana Clara."
         },
         // Common
         common: {
@@ -2007,6 +2334,20 @@ export const translations = {
         images: {
             manReading: "Un homme âgé partageant des histoires et lisant un livre avec sa fille dans un salon confortable.",
             womanReading: "Une femme âgée souriant en regardant un album photo avec sa fille, partageant des souvenirs précieux."
+        },
+        // Problem Section
+        problemSection: {
+            badge: "Pourquoi c'est important",
+            title: "Toutes les 3 secondes,",
+            titleHighlight: "quelqu'un perd un souvenir",
+            description: "Plus de 55 millions de personnes dans le monde vivent avec Alzheimer ou la démence. À mesure que la maladie progresse, des souvenirs précieux d'une vie entière commencent à s'estomper — la voix d'une mère, l'histoire d'un premier amour, la recette transmise de génération en génération.",
+            stat1Number: "55M+",
+            stat1Label: "personnes vivent avec la démence dans le monde",
+            stat2Number: "10M",
+            stat2Label: "nouveaux cas chaque année",
+            stat3Number: "70%",
+            stat3Label: "des familles auraient aimé préserver plus de souvenirs",
+            cta: "Memory Book aide les familles à préserver ces histoires avant qu'elles ne disparaissent — transformant des souvenirs éphémères en un bel héritage durable.",
         },
         // How it Works Section
         howItWorks: {
@@ -2085,6 +2426,9 @@ export const translations = {
             removedPermanently: "a été supprimé définitivement",
             deleteError: "Erreur de suppression",
             deleteErrorMsg: "Impossible de supprimer le livre. Veuillez réessayer.",
+            pdfReady: "PDF Prêt !",
+            pdfDownloaded: "a été téléchargé avec succès.",
+            generatingPdf: "Génération du PDF...",
             createFirst: "Créez votre premier Memory Book",
             createFirstDesc: "Consultez l'exemple ci-dessous pour vous inspirer et créez le vôtre !",
             createMemoryBook: "Créer un Memory Book",
@@ -2324,7 +2668,71 @@ export const translations = {
             photo: "photo",
             photosWord: "photos",
             ofPrompts: "de",
-            promptsWord: "questions répondues"
+            promptsWord: "questions répondues",
+            savingMemories: "Sauvegarde de vos souvenirs...",
+            pendingLabel: "en attente",
+            // Childhood step labels
+            childhoodIntro: "Parlez-nous de ses premières années. Écrivez peu ou beaucoup, comme vous préférez.",
+            whereBorn: "Où est-il/elle né(e) ?",
+            whoParents: "Qui étaient ses parents ?",
+            siblings: "Avait-il/elle des frères et sœurs ?",
+            happyMemory: "Un souvenir heureux d'enfance",
+            whatEnjoy: "Qu'aimait-il/elle faire ?",
+            addChildhoodPhotos: "Ajouter des photos d'enfance",
+            childhoodPhotosHelper: "Les anciennes photos de famille aident à capturer les premières années",
+            // Teenage step labels
+            teenageIntro: "Parlez-nous de son adolescence — école, amis et aventures.",
+            whereLiveTeenage: "Où vivait-il/elle ?",
+            schoolExperiences: "Expériences scolaires",
+            friendsInterests: "Amis et centres d'intérêt",
+            memorableEvents: "Événements mémorables",
+            addTeenagePhotos: "Ajouter des photos d'adolescence",
+            teenagePhotosHelper: "Les photos d'adolescence aident à donner vie à ce chapitre",
+            // Adult life step labels
+            adultLifeIntro: "Partagez sur sa vie adulte — travail, famille et passions.",
+            workCareer: "Travail et carrière",
+            hobbiesPassions: "Loisirs et passions",
+            marriagePartner: "Mariage ou partenaire",
+            childrenFamily: "Enfants et famille",
+            milestones: "Étapes importantes",
+            addAdultPhotos: "Ajouter des photos de la vie adulte",
+            adultPhotosHelper: "Les photos de la vie adulte aident à illustrer cette période",
+            // Later life step labels
+            laterLifeIntro: "Parlez-nous de ses années récentes — routines, famille et ce qui apporte de la joie.",
+            whereLiveLater: "Où vit-il/elle actuellement ?",
+            routinesTraditions: "Routines et traditions",
+            familyMoments: "Moments en famille",
+            comfortJoy: "Ce qui apporte réconfort et joie",
+            addLaterPhotos: "Ajouter des photos récentes",
+            laterPhotosHelper: "Les photos récentes aident à capturer le chapitre actuel",
+            modeSelectionTitle: "Comment souhaitez-vous créer votre livre ?",
+            modeSelectionDesc: "Choisissez comment vous souhaitez partager les souvenirs.",
+            modeDetailedTitle: "Décrire l'histoire",
+            modeDetailedDesc: "Racontez en détail chaque phase de la vie. Plus vous partagez de détails, plus le livre sera spécial.",
+            modeBriefTitle: "Version brève",
+            modeBriefDesc: "Écrivez librement sur chaque phase dans un champ de texte. Idéal pour quelque chose de rapide et simple.",
+            modeAudioTitle: "Décrire par audio",
+            modeAudioDesc: "Enregistrez votre voix et l'IA transcrit automatiquement.",
+            comingSoon: "Bientôt disponible",
+            detailedMemoriesTitle: "Racontez l'histoire en détail",
+            detailedMemoriesIntro: "Plus vous partagez de détails, plus le livre sera riche et personnel. Remplissez ce que vous savez — chaque champ est optionnel.",
+            detailedMemoriesTip: "Ne vous inquiétez pas de tout remplir — chaque détail que vous partagez rend le livre plus spécial.",
+            whereYoung: "Où vivait-il/elle adolescent(e) ?",
+            youngLivingPlaceholder: "Ex : A déménagé en ville pour étudier",
+            schoolExperience: "Expériences scolaires",
+            career: "Carrière / profession",
+            careerPlaceholder: "Ex : A travaillé comme professeur pendant 35 ans...",
+            partner: "Partenaire de vie",
+            children: "Enfants",
+            whereNow: "Où vit-il/elle maintenant ?",
+            nowLivingPlaceholder: "Ex : Dans la même maison où les enfants ont grandi",
+            familyPlaceholder: "Ex : Le dernier Noël tous ensemble...",
+            eventPlaceholder: "Ex : La remise des diplômes, le jour du déménagement...",
+            enhanceWithAI: "Améliorer avec l'IA",
+            enhanceBtn: "IA",
+            enhancing: "Amélioration...",
+            undoEnhance: "Annuler l'amélioration",
+            minimize: "Minimiser"
         },
         // Delete Confirmation
         deleteConfirm: {
@@ -2381,7 +2789,8 @@ export const translations = {
             favorites: "Favoris",
             myProfile: "Mon Profil",
             settings: "Paramètres",
-            logout: "Déconnexion"
+            logout: "Déconnexion",
+            language: "Langue"
         },
         // Home Page
         home: {
@@ -2449,18 +2858,18 @@ export const translations = {
             displayDate: "14 Février 2026",
             displayDescription: "Un livre de souvenirs aquarelle créé par une fille pour son père — un hommage à l'amour qui transcende l'oubli.",
             pages: [
-                { title: "La Cour de la Maison Jaune", description: "Enfant, papa passait ses après-midi à jouer dans la cour de la maison jaune à la campagne. Il courait pieds nus entre les manguiers, chassant les papillons et inventant des aventures avec ses frères et sœurs." },
-                { title: "Le Premier Jour d'École", description: "Avec son nouveau sac à dos et les cheveux coiffés par grand-mère, papa est allé à son premier jour d'école. Il est rentré plein d'histoires sur ses nouveaux amis et la maîtresse qui dessinait des fleurs au tableau." },
-                { title: "Après-midis de Football au Terrain", description: "Adolescent, papa vivait au terrain du quartier. Il jouait au football avec ses amis jusqu'au coucher du soleil, rentrant à la maison en sueur et heureux, rêvant de devenir joueur professionnel." },
-                { title: "La Remise de Diplôme qui a Rendu la Famille Fière", description: "Papa a été le premier de la famille à obtenir son diplôme du lycée. Le jour de la remise, grand-mère a pleuré de joie et grand-père a dit que c'était le plus beau jour de sa vie." },
-                { title: "Le Jour où Tout a Commencé", description: "Papa et maman se sont mariés par un matin ensoleillé. Il raconte toujours que quand il l'a vue à l'autel, il a oublié le discours qu'il avait répété et n'a pu que sourire." },
-                { title: "L'Arrivée de la Petite Princesse", description: "Quand je suis née, papa m'a tenue dans ses bras pour la première fois et a promis qu'il serait toujours là pour moi. Maman a dit qu'il ne m'a pas lâchée pendant des heures, juste en me regardant et en souriant." },
-                { title: "Apprendre à Voler en Vélo", description: "Papa courait à côté de moi en tenant la selle du vélo, répétant 'Je suis là, je ne te lâche pas.' Jusqu'à ce que, dans un moment magique, il lâche — et j'ai volé seule pour la première fois." },
-                { title: "Le Professeur qui Transformait les Nombres en Histoires", description: "Pendant 35 ans, papa a été professeur de mathématiques. Ses élèves adoraient comment il transformait les nombres compliqués en histoires simples. Il était plus qu'un professeur — c'était un conteur avec de la craie à la main." },
-                { title: "Café du Matin dans le Jardin", description: "Chaque matin, papa prend son café dans le jardin en regardant les fleurs qu'il a plantées au fil des ans. La véranda, la musique ancienne, l'odeur du café — ce sont les rituels qui apportent la paix à sa journée." },
-                { title: "Le Noël qui a Réuni Tout le Monde", description: "Au dernier Noël en famille, papa s'est assis en bout de table entouré d'enfants et de petits-enfants. Même quand les mots manquent, son sourire dit tout. Ce sourire qui ne change jamais." }
+                { title: "La Cour de la Maison Jaune", description: "À Ouro Fino, une petite ville nichée dans les collines du sud du Minas Gerais, papa a grandi dans une maison jaune avec une cour qui semblait s'étendre à l'infini. Chaque après-midi d'été, il courait pieds nus dans la terre rouge entre les manguiers chargés de fruits, le cœur débordant de joie. Ses frères et sœurs Pedro, Ana et João couraient derrière lui, et ensemble ils inventaient des mondes entiers entre les arbres. Dona Rosa, leur mère, apparaissait à la fenêtre de la cuisine pour appeler tout le monde au café de l'après-midi — un café fraîchement préparé avec un gâteau de maïs qu'elle faisait chaque vendredi. L'arôme de ce café se mêlait au parfum des mangues mûres, et aujourd'hui encore, quand je sens cette odeur, je pense à papa enfant souriant dans cette cour." },
+                { title: "Le Premier Jour d'École", description: "Avec son nouveau sac en toile et les cheveux soigneusement coiffés par grand-mère Rosa, papa a marché jusqu'à l'École d'État d'Ouro Fino ce matin de février. Il était tellement nerveux qu'il a tenu la main de sa mère jusqu'à la porte de la classe. Quand il est rentré ce jour-là, il ne s'arrêtait plus de parler — il a raconté son ami Zé qui s'était assis à côté de lui, la maîtresse Dona Lúcia qui dessinait des fleurs colorées au tableau pour enseigner les lettres, et le goûter que grand-mère avait préparé avec tant d'amour que tous les camarades en ont demandé un morceau. Grand-père Antônio écoutait chaque mot, les yeux brillants, fier du garçon qui apprenait à lire." },
+                { title: "Après-midis de Football au Terrain", description: "Adolescent, quand il a déménagé en ville pour le lycée, papa a trouvé sa deuxième maison sur le terrain de football en terre battue du quartier. Du lundi au samedi, dès que les cours finissaient et que son service à l'épicerie de l'oncle se terminait, il y était. Il jouait ailier gauche, dribblant avec ce style élégant que ses amis admiraient. Il rentrait en sueur, les genoux écorchés, avec un sourire d'une oreille à l'autre. Il rêvait de devenir joueur professionnel — il collait des coupures de journal de Pelé sur le mur de sa chambre. Le destin avait d'autres plans, mais cette passion pour le football, cette joie de courir librement, n'a jamais quitté son cœur." },
+                { title: "La Remise de Diplôme qui a Rendu la Famille Fière", description: "Papa a été le tout premier de toute la famille à terminer ses études. Le jour de la remise des diplômes à l'École d'État, grand-mère Rosa portait sa plus belle robe fleurie et a pleuré du début à la fin de la cérémonie. Grand-père Antônio, un homme de peu de mots, a serré papa si fort dans ses bras qu'ils ont failli tomber, et a dit d'une voix tremblante : 'C'est le plus beau jour de ma vie.' Toute la famille est venue de la campagne — oncles, cousins, la marraine Aparecida — tous serrés dans un bus pour voir Carlos recevoir son diplôme. Ce soir-là, ils ont fait un barbecue dans la cour et ont dansé jusqu'à tard dans la nuit." },
+                { title: "Le Jour où Tout a Commencé", description: "Papa et maman Maria Helena se sont rencontrés lors d'une fête de la Saint-Jean sur la place du village. Il raconte qu'elle dansait dans une robe rouge, et qu'à ce moment-là, il a su. Ils se sont mariés par un matin ensoleillé d'octobre à la petite église São Sebastião. Il raconte toujours cette histoire : quand il l'a vue à l'autel, il a complètement oublié le discours qu'il avait répété pendant des semaines. Ses mains tremblaient, sa voix a disparu, et tout ce qu'il a pu faire, c'est sourire — un sourire si large et si sincère que maman a commencé à rire aussi. Toute l'église a ri ensemble. Et ce sourire n'a pas quitté son visage de toute la journée, ni le lendemain, ni toutes les années qui ont suivi." },
+                { title: "L'Arrivée de la Petite Princesse", description: "Quand je suis née, un mardi pluvieux de mars, papa était dans la salle d'attente, faisant les cent pas. Maman raconte que quand l'infirmière l'a appelé, il a couru si vite qu'il a failli trébucher à la porte. Il m'a tenue dans ses bras pour la première fois avec tant de précaution, comme si j'étais en cristal. Il est resté des heures, juste à me regarder, comptant mes petits doigts, caressant ma joue. Il murmurait doucement 'Ma petite princesse, ma petite princesse' avec les yeux pleins de larmes. Cette nuit-là, quand il m'a enfin couchée dans le berceau, il s'est assis sur la chaise à côté et a promis, de la voix la plus sérieuse que j'entendrais jamais : 'Je serai toujours là pour toi, toujours.'" },
+                { title: "Apprendre à Voler en Vélo", description: "C'était un dimanche après-midi doré au Parc Municipal. Papa courait à côté de moi en tenant la selle de mon vélo rouge, essoufflé mais sans s'arrêter, répétant 'Je suis là, ma chérie, je ne te lâche pas.' Je pédalais le cœur battant, sentant le vent sur mon visage et la peur mêlée d'excitation. Jusqu'à un moment magique — le genre de moment qu'on garde pour toujours — il a lâché. Et j'ai volé. J'ai pédalé seule pour la première fois, le monde entier s'ouvrant devant moi. Quand j'ai regardé en arrière, triomphante, j'ai vu papa arrêté au milieu du chemin. Des larmes coulaient sur son visage et ses mains étaient pressées sur sa poitrine, comme si son cœur allait exploser de fierté." },
+                { title: "Le Professeur qui Transformait les Nombres en Histoires", description: "Pendant 35 ans, papa se levait tôt, enfilait sa chemise et marchait jusqu'à l'École Municipale avec sa sacoche en cuir marron sous le bras. Il était professeur de mathématiques — mais pas n'importe quel professeur. Ses élèves adoraient comment il transformait les équations compliquées en histoires drôles. 'Si Monsieur João a 50 vaches et en vend 12 à Monsieur Manoel, combien en reste-t-il ?' — et là venait tout un feuilleton qui faisait rire toute la classe. D'anciens élèves l'arrêtent encore dans la rue pour dire : 'Professeur Carlos, vous avez changé ma vie.' Il était plus qu'un professeur — c'était un conteur avec de la craie à la main et un amour infini dans le cœur." },
+                { title: "Café du Matin dans le Jardin", description: "Chaque matin, sans exception, papa se lève avec le soleil, met l'eau à bouillir et prépare son café comme sa mère le lui a appris — lentement, patiemment, laissant l'arôme envahir toute la cuisine. Puis il porte sa tasse dans le jardin qu'il a lui-même planté au fil des décennies. Il y a des roses, du jasmin, du basilic et un citronnier qui donne des fruits toute l'année. Il s'assoit dans le fauteuil en osier sur la véranda, met la radio sur une station de musique et reste là, en paix, regardant les fleurs pendant que son café refroidit. Parfois il ferme les yeux et sourit tout seul, comme s'il conversait avec ses souvenirs. Même quand la mémoire s'éloigne, ces rituels demeurent — le corps se souvient de ce que l'esprit oublie parfois." },
+                { title: "Le Noël qui a Réuni Tout le Monde", description: "Au dernier Noël en famille, la table était dressée avec la nappe en crochet blanc que grand-mère Rosa avait faite, et papa s'est assis en bout de table, comme toujours. La maison était pleine — moi, les petits-enfants courant dans le couloir, les cousins, tante Ana avec son fameux riz. Papa a regardé chacun d'entre nous avec ces yeux qui disent plus que n'importe quels mots. Quand Pedrinho, mon fils de cinq ans, est monté sur ses genoux et a dit 'Je t'aime, papi', papa l'a serré fort contre sa poitrine et est resté silencieux un long moment. Même quand les mots manquent, son sourire dit tout. Ce sourire qu'on connaît depuis toujours — le même sourire que celui du garçon qui courait pieds nus à Ouro Fino — et qui ne change jamais, jamais." }
             ],
-            backCoverDescription: "Les souvenirs sont comme des graines plantées dans le cœur. Même quand l'esprit oublie, l'amour demeure."
+            backCoverDescription: "Les souvenirs sont comme des graines plantées dans le cœur. Même quand l'esprit oublie, l'amour demeure. Ce livre a été fait pour toi, Papa — pour que chaque page ramène la chaleur de ces moments qui ont fait de nous ce que nous sommes. Avec tout mon amour, ta fille Ana Clara."
         },
         // Common
         common: {

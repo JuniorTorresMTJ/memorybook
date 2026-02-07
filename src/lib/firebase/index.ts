@@ -59,6 +59,7 @@ export {
     deleteFile,
     deleteFolder,
     deleteBookFiles,
+    deleteGeneratedImages,
     getFileUrl,
     getFileUrls,
     downloadBookImages,

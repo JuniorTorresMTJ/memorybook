@@ -1,12 +1,16 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight, Sparkles, RotateCcw } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Sparkles, RotateCcw, Minimize2 } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import type {
     WizardStep,
     MemoryBookData,
     BookSetupData,
     MemoriesData,
+    ChildhoodData,
+    TeenageData,
+    AdultLifeData,
+    LaterLifeData,
     GenerationSettings,
 } from './types';
 import { getInitialMemoryBookData, WIZARD_STEPS } from './types';
@@ -14,8 +18,10 @@ import { StepperSidebar } from './StepperSidebar';
 import { StepperTopBar } from './StepperTopBar';
 import { GenerateLoadingScreen, type PreBackendStep } from './GenerateLoadingScreen';
 import { SuccessScreen } from './SuccessScreen';
+import { ModeSelectionScreen, type WizardMode } from './ModeSelectionScreen';
 import { BookSetupStep } from './steps/BookSetupStep';
 import { MemoriesStep } from './steps/MemoriesStep';
+import { DetailedMemoriesStep } from './steps/DetailedMemoriesStep';
 import { ReviewStep } from './steps/ReviewStep';
 import { useWizardPersistence } from './useWizardPersistence';
 
@@ -45,15 +51,62 @@ interface CreateMemoryBookModalProps {
     onClose: () => void;
     onComplete?: (data: MemoryBookData) => void;
     onSuccess?: (bookTitle: string) => void;
+    quickTest?: boolean;
+    /** When true, modal renders nothing visual but stays mounted (polling continues) */
+    isMinimized?: boolean;
+    /** Called when user clicks the minimize button */
+    onMinimize?: () => void;
+    /** Called on every progress update so parent can render a floating widget */
+    onProgressUpdate?: (progress: number) => void;
 }
 
 type ModalState = 'wizard' | 'generating' | 'success' | 'error';
+
+// Mock data for quick testing - skips wizard and goes straight to generation
+const MOCK_WIZARD_DATA: MemoryBookData = {
+    bookSetup: {
+        pageCount: 10,
+        referencePhotos: [],
+        referenceInputMode: 'characteristics',
+        physicalCharacteristics: {
+            name: 'Maria da Silva',
+            gender: 'female',
+            skinColor: 'medium',
+            hairColor: 'gray',
+            hairStyle: 'short',
+            hasGlasses: true,
+            hasFacialHair: false,
+        },
+        illustrationStyle: 'watercolor',
+        title: `Teste Rápido - ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`,
+        subtitle: 'Livro gerado para teste',
+        date: new Date().toISOString().split('T')[0],
+    },
+    memories: {
+        childhood: 'Maria nasceu em São Paulo em 1945, filha de João e Ana. Cresceu em uma casa simples no bairro da Mooca com seus dois irmãos, Pedro e Paulo. Adorava brincar no quintal e ajudar a mãe na cozinha. Sua memória mais feliz era dos almoços de domingo em família.',
+        teenage: 'Na adolescência, Maria estudou na escola estadual do bairro. Era uma aluna dedicada e adorava literatura. Fez amizades para a vida toda, especialmente com sua amiga Rosa. Participava do coral da escola e sonhava em ser professora.',
+        adultLife: 'Maria se formou professora e lecionou por 35 anos em escolas públicas. Casou-se com Carlos em 1968 e tiveram três filhos: Ana, João e Lucia. Nos fins de semana, a família se reunia para churrascos. Maria adorava jardinagem e costura.',
+        laterLife: 'Hoje Maria vive na mesma casa onde criou os filhos. Adora receber os netos nos finais de semana e preparar seu famoso bolo de cenoura. Sua rotina inclui caminhadas no parque pela manhã e assistir novelas à tarde. O que mais lhe traz alegria são as reuniões familiares.',
+    },
+    childhood: { birthPlace: '', parents: '', siblings: '', happyMemory: '', enjoyedActivities: '', photos: [] },
+    teenage: { livingPlace: '', schoolExperiences: '', friendsInterests: '', memorableEvents: '', photos: [] },
+    adultLife: { career: '', hobbiesPassions: '', partner: '', children: '', milestones: '', photos: [] },
+    laterLife: { livingPlace: '', routinesTraditions: '', familyMoments: '', comfortJoy: '', photos: [] },
+    generationSettings: {
+        readingLevel: 'standard',
+        tone: 'warm',
+    },
+};
 
 export const CreateMemoryBookModal = ({
     isOpen,
     onClose,
     onComplete,
     onSuccess,
+    quickTest = false,
+    isMinimized = false,
+    onMinimize,
+    onProgressUpdate,
 }: CreateMemoryBookModalProps) => {
     const { user } = useAuth();
     const [currentStep, setCurrentStep] = useState<WizardStep>(1);
@@ -65,6 +118,7 @@ export const CreateMemoryBookModal = ({
     const [savedStatus, setSavedStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
     const [showRestoreDialog, setShowRestoreDialog] = useState(false);
     const [modalState, setModalState] = useState<ModalState>('wizard');
+    const [wizardMode, setWizardMode] = useState<WizardMode | null>(null);
     const [errors, setErrors] = useState<{
         title?: string;
         photos?: string;
@@ -120,6 +174,13 @@ export const CreateMemoryBookModal = ({
         }
     }, [data, currentStep, completedSteps, isOpen, modalState, showRestoreDialog, saveData]);
 
+    // Propagate progress to parent (for floating widget)
+    useEffect(() => {
+        if (modalState === 'generating' && onProgressUpdate) {
+            onProgressUpdate(jobStatus?.progress_percent ?? 0);
+        }
+    }, [jobStatus?.progress_percent, modalState, onProgressUpdate]);
+
     // Cleanup on unmount
     useEffect(() => {
         return () => {
@@ -173,6 +234,51 @@ export const CreateMemoryBookModal = ({
             setData((prev) => ({
                 ...prev,
                 memories: { ...prev.memories, ...updates },
+            }));
+            triggerAutosave();
+        },
+        [triggerAutosave]
+    );
+
+    // Detailed life phase handlers
+    const updateChildhood = useCallback(
+        (updates: Partial<ChildhoodData>) => {
+            setData((prev) => ({
+                ...prev,
+                childhood: { ...prev.childhood, ...updates },
+            }));
+            triggerAutosave();
+        },
+        [triggerAutosave]
+    );
+
+    const updateTeenage = useCallback(
+        (updates: Partial<TeenageData>) => {
+            setData((prev) => ({
+                ...prev,
+                teenage: { ...prev.teenage, ...updates },
+            }));
+            triggerAutosave();
+        },
+        [triggerAutosave]
+    );
+
+    const updateAdultLife = useCallback(
+        (updates: Partial<AdultLifeData>) => {
+            setData((prev) => ({
+                ...prev,
+                adultLife: { ...prev.adultLife, ...updates },
+            }));
+            triggerAutosave();
+        },
+        [triggerAutosave]
+    );
+
+    const updateLaterLife = useCallback(
+        (updates: Partial<LaterLifeData>) => {
+            setData((prev) => ({
+                ...prev,
+                laterLife: { ...prev.laterLife, ...updates },
             }));
             triggerAutosave();
         },
@@ -254,7 +360,8 @@ export const CreateMemoryBookModal = ({
     }, [currentStep]);
 
     // Generation handlers
-    const handleGenerate = useCallback(async () => {
+    const handleGenerate = useCallback(async (overrideData?: MemoryBookData) => {
+        const wizardData = overrideData || data;
         setModalState('generating');
         setGenerationError(null);
         setPreBackendStep('saving_firebase');
@@ -279,21 +386,21 @@ export const CreateMemoryBookModal = ({
             // 1. Create Memory Book in Firebase
             console.log('Creating memory book in Firebase...');
             const newBookId = await createMemoryBook(userId, {
-                title: data.bookSetup.title,
-                subtitle: data.bookSetup.subtitle || undefined,
-                bookDate: data.bookSetup.date ? new Date(data.bookSetup.date) : new Date(),
-                pageCount: data.bookSetup.pageCount,
-                imageStyle: data.bookSetup.illustrationStyle,
-                tone: data.generationSettings.tone,
-                readingLevel: data.generationSettings.readingLevel,
+                title: wizardData.bookSetup.title,
+                subtitle: wizardData.bookSetup.subtitle || undefined,
+                bookDate: wizardData.bookSetup.date ? new Date(wizardData.bookSetup.date) : new Date(),
+                pageCount: wizardData.bookSetup.pageCount,
+                imageStyle: wizardData.bookSetup.illustrationStyle,
+                tone: wizardData.generationSettings.tone,
+                readingLevel: wizardData.generationSettings.readingLevel,
             });
             setBookId(newBookId);
             console.log('Memory book created:', newBookId);
 
             // 2. Transform wizard data to API payload
             setPreBackendStep('calling_api');
-            const payload = transformWizardDataToPayload(data, userLanguage);
-            const referencePhotos = getReferencePhotos(data);
+            const payload = transformWizardDataToPayload(wizardData, userLanguage);
+            const referencePhotos = getReferencePhotos(wizardData);
 
             // 3. Send to backend API
             console.log('Sending to backend API...');
@@ -323,20 +430,51 @@ export const CreateMemoryBookModal = ({
         }
     }, [user, data, clearSavedData]);
 
+    // Quick test: auto-fill mock data and trigger generation immediately
+    const quickTestTriggered = useRef(false);
+    useEffect(() => {
+        if (quickTest && isOpen && !quickTestTriggered.current && modalState === 'wizard') {
+            quickTestTriggered.current = true;
+            // Skip mode selection for quick test
+            setWizardMode('brief');
+            console.log('[QuickTest] Auto-filling mock data and triggering generation...');
+            setData(MOCK_WIZARD_DATA);
+            // Pass mock data directly to avoid stale closure
+            handleGenerate(MOCK_WIZARD_DATA);
+        }
+        if (!isOpen) {
+            quickTestTriggered.current = false;
+        }
+    }, [quickTest, isOpen, modalState, handleGenerate]);
+
     const handleGenerationComplete = useCallback(async (bookResult: FinalBookPackage) => {
         setResult(bookResult);
         
-        // Update Firebase - persist images to Firebase Storage, then save result
+        // Update Firebase - persist result and images
         if (bookId && jobId) {
+            const resultSnapshot = bookResult as unknown as Record<string, unknown>;
+            
+            // Step 1: Save resultSnapshot to Firestore FIRST (ensures data is saved even if image download fails)
             try {
-                const resultSnapshot = bookResult as unknown as Record<string, unknown>;
-                
-                // Try to get image data for persistence
-                // First: check if backend embedded image_data in the result
+                console.log('[handleGenerationComplete] Saving resultSnapshot to Firestore...');
+                await completeGenerationJob(bookId, jobId, resultSnapshot);
+                console.log('[handleGenerationComplete] ResultSnapshot saved successfully');
+            } catch (error) {
+                console.error('[handleGenerationComplete] Failed to save resultSnapshot:', error);
+            }
+
+            // Step 2: Try to download and persist images (separate step, won't block completion)
+            try {
                 const imageMap = new Map<string, string>();
+                let hasPublicUrls = false;
+                
+                // First: check if backend embedded image_data in the result
                 const extractImageData = (page: Record<string, unknown> | undefined, key: string) => {
                     if (page && typeof page.image_data === 'string' && page.image_data.startsWith('data:')) {
                         imageMap.set(key, page.image_data);
+                    }
+                    if (page && typeof page.image_path === 'string' && page.image_path.startsWith('http')) {
+                        hasPublicUrls = true;
                     }
                 };
                 extractImageData(resultSnapshot.cover as Record<string, unknown>, 'cover');
@@ -349,25 +487,42 @@ export const CreateMemoryBookModal = ({
                 
                 // Fallback: if no embedded images, try downloading from backend 
                 // (works if same Cloud Run instance is still alive)
-                if (imageMap.size === 0) {
+                if (imageMap.size === 0 && !hasPublicUrls) {
+                    console.log('[handleGenerationComplete] No embedded images found, downloading from backend...');
                     try {
                         const downloaded = await downloadBookImages(
                             resultSnapshot,
                             (filename: string) => getAssetUrl(jobId, 'outputs', filename),
                         );
                         downloaded.forEach((v, k) => imageMap.set(k, v));
-                        console.log(`Downloaded ${imageMap.size} images from backend`);
+                        console.log(`[handleGenerationComplete] Downloaded ${imageMap.size} images from backend`);
                     } catch (dlErr) {
-                        console.warn('Failed to download images from backend:', dlErr);
+                        console.error('[handleGenerationComplete] Failed to download images from backend:', dlErr);
                     }
-                } else {
-                    console.log(`Using ${imageMap.size} embedded images from backend`);
+                } else if (imageMap.size > 0) {
+                    console.log(`[handleGenerationComplete] Using ${imageMap.size} embedded images from backend`);
+                } else if (hasPublicUrls) {
+                    console.log('[handleGenerationComplete] Using public image URLs from backend');
                 }
                 
-                await completeGenerationJob(bookId, jobId, resultSnapshot, imageMap.size > 0 ? imageMap : undefined);
-                await updateMemoryBookStatus(bookId, 'completed');
+                // Save images to Firestore subcollection
+                if (imageMap.size > 0) {
+                    console.log(`[handleGenerationComplete] Saving ${imageMap.size} images to Firestore...`);
+                    await completeGenerationJob(bookId, jobId, undefined, imageMap);
+                    console.log('[handleGenerationComplete] Images saved to Firestore successfully');
+                } else if (!hasPublicUrls) {
+                    console.warn('[handleGenerationComplete] No images to save - book will have broken images until backend is available');
+                }
             } catch (error) {
-                console.error('Failed to update Firebase:', error);
+                console.error('[handleGenerationComplete] Failed to persist images:', error);
+            }
+
+            // Step 3: Update book status to completed
+            try {
+                await updateMemoryBookStatus(bookId, 'completed');
+                console.log('[handleGenerationComplete] Book status updated to completed');
+            } catch (error) {
+                console.error('[handleGenerationComplete] Failed to update book status:', error);
             }
         }
 
@@ -384,6 +539,7 @@ export const CreateMemoryBookModal = ({
             // Close modal inline (to avoid circular dependency)
             if (stopPolling) stopPolling();
             setModalState('wizard');
+            setWizardMode(null);
             setJobId(null);
             setBookId(null);
             setGenerationError(null);
@@ -430,6 +586,7 @@ export const CreateMemoryBookModal = ({
     const handleClose = useCallback(() => {
         if (stopPolling) stopPolling();
         setModalState('wizard');
+        setWizardMode(null);
         setJobId(null);
         setBookId(null);
         setGenerationError(null);
@@ -442,6 +599,9 @@ export const CreateMemoryBookModal = ({
     const currentStepInfo = WIZARD_STEPS.find((s) => s.number === currentStep);
 
     if (!isOpen) return null;
+
+    // When minimized, render nothing visual but stay mounted (polling continues)
+    if (isMinimized && modalState === 'generating') return null;
 
     // Get title for non-wizard states
     const getHeaderTitle = () => {
@@ -525,8 +685,8 @@ export const CreateMemoryBookModal = ({
                 className="fixed inset-4 md:inset-6 lg:inset-y-8 lg:inset-x-auto lg:left-1/2 lg:-translate-x-1/2 lg:w-full lg:max-w-5xl z-50 flex"
             >
                 <div className="w-full h-full bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row">
-                    {/* Sidebar (Desktop) - Only show in wizard state */}
-                    {modalState === 'wizard' && (
+                    {/* Sidebar (Desktop) - Only show in wizard state with mode selected */}
+                    {modalState === 'wizard' && wizardMode !== null && (
                         <StepperSidebar
                             currentStep={currentStep}
                             completedSteps={completedSteps}
@@ -538,7 +698,7 @@ export const CreateMemoryBookModal = ({
                     {/* Main Content */}
                     <div className="flex-1 flex flex-col overflow-hidden">
                         {/* Header - Always show with close button */}
-                        {modalState === 'wizard' ? (
+                        {modalState === 'wizard' && wizardMode !== null ? (
                             <>
                                 <StepperTopBar
                                     currentStep={currentStep}
@@ -566,18 +726,39 @@ export const CreateMemoryBookModal = ({
                                     </button>
                                 </div>
                             </>
-                        ) : (
+                        ) : modalState !== 'wizard' ? (
                             /* Header for non-wizard states */
                             <div className="flex items-center justify-between p-4 lg:p-6 border-b border-black/5">
                                 <h2 className="text-lg lg:text-xl font-bold text-gray-800">
                                     {getHeaderTitle()}
                                 </h2>
+                                <div className="flex items-center gap-1">
+                                    {modalState === 'generating' && onMinimize && (
+                                        <button
+                                            onClick={onMinimize}
+                                            className="p-2 hover:bg-black/5 rounded-lg transition-colors"
+                                            title={wz?.minimize || 'Minimizar'}
+                                        >
+                                            <Minimize2 className="w-5 h-5 text-gray-500" />
+                                        </button>
+                                    )}
+                                    <button
+                                        onClick={handleClose}
+                                        className="p-2 hover:bg-black/5 rounded-lg transition-colors"
+                                        title={wz?.cancel || 'Fechar'}
+                                    >
+                                        <X className="w-5 h-5 text-gray-500" />
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            /* Minimal header for mode selection screen */
+                            <div className="flex items-center justify-end p-4 lg:p-6">
                                 <button
                                     onClick={handleClose}
                                     className="p-2 hover:bg-black/5 rounded-lg transition-colors"
-                                    title={wz?.cancel || 'Fechar'}
                                 >
-                                    <X className="w-5 h-5 text-gray-500" />
+                                    <X className="w-5 h-5 text-text-muted" />
                                 </button>
                             </div>
                         )}
@@ -605,20 +786,40 @@ export const CreateMemoryBookModal = ({
 
                                 {modalState === 'wizard' && !showRestoreDialog && (
                                     <>
-                                        {currentStep === 1 && (
+                                        {/* Mode selection (shown before wizard steps) */}
+                                        {wizardMode === null && (
+                                            <ModeSelectionScreen
+                                                onSelect={(mode) => setWizardMode(mode)}
+                                            />
+                                        )}
+
+                                        {/* Wizard steps (shown after mode is selected) */}
+                                        {wizardMode !== null && currentStep === 1 && (
                                             <BookSetupStep
                                                 data={data.bookSetup}
                                                 onChange={updateBookSetup}
                                                 errors={errors}
                                             />
                                         )}
-                                        {currentStep === 2 && (
+                                        {wizardMode === 'brief' && currentStep === 2 && (
                                             <MemoriesStep
                                                 data={data.memories}
                                                 onChange={updateMemories}
                                             />
                                         )}
-                                        {currentStep === 3 && (
+                                        {wizardMode === 'detailed' && currentStep === 2 && (
+                                            <DetailedMemoriesStep
+                                                childhood={data.childhood}
+                                                teenage={data.teenage}
+                                                adultLife={data.adultLife}
+                                                laterLife={data.laterLife}
+                                                onChildhoodChange={updateChildhood}
+                                                onTeenageChange={updateTeenage}
+                                                onAdultLifeChange={updateAdultLife}
+                                                onLaterLifeChange={updateLaterLife}
+                                            />
+                                        )}
+                                        {wizardMode !== null && currentStep === 3 && (
                                             <ReviewStep
                                                 data={data}
                                                 onEditSection={goToStep}
@@ -631,8 +832,8 @@ export const CreateMemoryBookModal = ({
                             </div>
                         </div>
 
-                        {/* Footer Actions - Only in wizard state */}
-                        {modalState === 'wizard' && !showRestoreDialog && (
+                        {/* Footer Actions - Only in wizard state with mode selected */}
+                        {modalState === 'wizard' && wizardMode !== null && !showRestoreDialog && (
                             <div className="p-4 lg:p-6 border-t border-black/5 bg-bg-soft">
                                 <div className="max-w-3xl mx-auto flex items-center justify-between gap-4">
                                     {/* Left Actions */}
@@ -673,7 +874,7 @@ export const CreateMemoryBookModal = ({
                                             </button>
                                         ) : (
                                             <button
-                                                onClick={handleGenerate}
+                                                onClick={() => handleGenerate()}
                                                 className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-teal to-teal-400 hover:from-teal-500 hover:to-teal-400 text-white font-semibold transition-all shadow-lg shadow-primary-teal/20 hover:shadow-xl hover:shadow-primary-teal/30"
                                             >
                                                 <Sparkles className="w-5 h-5" />

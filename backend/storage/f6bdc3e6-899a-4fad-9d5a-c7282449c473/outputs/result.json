@@ -1,0 +1,640 @@
+{
+  "book_id": "f6bdc3e6-899a-4fad-9d5a-c7282449c473",
+  "title": "Livro Teste Completo",
+  "style": "cartoon",
+  "created_at": "2026-02-04 21:19:06.361666",
+  "cover": {
+    "page_number": 0,
+    "page_type": "cover",
+    "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\f6bdc3e6-899a-4fad-9d5a-c7282449c473\\outputs\\cover.png",
+    "thumbnail_path": null,
+    "narrative_text": null,
+    "life_phase": null,
+    "memory_reference": null,
+    "generation_attempts": 1
+  },
+  "back_cover": {
+    "page_number": -1,
+    "page_type": "back_cover",
+    "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\f6bdc3e6-899a-4fad-9d5a-c7282449c473\\outputs\\back_cover.png",
+    "thumbnail_path": null,
+    "narrative_text": null,
+    "life_phase": null,
+    "memory_reference": null,
+    "generation_attempts": 1
+  },
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\f6bdc3e6-899a-4fad-9d5a-c7282449c473\\outputs\\page_01.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Playing hide-and-seek with cousins in grandma's backyard",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 2,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\f6bdc3e6-899a-4fad-9d5a-c7282449c473\\outputs\\page_02.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Playing hide-and-seek with cousins in grandma's backyard",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 3,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\f6bdc3e6-899a-4fad-9d5a-c7282449c473\\outputs\\page_03.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Born in Rio de Janeiro, Brasil",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 4,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\f6bdc3e6-899a-4fad-9d5a-c7282449c473\\outputs\\page_04.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "adolescent",
+      "memory_reference": "Loved playing soccer on the beach with friends",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 5,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\f6bdc3e6-899a-4fad-9d5a-c7282449c473\\outputs\\page_05.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "adolescent",
+      "memory_reference": "Loved playing soccer on the beach with friends",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 6,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\f6bdc3e6-899a-4fad-9d5a-c7282449c473\\outputs\\page_06.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "adolescent",
+      "memory_reference": "listening to music on the radio",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 7,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\f6bdc3e6-899a-4fad-9d5a-c7282449c473\\outputs\\page_07.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "adolescent",
+      "memory_reference": "listening to music on the radio",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 8,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\f6bdc3e6-899a-4fad-9d5a-c7282449c473\\outputs\\page_08.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "running among the trees and laughing a lot",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 9,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\f6bdc3e6-899a-4fad-9d5a-c7282449c473\\outputs\\page_09.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Born in Rio de Janeiro, Brasil",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 10,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\f6bdc3e6-899a-4fad-9d5a-c7282449c473\\outputs\\page_10.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "adolescent",
+      "memory_reference": "Loved playing soccer on the beach with friends and listening to music on the radio.",
+      "generation_attempts": 1
+    }
+  ],
+  "total_pages": 12,
+  "narrative_plan": {
+    "book_title": "Livro Teste Completo",
+    "total_pages": 10,
+    "cover": {
+      "main_subject_pose": "Smiling figure with outstretched arms, looking towards a bright sky.",
+      "background_elements": [
+        "Cartoon trees",
+        "Beach",
+        "Radio playing music"
+      ],
+      "color_scheme": [
+        "Bright blues",
+        "Yellows",
+        "Greens"
+      ],
+      "mood": "Joyful and carefree",
+      "title_placement": "top-center",
+      "title_space_reserved": true,
+      "symbolic_elements": [
+        "Soccer ball",
+        "Musical notes"
+      ],
+      "composition_notes": "Combine elements of youth and adolescence"
+    },
+    "back_cover": {
+      "design_type": "symbolic",
+      "main_elements": [
+        "Cartoon sun",
+        "Winding road"
+      ],
+      "color_scheme": [
+        "Yellow",
+        "Orange",
+        "Light blue"
+      ],
+      "symbolic_meaning": "Represents the journey of life, with the sun symbolizing hope and a bright future.",
+      "text_area": false,
+      "text_content": null
+    },
+    "pages": [
+      {
+        "page_number": 1,
+        "life_phase": "young",
+        "memory_reference": "Playing hide-and-seek with cousins in grandma's backyard",
+        "scene_description": "A group of cartoon children playing hide-and-seek among large cartoon trees in a sunny backyard. One child is peeking from behind a tree with a playful expression.",
+        "emotional_tone": "Playful and joyful",
+        "key_elements": [
+          "Large cartoon trees",
+          "Hiding children",
+          "Sunny backyard",
+          "Grandma's house in the background"
+        ],
+        "setting": "Grandma's backyard",
+        "characters_present": [
+          "Children",
+          "Grandma (optional, in the background)"
+        ],
+        "suggested_composition": "Wide shot showing the entire backyard with children scattered around, some hiding, some seeking.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 2,
+        "life_phase": "young",
+        "memory_reference": "Playing hide-and-seek with cousins in grandma's backyard",
+        "scene_description": "Close-up of a child laughing while running through the backyard.",
+        "emotional_tone": "Pure joy and freedom",
+        "key_elements": [
+          "Child laughing",
+          "Motion lines indicating running",
+          "Blurry background of trees and flowers",
+          "Bright sunlight"
+        ],
+        "setting": "Grandma's backyard",
+        "characters_present": [
+          "Child"
+        ],
+        "suggested_composition": "Focus on the child's face and expression, conveying a sense of movement and joy.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 3,
+        "life_phase": "young",
+        "memory_reference": "Born in Rio de Janeiro, Brasil",
+        "scene_description": "A cartoon stork delivering a baby in Rio de Janeiro, with Christ the Redeemer statue in the background.",
+        "emotional_tone": "Welcoming and celebratory",
+        "key_elements": [
+          "Stork",
+          "Baby",
+          "Christ the Redeemer statue",
+          "Rio de Janeiro cityscape"
+        ],
+        "setting": "Rio de Janeiro",
+        "characters_present": [
+          "Stork",
+          "Baby"
+        ],
+        "suggested_composition": "Wide shot showing the stork flying over Rio, with Christ the Redeemer prominently displayed.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 4,
+        "life_phase": "adolescent",
+        "memory_reference": "Loved playing soccer on the beach with friends",
+        "scene_description": "A group of cartoon teenagers playing soccer on a sunny beach, with the ocean in the background.",
+        "emotional_tone": "Friendship and fun",
+        "key_elements": [
+          "Soccer ball",
+          "Teenagers",
+          "Beach",
+          "Ocean waves"
+        ],
+        "setting": "Beach",
+        "characters_present": [
+          "Teenagers"
+        ],
+        "suggested_composition": "Action shot of teenagers playing soccer, with a focus on teamwork and camaraderie.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 5,
+        "life_phase": "adolescent",
+        "memory_reference": "Loved playing soccer on the beach with friends",
+        "scene_description": "Close-up of a teenager kicking the soccer ball with determination.",
+        "emotional_tone": "Focused and energetic",
+        "key_elements": [
+          "Soccer ball",
+          "Teenager",
+          "Sand flying",
+          "Determined expression"
+        ],
+        "setting": "Beach",
+        "characters_present": [
+          "Teenager"
+        ],
+        "suggested_composition": "Focus on the teenager's face and the action of kicking the ball, conveying a sense of energy and determination.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 6,
+        "life_phase": "adolescent",
+        "memory_reference": "listening to music on the radio",
+        "scene_description": "Teenagers sitting around a radio on the beach, listening to music and laughing.",
+        "emotional_tone": "Relaxed and happy",
+        "key_elements": [
+          "Radio",
+          "Teenagers",
+          "Beach",
+          "Music notes floating"
+        ],
+        "setting": "Beach",
+        "characters_present": [
+          "Teenagers"
+        ],
+        "suggested_composition": "Group shot of teenagers enjoying music together, conveying a sense of friendship and shared interests.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 7,
+        "life_phase": "adolescent",
+        "memory_reference": "listening to music on the radio",
+        "scene_description": "Close up of an old radio, with dials and buttons, playing music on the beach.",
+        "emotional_tone": "Nostalgia and happiness",
+        "key_elements": [
+          "Radio",
+          "Music notes",
+          "Beach in the background"
+        ],
+        "setting": "Beach",
+        "characters_present": [
+          "None"
+        ],
+        "suggested_composition": "Focus on the radio, emphasizing its retro design and the music it's playing.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 8,
+        "life_phase": "young",
+        "memory_reference": "running among the trees and laughing a lot",
+        "scene_description": "Child is running among trees, arms wide open, laughing with joy. ",
+        "emotional_tone": "Pure joy and freedom",
+        "key_elements": [
+          "Child laughing",
+          "Trees",
+          "Sunlight"
+        ],
+        "setting": "Park/Backyard",
+        "characters_present": [
+          "Child"
+        ],
+        "suggested_composition": "Low angle shot emphasizing the height of the trees and the child's freedom.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 9,
+        "life_phase": "young",
+        "memory_reference": "Born in Rio de Janeiro, Brasil",
+        "scene_description": "A cartoon representation of the Rio de Janeiro cityscape with a smiling baby sun in the sky",
+        "emotional_tone": "Joyful and vibrant",
+        "key_elements": [
+          "Rio de Janeiro cityscape",
+          "Smiling baby sun",
+          "Colorful buildings"
+        ],
+        "setting": "Rio de Janeiro",
+        "characters_present": [
+          "None"
+        ],
+        "suggested_composition": "Panoramic view of the cityscape with the sun as a focal point.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 10,
+        "life_phase": "adolescent",
+        "memory_reference": "Loved playing soccer on the beach with friends and listening to music on the radio.",
+        "scene_description": "A montage of quick cartoon sketches, showing someone kicking a soccer ball and turning the dial on a radio.",
+        "emotional_tone": "Energetic and playful",
+        "key_elements": [
+          "Soccer ball",
+          "Radio dial",
+          "Motion lines",
+          "Bright colors"
+        ],
+        "setting": "Abstract",
+        "characters_present": [
+          "None"
+        ],
+        "suggested_composition": "Dynamic layout with overlapping elements, conveying a sense of action and excitement.",
+        "narrative_text": null
+      }
+    ],
+    "narrative_arc": "The book follows a journey through childhood and adolescence, highlighting moments of joy, friendship, and discovery. It focuses on carefree play and the simple pleasures of life.",
+    "visual_themes": [
+      "Bright colors",
+      "Cartoon style",
+      "Beaches",
+      "Nature"
+    ],
+    "color_progression": "Starts with softer greens and yellows in childhood, transitioning to brighter blues and oranges in adolescence."
+  },
+  "visual_fingerprint": {
+    "subject_id": "unknown",
+    "facial_features": {
+      "face_shape": "",
+      "eye_color": "",
+      "eye_shape": "",
+      "hair_color": "",
+      "hair_style": "",
+      "skin_tone": "",
+      "distinctive_features": [],
+      "estimated_age_range": ""
+    },
+    "body_characteristics": {
+      "body_type": "",
+      "height_estimate": "",
+      "posture": "",
+      "clothing_style": []
+    },
+    "style_attributes": {
+      "color_palette": [
+        "bright",
+        "saturated"
+      ],
+      "line_weight": "bold",
+      "shading_style": "cel-shading",
+      "detail_level": "medium"
+    },
+    "reference_image_analysis": [],
+    "consistency_notes": [
+      "Unable to analyze reference images - using generic representation"
+    ],
+    "age_variations": {}
+  },
+  "design_review": {
+    "overall_cohesion": 9.0,
+    "style_consistency_score": 9.5,
+    "color_palette_harmony": 10.0,
+    "narrative_flow": 8.5,
+    "character_consistency": 8.0,
+    "page_reviews": [
+      {
+        "page_number": 0,
+        "artistic_assessment": "The illustration is well-executed and fits the cartoon style. The scene is cheerful and inviting, with good use of color and composition. The character's expression is engaging.",
+        "composition_notes": "The composition is well-balanced, with the character in the center and the beach elements surrounding him. The musical notes add a dynamic element.",
+        "color_harmony": "excellent",
+        "emotional_impact": "strong",
+        "style_adherence": "perfect",
+        "strengths": [
+          "Cheerful and inviting scene",
+          "Good use of color",
+          "Well-balanced composition",
+          "Engaging character expression",
+          "Fits the cartoon style perfectly"
+        ],
+        "areas_for_improvement": [],
+        "recommended_action": "approve"
+      },
+      {
+        "page_number": 1,
+        "artistic_assessment": "The illustration is well-executed and charming, fitting the cartoon style effectively. The composition is pleasing, and the characters are engaging. The scene depicts children playing outdoors, creating a joyful and innocent atmosphere.",
+        "composition_notes": "The composition is balanced with the tree and child on the left, and the house and other children on the right. The background details add depth and interest without being distracting.",
+        "color_harmony": "excellent",
+        "emotional_impact": "strong",
+        "style_adherence": "perfect",
+        "strengths": [
+          "Charming character designs",
+          "Balanced composition",
+          "Harmonious color palette",
+          "Effective use of light and shadow",
+          "Clear and engaging narrative"
+        ],
+        "areas_for_improvement": [],
+        "recommended_action": "approve"
+      },
+      {
+        "page_number": 2,
+        "artistic_assessment": "The illustration is well-executed with a vibrant and cheerful style that fits the cartoon aesthetic. The character design is appealing, and the background elements contribute to a lively scene. However, there are a couple of minor anatomical issues and inconsistencies that could be addressed.",
+        "composition_notes": "The composition is balanced with the character centered and leading lines directing the viewer's eye through the scene. The use of foreground and background elements creates depth.",
+        "color_harmony": "excellent",
+        "emotional_impact": "strong",
+        "style_adherence": "perfect",
+        "strengths": [
+          "Appealing character design",
+          "Vibrant color palette",
+          "Dynamic composition",
+          "Good use of light and shadow"
+        ],
+        "areas_for_improvement": [
+          "Address minor anatomical issues",
+          "Ensure consistent line weight throughout"
+        ],
+        "recommended_action": "minor_edit"
+      },
+      {
+        "page_number": 3,
+        "artistic_assessment": "The illustration is well-executed in a cartoon style and evokes a sense of joy and celebration. The stork carrying a baby over Rio de Janeiro is a creative concept. However, there are some minor areas where improvements could be made to enhance the overall quality.",
+        "composition_notes": "The composition is balanced, with the stork and baby as the focal point, complemented by the cityscape and landscape in the background. The use of confetti and musical notes adds to the celebratory atmosphere.",
+        "color_harmony": "excellent",
+        "emotional_impact": "strong",
+        "style_adherence": "perfect",
+        "strengths": [
+          "Vibrant colors and cartoon style effectively capture the theme.",
+          "The stork and baby are well-drawn and expressive.",
+          "Background details like the Christ the Redeemer statue and Sugarloaf Mountain enhance the scene."
+        ],
+        "areas_for_improvement": [
+          "Slightly refine the shading on the buildings for better depth.",
+          "Consider adding more distinct details to the baby's features."
+        ],
+        "recommended_action": "minor_edit"
+      },
+      {
+        "page_number": 4,
+        "artistic_assessment": "The illustration has a good cartoon style and captures a fun beach scene. The characters are engaging and the composition is dynamic. However, there are some minor anatomical issues and inconsistencies in the rendering of the feet.",
+        "composition_notes": "The composition is well-balanced with the characters spread across the scene and the soccer ball as a focal point. The beach and sky background provides a good context.",
+        "color_harmony": "excellent",
+        "emotional_impact": "moderate",
+        "style_adherence": "good",
+        "strengths": [
+          "Good use of color palette",
+          "Dynamic composition",
+          "Engaging character designs",
+          "Clear cartoon style"
+        ],
+        "areas_for_improvement": [
+          "Anatomical accuracy of feet",
+          "Refining the rendering of the characters' feet",
+          "Slightly improve the consistency of the line work"
+        ],
+        "recommended_action": "minor_edit"
+      },
+      {
+        "page_number": 5,
+        "artistic_assessment": "The illustration is well-executed and fits the cartoon style. The action pose is dynamic, and the character's expression adds to the scene. The background complements the action without being distracting.",
+        "composition_notes": "The composition is good, with the character positioned to emphasize the action of kicking the soccer ball. The background provides context and depth.",
+        "color_harmony": "excellent",
+        "emotional_impact": "moderate",
+        "style_adherence": "perfect",
+        "strengths": [
+          "Dynamic pose",
+          "Clear and vibrant colors",
+          "Good character expression",
+          "Effective use of background to set the scene"
+        ],
+        "areas_for_improvement": [],
+        "recommended_action": "approve"
+      },
+      {
+        "page_number": 6,
+        "artistic_assessment": "The illustration is well-executed and captures a joyful scene. The characters are expressive, and the overall composition is pleasing. It aligns well with the intended cartoon style.",
+        "composition_notes": "The composition is balanced, with the children and the radio forming a clear focal point. The beach background provides context without being distracting.",
+        "color_harmony": "excellent",
+        "emotional_impact": "strong",
+        "style_adherence": "perfect",
+        "strengths": [
+          "Expressive character designs",
+          "Harmonious color palette",
+          "Clear and engaging composition"
+        ],
+        "areas_for_improvement": [],
+        "recommended_action": "approve"
+      },
+      {
+        "page_number": 7,
+        "artistic_assessment": "The illustration is well-executed and fits the cartoon style. The character's expression is cheerful and engaging. The composition effectively uses the radio and musical notes to create a lively scene.",
+        "composition_notes": "The composition is balanced, with the character and radio positioned nicely within the frame. The musical notes add a dynamic element.",
+        "color_harmony": "excellent",
+        "emotional_impact": "moderate",
+        "style_adherence": "perfect",
+        "strengths": [
+          "Cheerful character expression",
+          "Harmonious color palette",
+          "Well-balanced composition",
+          "Clear and appealing cartoon style"
+        ],
+        "areas_for_improvement": [],
+        "recommended_action": "approve"
+      },
+      {
+        "page_number": 8,
+        "artistic_assessment": "The illustration is well-executed with a cheerful and energetic feel. The character design is appealing, and the background provides a pleasant context. The composition is engaging and the colors are vibrant, contributing to the positive emotional impact.",
+        "composition_notes": "The framing with the trees creates a natural border, focusing attention on the character. The use of perspective adds depth. The placement of flowers in the foreground enhances the sense of being in nature.",
+        "color_harmony": "excellent",
+        "emotional_impact": "strong",
+        "style_adherence": "perfect",
+        "strengths": [
+          "Charming character design",
+          "Vibrant and harmonious colors",
+          "Engaging composition",
+          "Clear and expressive animation style"
+        ],
+        "areas_for_improvement": [],
+        "recommended_action": "approve"
+      },
+      {
+        "page_number": 9,
+        "artistic_assessment": "The illustration is well-executed in a cartoon style and captures the essence of a tropical cityscape, possibly Rio de Janeiro. The composition is balanced, with vibrant colors and a whimsical sun character. The style adherence is good, and the overall emotional impact is moderate due to the cheerful imagery.",
+        "composition_notes": "The composition is well-balanced with foreground foliage, a detailed cityscape, and iconic landmarks in the background. The placement of the 'sun-face' character at the top draws the eye effectively.",
+        "color_harmony": "excellent",
+        "emotional_impact": "moderate",
+        "style_adherence": "good",
+        "strengths": [
+          "Vibrant and harmonious color palette.",
+          "Good composition with a clear focal point.",
+          "Effective use of cartoon style.",
+          "Captures a cheerful and tropical atmosphere."
+        ],
+        "areas_for_improvement": [
+          "The sun's face could be slightly more refined to better match the overall cartoon aesthetic.",
+          "Consider adding subtle details to the buildings to enhance depth and realism within the cartoon style."
+        ],
+        "recommended_action": "approve"
+      },
+      {
+        "page_number": 10,
+        "artistic_assessment": "The illustration is well-executed and captures a playful beach scene. The characters are expressive, and the composition is balanced. The style adheres well to the cartoon aesthetic. However, there's a slight inconsistency in the character design since there appear to be two of the same character.",
+        "composition_notes": "The layout is well-balanced, with the characters and elements distributed evenly across the scene. The background provides a good context, and the 'Beach Beats' title is nicely integrated.",
+        "color_harmony": "excellent",
+        "emotional_impact": "moderate",
+        "style_adherence": "perfect",
+        "strengths": [
+          "Expressive characters",
+          "Balanced composition",
+          "Harmonious color palette",
+          "Consistent cartoon style"
+        ],
+        "areas_for_improvement": [
+          "Avoid duplicating characters within the same scene unless intended",
+          "Consider adding more variation in poses"
+        ],
+        "recommended_action": "minor_edit"
+      },
+      {
+        "page_number": 11,
+        "artistic_assessment": "The illustration is well-executed and fits the cartoon style. The composition is balanced, and the colors are harmonious. The overall emotional impact is positive due to the smiling sun and the inviting path. However, there could be slight improvements in the path's texture to give it a more natural look.",
+        "composition_notes": "The layout is well-balanced with the sun at the top, the path leading into the scene, and the text nicely placed at the bottom.",
+        "color_harmony": "excellent",
+        "emotional_impact": "moderate",
+        "style_adherence": "perfect",
+        "strengths": [
+          "Harmonious color palette",
+          "Clear and balanced composition",
+          "Fits the cartoon style well",
+          "Positive emotional tone"
+        ],
+        "areas_for_improvement": [
+          "Adding slight texture to the path could enhance realism"
+        ],
+        "recommended_action": "approve"
+      }
+    ],
+    "global_issues": [
+      "Slight anatomical inconsistencies across a few pages (pages 2 and 4)",
+      "Minor character design inconsistency (page 10)"
+    ],
+    "global_suggestions": [
+      "Review and correct the anatomical inaccuracies on pages 2 and 4.",
+      "Ensure character consistency across all pages, paying close attention to recurring characters.",
+      "Consider adding transition elements between pages to enhance narrative flow."
+    ],
+    "pages_needing_attention": [
+      2,
+      3,
+      4,
+      10
+    ],
+    "approved": false
+  },
+  "total_generation_time_ms": 0,
+  "total_retries": 0,
+  "output_directory": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\f6bdc3e6-899a-4fad-9d5a-c7282449c473\\outputs",
+  "pdf_path": null
+}

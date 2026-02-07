@@ -78,6 +78,20 @@ service firebase.storage {
       allow write: if isOwner(userId) && isValidImage();
       allow delete: if isOwner(userId);
     }
+
+    // Public generated images (backend uploads)
+    // /public/generated/{jobId}/{filename}
+    match /public/generated/{jobId}/{filename} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Public sample book images (pre-generated examples)
+    // /public/sample-books/{bookId}/{filename}
+    match /public/sample-books/{bookId}/{filename} {
+      allow read: if true;
+      allow write: if false;
+    }
     
     // ============================================
     // DENY ALL OTHER ACCESS

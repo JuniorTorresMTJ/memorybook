@@ -44,6 +44,7 @@ export {
   checkHealth,
   detectUserLanguage,
   validateReferenceImages,
+  enhanceText,
 } from './client';
 
 // Hooks

@@ -51,6 +51,7 @@ export const MemoriesStep = ({ data, onChange }: MemoriesStepProps) => {
                         onChange={(childhood) => onChange({ childhood })}
                         placeholder={wz?.childhoodMemoriesPlaceholder || "Where were they born? Parents, siblings, happy memories, what they loved doing..."}
                         rows={3}
+                        enhanceContext="childhood"
                     />
                 </div>
 
@@ -68,6 +69,7 @@ export const MemoriesStep = ({ data, onChange }: MemoriesStepProps) => {
                         onChange={(teenage) => onChange({ teenage })}
                         placeholder={wz?.teenageMemoriesPlaceholder || "School, friends, hobbies, memorable events, where they lived..."}
                         rows={3}
+                        enhanceContext="teenage"
                     />
                 </div>
 
@@ -85,6 +87,7 @@ export const MemoriesStep = ({ data, onChange }: MemoriesStepProps) => {
                         onChange={(adultLife) => onChange({ adultLife })}
                         placeholder={wz?.adultMemoriesPlaceholder || "Career, partner, children, hobbies, milestones, proud moments..."}
                         rows={3}
+                        enhanceContext="adultLife"
                     />
                 </div>
 
@@ -102,6 +105,7 @@ export const MemoriesStep = ({ data, onChange }: MemoriesStepProps) => {
                         onChange={(laterLife) => onChange({ laterLife })}
                         placeholder={wz?.laterMemoriesPlaceholder || "Routines, traditions, family moments, what brings them comfort and joy today..."}
                         rows={3}
+                        enhanceContext="laterLife"
                     />
                 </div>
             </div>

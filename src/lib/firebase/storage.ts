@@ -214,14 +214,73 @@ export const deleteBookFiles = async (
     await deleteFolder(bookFolderPath);
 };
 
+/**
+ * Delete generated images for backend job IDs from public Storage.
+ */
+export const deleteGeneratedImages = async (backendJobIds: string[]): Promise<void> => {
+    for (const jobId of backendJobIds) {
+        try {
+            await deleteFolder(`public/generated/${jobId}`);
+        } catch (e) {
+            console.warn(`[deleteGeneratedImages] Failed to delete public/generated/${jobId}:`, e);
+        }
+    }
+};
+
 // ============================================
 // PERSIST BOOK IMAGES AS BASE64 DATA URLS
 // ============================================
 
 /**
- * Download an image from the backend API, compress it, and return as a base64 data URL.
- * Images are resized to max 800px and converted to JPEG at 70% quality to keep
- * the total Firestore document under 1MB.
+ * Convert a Blob to a base64 data URL using FileReader.
+ * Works for any blob type - no Image element or Canvas needed.
+ */
+const blobToDataUrl = (blob: Blob): Promise<string> =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = () => reject(new Error('FileReader failed'));
+        reader.readAsDataURL(blob);
+    });
+
+/**
+ * Compress a blob client-side using Image + Canvas (fallback for large images).
+ * IMPORTANT: Do NOT set crossOrigin on Image when using blob URLs.
+ */
+const compressWithCanvas = (blob: Blob): Promise<string> =>
+    new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(blob);
+        const img = new Image();
+        img.onload = () => {
+            try {
+                const MAX = 800;
+                let w = img.naturalWidth, h = img.naturalHeight;
+                if (w > MAX || h > MAX) {
+                    const r = Math.min(MAX / w, MAX / h);
+                    w = Math.round(w * r);
+                    h = Math.round(h * r);
+                }
+                const c = document.createElement('canvas');
+                c.width = w;
+                c.height = h;
+                const ctx = c.getContext('2d');
+                if (!ctx) { URL.revokeObjectURL(url); reject(new Error('No canvas ctx')); return; }
+                ctx.drawImage(img, 0, 0, w, h);
+                URL.revokeObjectURL(url);
+                resolve(c.toDataURL('image/jpeg', 0.65));
+            } catch (err) {
+                URL.revokeObjectURL(url);
+                reject(err);
+            }
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Image load failed')); };
+        img.src = url; // NO crossOrigin for blob URLs
+    });
+
+/**
+ * Download an image from the backend API and return as a base64 data URL.
+ * Images are already compressed at generation time (JPEG ~80-150KB).
+ * Uses FileReader as primary method, with Canvas fallback if data URL > 1MB.
  */
 const fetchImageAsDataUrl = async (imageUrl: string): Promise<string> => {
     const response = await fetch(imageUrl);
@@ -229,46 +288,25 @@ const fetchImageAsDataUrl = async (imageUrl: string): Promise<string> => {
         throw new Error(`Failed to fetch image: ${response.status}`);
     }
     const blob = await response.blob();
+    console.log(`[fetchImage] Fetched ${imageUrl.split('/').pop()}: ${(blob.size / 1024).toFixed(0)}KB, type=${blob.type}`);
 
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            const MAX_SIZE = 800;
-            let width = img.width;
-            let height = img.height;
+    // Primary: FileReader directly (works for any blob, guaranteed)
+    const dataUrl = await blobToDataUrl(blob);
+    if (dataUrl.length < 1_000_000) {
+        console.log(`[fetchImage] OK via FileReader: ${(dataUrl.length / 1024).toFixed(0)}KB`);
+        return dataUrl;
+    }
 
-            if (width > MAX_SIZE || height > MAX_SIZE) {
-                const ratio = Math.min(MAX_SIZE / width, MAX_SIZE / height);
-                width = Math.round(width * ratio);
-                height = Math.round(height * ratio);
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            if (!ctx) {
-                reject(new Error('Failed to get canvas context'));
-                return;
-            }
-            ctx.drawImage(img, 0, 0, width, height);
-            // JPEG at 70% quality for good compression
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-            URL.revokeObjectURL(img.src);
-            resolve(dataUrl);
-        };
-        img.onerror = () => {
-            URL.revokeObjectURL(img.src);
-            reject(new Error('Failed to load image'));
-        };
-        img.crossOrigin = 'anonymous';
-        img.src = URL.createObjectURL(blob);
-    });
+    // Fallback: Image+Canvas compression if data URL exceeds Firestore limit
+    console.log(`[fetchImage] Data URL too large (${(dataUrl.length / 1024).toFixed(0)}KB), compressing with Canvas...`);
+    return compressWithCanvas(blob);
 };
 
 /**
  * Download all images from a FinalBookPackage and return a map of
  * page key -> base64 data URL. The book package is NOT modified.
+ * Downloads are done SEQUENTIALLY to ensure same Cloud Run instance
+ * serves all requests (avoids routing to different instances).
  */
 export const downloadBookImages = async (
     bookPackage: Record<string, unknown>,
@@ -276,12 +314,34 @@ export const downloadBookImages = async (
 ): Promise<Map<string, string>> => {
     const imageMap = new Map<string, string>();
 
-    const processPage = async (page: Record<string, unknown>, key: string) => {
+    // Collect all pages to download
+    const pagesToDownload: Array<{ page: Record<string, unknown>; key: string }> = [];
+
+    if (bookPackage.cover && typeof bookPackage.cover === 'object') {
+        pagesToDownload.push({ page: bookPackage.cover as Record<string, unknown>, key: 'cover' });
+    }
+    if (bookPackage.back_cover && typeof bookPackage.back_cover === 'object') {
+        pagesToDownload.push({ page: bookPackage.back_cover as Record<string, unknown>, key: 'back_cover' });
+    }
+    if (Array.isArray(bookPackage.pages)) {
+        (bookPackage.pages as Record<string, unknown>[]).forEach((page, idx) => {
+            pagesToDownload.push({ page, key: `page_${idx}` });
+        });
+    }
+
+    // Download SEQUENTIALLY to keep requests on the same Cloud Run instance
+    for (const { page, key } of pagesToDownload) {
         const imagePath = page.image_path as string | undefined;
-        if (!imagePath || imagePath.trim() === '') return;
+        if (!imagePath || imagePath.trim() === '') {
+            console.log(`[downloadBookImages] Skipping ${key}: no image_path`);
+            continue;
+        }
 
         // If already a data URL or full http URL, skip downloading
-        if (typeof imagePath === 'string' && (imagePath.startsWith('data:') || imagePath.startsWith('http'))) return;
+        if (typeof imagePath === 'string' && (imagePath.startsWith('data:') || imagePath.startsWith('http'))) {
+            console.log(`[downloadBookImages] Skipping ${key}: already a URL/data`);
+            continue;
+        }
 
         // Extract filename
         const pathParts = imagePath.replace(/\\/g, '/').split('/');
@@ -289,33 +349,15 @@ export const downloadBookImages = async (
 
         try {
             const backendUrl = getBackendAssetUrl(filename);
+            console.log(`[downloadBookImages] Downloading ${key}: ${backendUrl}`);
             const dataUrl = await fetchImageAsDataUrl(backendUrl);
             imageMap.set(key, dataUrl);
+            console.log(`[downloadBookImages] Success ${key}: ${dataUrl.substring(0, 50)}...`);
         } catch (err) {
-            console.warn(`Failed to download image ${filename}:`, err);
+            console.error(`[downloadBookImages] FAILED ${key} (${filename}):`, err);
         }
-    };
-
-    const promises: Promise<void>[] = [];
-
-    // Process cover
-    if (bookPackage.cover && typeof bookPackage.cover === 'object') {
-        promises.push(processPage(bookPackage.cover as Record<string, unknown>, 'cover'));
     }
 
-    // Process back cover
-    if (bookPackage.back_cover && typeof bookPackage.back_cover === 'object') {
-        promises.push(processPage(bookPackage.back_cover as Record<string, unknown>, 'back_cover'));
-    }
-
-    // Process pages
-    if (Array.isArray(bookPackage.pages)) {
-        (bookPackage.pages as Record<string, unknown>[]).forEach((page, idx) => {
-            promises.push(processPage(page, `page_${idx}`));
-        });
-    }
-
-    await Promise.all(promises);
     return imageMap;
 };
 

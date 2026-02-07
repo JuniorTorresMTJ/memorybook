@@ -1,0 +1,641 @@
+{
+  "book_id": "80501224-7cda-456d-8bf6-e072554245d6",
+  "title": "Teste Geracao Imagens",
+  "style": "watercolor",
+  "created_at": "2026-02-04 20:46:41.839988",
+  "cover": {
+    "page_number": 0,
+    "page_type": "cover",
+    "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\80501224-7cda-456d-8bf6-e072554245d6\\outputs\\cover.png",
+    "thumbnail_path": null,
+    "narrative_text": null,
+    "life_phase": null,
+    "memory_reference": null,
+    "generation_attempts": 1
+  },
+  "back_cover": {
+    "page_number": -1,
+    "page_type": "back_cover",
+    "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\80501224-7cda-456d-8bf6-e072554245d6\\outputs\\back_cover.png",
+    "thumbnail_path": null,
+    "narrative_text": null,
+    "life_phase": null,
+    "memory_reference": null,
+    "generation_attempts": 1
+  },
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\80501224-7cda-456d-8bf6-e072554245d6\\outputs\\page_01.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 2,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\80501224-7cda-456d-8bf6-e072554245d6\\outputs\\page_02.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 3,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\80501224-7cda-456d-8bf6-e072554245d6\\outputs\\page_03.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 4,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\80501224-7cda-456d-8bf6-e072554245d6\\outputs\\page_04.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 5,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\80501224-7cda-456d-8bf6-e072554245d6\\outputs\\page_05.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 6,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\80501224-7cda-456d-8bf6-e072554245d6\\outputs\\page_06.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 7,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\80501224-7cda-456d-8bf6-e072554245d6\\outputs\\page_07.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 8,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\80501224-7cda-456d-8bf6-e072554245d6\\outputs\\page_08.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 9,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\80501224-7cda-456d-8bf6-e072554245d6\\outputs\\page_09.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+      "generation_attempts": 1
+    },
+    {
+      "page_number": 10,
+      "page_type": "content",
+      "image_path": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\80501224-7cda-456d-8bf6-e072554245d6\\outputs\\page_10.png",
+      "thumbnail_path": null,
+      "narrative_text": null,
+      "life_phase": "young",
+      "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+      "generation_attempts": 1
+    }
+  ],
+  "total_pages": 12,
+  "narrative_plan": {
+    "book_title": "Teste Geracao Imagens",
+    "total_pages": 10,
+    "cover": {
+      "main_subject_pose": "Childhood drawing of a sunny beach with siblings playing.",
+      "background_elements": [
+        "Ocean waves",
+        "Bright sun",
+        "Blue sky"
+      ],
+      "color_scheme": [
+        "Blue",
+        "Yellow",
+        "Orange"
+      ],
+      "mood": "Joyful and carefree",
+      "title_placement": "top-center",
+      "title_space_reserved": true,
+      "symbolic_elements": [
+        "Seashells representing memories",
+        "Sun representing happiness"
+      ],
+      "composition_notes": ""
+    },
+    "back_cover": {
+      "design_type": "symbolic",
+      "main_elements": [
+        "Watercolor texture",
+        "Fading beach scene"
+      ],
+      "color_scheme": [
+        "Pale blue",
+        "Sand color",
+        "White"
+      ],
+      "symbolic_meaning": "The enduring nature of childhood memories.",
+      "text_area": false,
+      "text_content": null
+    },
+    "pages": [
+      {
+        "page_number": 1,
+        "life_phase": "young",
+        "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+        "scene_description": "A sunny scene of children playing on Ipanema beach, building sandcastles and splashing in the waves.",
+        "emotional_tone": "Playful and happy",
+        "key_elements": [
+          "Children laughing",
+          "Sandcastles",
+          "Ocean waves"
+        ],
+        "setting": "Ipanema beach",
+        "characters_present": [
+          "Siblings"
+        ],
+        "suggested_composition": "Wide shot showing the beach and the children playing in the foreground.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 2,
+        "life_phase": "young",
+        "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+        "scene_description": "Close-up on the children's hands as they build a sandcastle together, showcasing their teamwork and friendship.",
+        "emotional_tone": "Collaborative and joyful",
+        "key_elements": [
+          "Hands building sandcastle",
+          "Shovels and buckets",
+          "Wet sand"
+        ],
+        "setting": "Ipanema beach",
+        "characters_present": [
+          "Siblings"
+        ],
+        "suggested_composition": "Focus on the hands and the sandcastle, blurring the background.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 3,
+        "life_phase": "young",
+        "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+        "scene_description": "The children splashing in the waves, with water droplets frozen in mid-air and sunlight reflecting off the water.",
+        "emotional_tone": "Exuberant and energetic",
+        "key_elements": [
+          "Splashing water",
+          "Sunlight",
+          "Laughing faces"
+        ],
+        "setting": "Ipanema beach",
+        "characters_present": [
+          "Siblings"
+        ],
+        "suggested_composition": "Action shot capturing the movement and energy of the children playing.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 4,
+        "life_phase": "young",
+        "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+        "scene_description": "Children searching for seashells on the beach, with focus on discovering a particularly beautiful shell.",
+        "emotional_tone": "Curious and delighted",
+        "key_elements": [
+          "Seashells",
+          "Children searching",
+          "Sparkling sand"
+        ],
+        "setting": "Ipanema beach",
+        "characters_present": [
+          "Siblings"
+        ],
+        "suggested_composition": "Children framed by the shoreline.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 5,
+        "life_phase": "young",
+        "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+        "scene_description": "A quiet moment of the children sitting together, watching the sunset over the ocean, sharing a snack.",
+        "emotional_tone": "Peaceful and content",
+        "key_elements": [
+          "Sunset",
+          "Children sitting together",
+          "Snack sharing"
+        ],
+        "setting": "Ipanema beach",
+        "characters_present": [
+          "Siblings"
+        ],
+        "suggested_composition": "Silhouette of the children against the vibrant colors of the sunset.",
+        "narrative_text": null
+      },
+      {
+        "page_number": 6,
+        "life_phase": "young",
+        "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+        "scene_description": "The children burying each other in the sand, laughter, creating funny sand sculptures of each other. ",
+        "emotional_tone": "Amusing and playful",
+        "key_elements": [
+          "Sand",
+          "Laughter",
+          "Sunlight"
+        ],
+        "setting": "Ipanema beach",
+        "characters_present": [
+          "Siblings"
+        ],
+        "suggested_composition": "Birds eye view",
+        "narrative_text": null
+      },
+      {
+        "page_number": 7,
+        "life_phase": "young",
+        "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+        "scene_description": "The children chasing after each other as they playfully run down the shore.",
+        "emotional_tone": "Energetic",
+        "key_elements": [
+          "Sand",
+          "Footprints",
+          "laughter"
+        ],
+        "setting": "Ipanema beach",
+        "characters_present": [
+          "Siblings"
+        ],
+        "suggested_composition": "Low angle close up of feet running",
+        "narrative_text": null
+      },
+      {
+        "page_number": 8,
+        "life_phase": "young",
+        "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+        "scene_description": "After a long day of play, the children sit to watch an amazing fire show performance on the beach at twilight.",
+        "emotional_tone": "Enchanting",
+        "key_elements": [
+          "Fire",
+          "Audience",
+          "twilight"
+        ],
+        "setting": "Ipanema beach",
+        "characters_present": [
+          "Siblings"
+        ],
+        "suggested_composition": "Wide, scenic shot",
+        "narrative_text": null
+      },
+      {
+        "page_number": 9,
+        "life_phase": "young",
+        "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+        "scene_description": "Children asleep on ride home, exhausted from joyful day.",
+        "emotional_tone": "Sleepy",
+        "key_elements": [
+          "Car",
+          "Exhaustion",
+          "Siblings"
+        ],
+        "setting": "Car",
+        "characters_present": [
+          "Siblings"
+        ],
+        "suggested_composition": "Close up of faces",
+        "narrative_text": null
+      },
+      {
+        "page_number": 10,
+        "life_phase": "young",
+        "memory_reference": "Brincar na praia de Ipanema com os irmaos",
+        "scene_description": "Illustrate an adult looking back at the Ipanema beach with fondness, in watercolor style.",
+        "emotional_tone": "Nostalgic and reflective",
+        "key_elements": [
+          "Beach",
+          "Adult",
+          "Distant figure"
+        ],
+        "setting": "Ipanema beach",
+        "characters_present": [
+          "Adult"
+        ],
+        "suggested_composition": "Wide shot of beach",
+        "narrative_text": null
+      }
+    ],
+    "narrative_arc": "A journey through a memorable day at Ipanema beach, capturing the joy, friendship, and enduring power of childhood memories.",
+    "visual_themes": [
+      "Beaches",
+      "Childhood games",
+      "Sibling relationships"
+    ],
+    "color_progression": "Warm and bright colors at the beginning, transitioning to softer and more nostalgic tones towards the end."
+  },
+  "visual_fingerprint": {
+    "subject_id": "unknown",
+    "facial_features": {
+      "face_shape": "",
+      "eye_color": "",
+      "eye_shape": "",
+      "hair_color": "",
+      "hair_style": "",
+      "skin_tone": "",
+      "distinctive_features": [],
+      "estimated_age_range": ""
+    },
+    "body_characteristics": {
+      "body_type": "",
+      "height_estimate": "",
+      "posture": "",
+      "clothing_style": []
+    },
+    "style_attributes": {
+      "color_palette": [
+        "muted",
+        "warm"
+      ],
+      "line_weight": "none",
+      "shading_style": "watercolor-wash",
+      "detail_level": "low"
+    },
+    "reference_image_analysis": [],
+    "consistency_notes": [
+      "Unable to analyze reference images - using generic representation"
+    ],
+    "age_variations": {}
+  },
+  "design_review": {
+    "overall_cohesion": 8.0,
+    "style_consistency_score": 9.0,
+    "color_palette_harmony": 9.0,
+    "narrative_flow": 8.0,
+    "character_consistency": 9.0,
+    "page_reviews": [
+      {
+        "page_number": 0,
+        "artistic_assessment": "The illustration is well-executed with a charming watercolor style. The composition is balanced, and the colors are harmonious, creating a cheerful and inviting scene. The characters are cute and expressive, contributing to the overall positive emotional impact.",
+        "composition_notes": "The composition effectively uses the rule of thirds, placing the horizon line and the children in visually appealing positions. The placement of the sun and clouds adds to the balanced feel.",
+        "color_harmony": "excellent",
+        "emotional_impact": "strong",
+        "style_adherence": "perfect",
+        "strengths": [
+          "Excellent watercolor style rendering.",
+          "Harmonious color palette.",
+          "Charming and expressive characters.",
+          "Balanced composition."
+        ],
+        "areas_for_improvement": [
+          "The white rectangle in the sky could be filled with a title."
+        ],
+        "recommended_action": "minor_edit"
+      },
+      {
+        "page_number": 1,
+        "artistic_assessment": "The illustration is charming and fits the watercolor style well. The children's expressions are joyful, and the scene is well-composed. However, there are some minor inconsistencies in the background details and the rendering of the water that could be improved.",
+        "composition_notes": "The composition is well-balanced, with the children and the sandcastle as the focal point. The background provides context without being distracting. The placement of the figures feels natural.",
+        "color_harmony": "excellent",
+        "emotional_impact": "strong",
+        "style_adherence": "good",
+        "strengths": [
+          "Joyful expressions on the children's faces",
+          "Harmonious color palette",
+          "Effective use of watercolor style",
+          "Balanced composition"
+        ],
+        "areas_for_improvement": [
+          "Refine the rendering of the water",
+          "Improve consistency in background details (e.g., buildings)",
+          "Smooth the transition between sand and water"
+        ],
+        "recommended_action": "minor_edit"
+      },
+      {
+        "page_number": 2,
+        "artistic_assessment": "The illustration is charming and fits the watercolor style well. The composition effectively uses the foreground and background to create depth. However, some areas could benefit from more refined details and consistent lighting.",
+        "composition_notes": "The composition is well-balanced with the sandcastle in the center and the figures framing it. The beach and mountains in the background add depth and context.",
+        "color_harmony": "good",
+        "emotional_impact": "moderate",
+        "style_adherence": "good",
+        "strengths": [
+          "Charming watercolor style",
+          "Good composition",
+          "Effective use of color to create a warm, beachy feel"
+        ],
+        "areas_for_improvement": [
+          "Refine details in the sand texture",
+          "Ensure consistent lighting across the scene",
+          "Improve the rendering of the background mountains"
+        ],
+        "recommended_action": "minor_edit"
+      },
+      {
+        "page_number": 3,
+        "artistic_assessment": "The illustration is charming and captures a joyful scene. The watercolor style is mostly well-executed, though some areas could be refined for better consistency. The composition is pleasing, and the children's expressions are engaging. Overall, it's a positive image with minor issues.",
+        "composition_notes": "The composition is well-balanced with the children in the foreground and the beach scene extending into the background. The mountains add depth, and the placement of the sun is aesthetically pleasing.",
+        "color_harmony": "good",
+        "emotional_impact": "strong",
+        "style_adherence": "good",
+        "strengths": [
+          "Engaging emotional expression on the children's faces.",
+          "Well-balanced composition.",
+          "Pleasant color palette."
+        ],
+        "areas_for_improvement": [
+          "Refine the watercolor effect for more consistency, particularly in the background.",
+          "Review anatomy for minor adjustments."
+        ],
+        "recommended_action": "minor_edit"
+      },
+      {
+        "page_number": 4,
+        "artistic_assessment": "The illustration is well-executed and captures a heartwarming scene of two children discovering a seashell on the beach. The watercolor style is effectively conveyed, and the overall composition is pleasing.",
+        "composition_notes": "The composition is well-balanced, with the children as the main focus and the beach and background providing context without being distracting. The use of the rule of thirds is apparent and contributes to the aesthetic appeal.",
+        "color_harmony": "excellent",
+        "emotional_impact": "moderate",
+        "style_adherence": "perfect",
+        "strengths": [
+          "Effective use of watercolor style.",
+          "Pleasing color palette.",
+          "Balanced composition.",
+          "Natural and expressive character designs."
+        ],
+        "areas_for_improvement": [
+          "Minor details could be added to the background to enhance depth."
+        ],
+        "recommended_action": "approve"
+      },
+      {
+        "page_number": 5,
+        "artistic_assessment": "The illustration is well-executed and captures a heartwarming scene of two children enjoying a snack at the beach during sunset. The watercolor style is effectively conveyed, and the overall mood is peaceful and nostalgic.",
+        "composition_notes": "The composition is well-balanced, with the children placed in the foreground and the beach and sunset filling the background. The placement draws the eye naturally to the children and then to the scenic view.",
+        "color_harmony": "excellent",
+        "emotional_impact": "strong",
+        "style_adherence": "perfect",
+        "strengths": [
+          "Excellent use of watercolor style",
+          "Harmonious color palette that evokes a sense of warmth and nostalgia",
+          "Well-balanced composition",
+          "Captures a peaceful and heartwarming moment"
+        ],
+        "areas_for_improvement": [],
+        "recommended_action": "approve"
+      },
+      {
+        "page_number": 6,
+        "artistic_assessment": "The illustration is charming and well-executed, capturing a playful scene at the beach. The watercolor style is evident and adds to the whimsical feel. The characters are expressive and engaging, and the overall composition is pleasing. However, there's room for improvement in anatomical accuracy and consistent lighting.",
+        "composition_notes": "The composition is well-balanced, with the characters and sand sculptures arranged in a visually appealing manner. The background provides context without overwhelming the foreground elements.",
+        "color_harmony": "excellent",
+        "emotional_impact": "strong",
+        "style_adherence": "good",
+        "strengths": [
+          "Expressive character designs",
+          "Effective use of watercolor style",
+          "Balanced composition",
+          "Harmonious color palette"
+        ],
+        "areas_for_improvement": [
+          "Anatomical accuracy (particularly in the sand creatures)",
+          "Consistency in lighting and shadows"
+        ],
+        "recommended_action": "minor_edit"
+      },
+      {
+        "page_number": 7,
+        "artistic_assessment": "The illustration captures a joyful scene of children running on a beach. The watercolor style is well-executed, with soft colors and a sense of movement. The reflections on the wet sand are particularly well done. However, the anatomy of the figures could be slightly improved.",
+        "composition_notes": "The composition is well-balanced, with the figures placed slightly off-center to create visual interest. The background provides context without being distracting.",
+        "color_harmony": "excellent",
+        "emotional_impact": "moderate",
+        "style_adherence": "perfect",
+        "strengths": [
+          "Excellent watercolor style",
+          "Harmonious color palette",
+          "Effective use of light and shadow",
+          "Well-executed reflections"
+        ],
+        "areas_for_improvement": [
+          "Slight improvements could be made to the anatomy of the figures, especially the proportions of the limbs."
+        ],
+        "recommended_action": "minor_edit"
+      },
+      {
+        "page_number": 8,
+        "artistic_assessment": "The illustration is charming and captures a sense of wonder with the children watching the fire dancer. The watercolor style is generally well-executed, although there's room for refinement in some areas. The composition is good, guiding the viewer's eye from the children to the performer and the crowd.",
+        "composition_notes": "The composition effectively uses the foreground to frame the children and the background to provide context. The positioning of the fire dancer near the center creates a focal point, but also could be improved by placing slightly left.",
+        "color_harmony": "good",
+        "emotional_impact": "moderate",
+        "style_adherence": "good",
+        "strengths": [
+          "Charming depiction of children's wonder.",
+          "Good use of watercolor style.",
+          "Effective composition with a clear focal point.",
+          "Harmonious color palette that creates a warm and inviting atmosphere."
+        ],
+        "areas_for_improvement": [
+          "Refine the facial features of the background characters for consistency.",
+          "Improve the rendering of the fire to look more dynamic and less static.",
+          "Consider adding more variation in the watercolor washes for added depth and texture."
+        ],
+        "recommended_action": "minor_edit"
+      },
+      {
+        "page_number": 9,
+        "artistic_assessment": "The illustration is charming and effectively captures a peaceful moment. The composition is well-balanced, and the color palette is soothing. While the watercolor effect is present, it could be enhanced to more closely resemble a traditional watercolor painting.",
+        "composition_notes": "The composition is well-balanced, with the two sleeping figures centered in the frame and the landscape visible through the car window adding context.",
+        "color_harmony": "excellent",
+        "emotional_impact": "moderate",
+        "style_adherence": "good",
+        "strengths": [
+          "Soothing color palette",
+          "Charming and peaceful scene",
+          "Effective composition"
+        ],
+        "areas_for_improvement": [
+          "Enhance the watercolor effect to make it more pronounced.",
+          "Add more variation in the background details."
+        ],
+        "recommended_action": "minor_edit"
+      },
+      {
+        "page_number": 10,
+        "artistic_assessment": "The illustration has a pleasant watercolor feel and captures a nice scene. The woman in the foreground is well-rendered, and the background elements are recognizable. However, some areas, like the distant buildings, could use more refinement to better match the overall style.",
+        "composition_notes": "The composition is well-balanced with the woman on the right and the beach scene on the left. The placement of the child on the beach adds depth.",
+        "color_harmony": "excellent",
+        "emotional_impact": "moderate",
+        "style_adherence": "good",
+        "strengths": [
+          "Good use of watercolor style",
+          "Well-composed scene",
+          "Pleasant color palette"
+        ],
+        "areas_for_improvement": [
+          "Refine the details of the distant buildings to better match the watercolor style",
+          "Slightly improve the blending of colors in the sky"
+        ],
+        "recommended_action": "minor_edit"
+      },
+      {
+        "page_number": 11,
+        "artistic_assessment": "The illustration captures the essence of a watercolor beach scene. The color palette is soothing and the composition is simple yet effective. The overall artistic quality is good, conveying a sense of tranquility.",
+        "composition_notes": "The composition is well-balanced with a clear horizon line. The distribution of elements (sky, water, sand) is pleasing to the eye.",
+        "color_harmony": "excellent",
+        "emotional_impact": "moderate",
+        "style_adherence": "perfect",
+        "strengths": [
+          "Excellent use of watercolor techniques to create a soft and airy feel.",
+          "Harmonious color palette that evokes a sense of calm.",
+          "Simple yet effective composition."
+        ],
+        "areas_for_improvement": [],
+        "recommended_action": "approve"
+      }
+    ],
+    "global_issues": [
+      "Minor inconsistencies in background detail and stylistic execution across a few pages disrupt perfect visual harmony.",
+      "Slight variations in character rendering on some pages impact overall character consistency."
+    ],
+    "global_suggestions": [
+      "Review and refine background details on pages needing attention to ensure a consistent level of detail throughout the book.",
+      "Pay close attention to character consistency across all pages, particularly facial features and proportions."
+    ],
+    "pages_needing_attention": [
+      0,
+      1,
+      2,
+      3,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "approved": false
+  },
+  "total_generation_time_ms": 0,
+  "total_retries": 0,
+  "output_directory": "C:\\Users\\User\\Documents\\GitHub\\Memorybook\\backend\\storage\\80501224-7cda-456d-8bf6-e072554245d6\\outputs",
+  "pdf_path": null
+}

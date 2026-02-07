@@ -165,58 +165,66 @@ export const MemoryStoryCard = ({
 
                 {/* Action Buttons - Above overlay */}
                 <div className="absolute top-3 right-3 flex items-center gap-1.5 z-20">
-                    {/* Edit Button */}
-                    <motion.button
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: showActions ? 1 : 0, scale: showActions ? 1 : 0.8 }}
-                        onClick={handleEditClick}
-                        className="p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-colors shadow-sm"
-                        title="Edit Book"
-                    >
-                        <Edit3 className="w-4 h-4 text-text-muted hover:text-primary-teal" />
-                    </motion.button>
+                    {/* Edit Button - only show if callback provided */}
+                    {onEdit && (
+                        <motion.button
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: showActions ? 1 : 0, scale: showActions ? 1 : 0.8 }}
+                            onClick={handleEditClick}
+                            className="p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-colors shadow-sm"
+                            title="Edit Book"
+                        >
+                            <Edit3 className="w-4 h-4 text-text-muted hover:text-primary-teal" />
+                        </motion.button>
+                    )}
 
-                    {/* Download/Print Button */}
-                    <motion.button
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: showActions ? 1 : 0, scale: showActions ? 1 : 0.8 }}
-                        transition={{ delay: 0.05 }}
-                        onClick={handlePrintClick}
-                        className="p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-colors shadow-sm"
-                        title="Download PDF"
-                    >
-                        <Download className="w-4 h-4 text-text-muted hover:text-primary-teal" />
-                    </motion.button>
+                    {/* Download/Print Button - only show if callback provided */}
+                    {onPrint && (
+                        <motion.button
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: showActions ? 1 : 0, scale: showActions ? 1 : 0.8 }}
+                            transition={{ delay: 0.05 }}
+                            onClick={handlePrintClick}
+                            className="p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-colors shadow-sm"
+                            title="Download PDF"
+                        >
+                            <Download className="w-4 h-4 text-text-muted hover:text-primary-teal" />
+                        </motion.button>
+                    )}
 
-                    {/* Delete Button */}
-                    <motion.button
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: showActions ? 1 : 0, scale: showActions ? 1 : 0.8 }}
-                        transition={{ delay: 0.1 }}
-                        onClick={handleDeleteClick}
-                        className="p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-red-50 transition-colors shadow-sm"
-                        title="Delete Book"
-                    >
-                        <Trash2 className="w-4 h-4 text-text-muted hover:text-red-500" />
-                    </motion.button>
+                    {/* Delete Button - only show if callback provided */}
+                    {onDelete && (
+                        <motion.button
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: showActions ? 1 : 0, scale: showActions ? 1 : 0.8 }}
+                            transition={{ delay: 0.1 }}
+                            onClick={handleDeleteClick}
+                            className="p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-red-50 transition-colors shadow-sm"
+                            title="Delete Book"
+                        >
+                            <Trash2 className="w-4 h-4 text-text-muted hover:text-red-500" />
+                        </motion.button>
+                    )}
 
-                    {/* Favorite Button - Always visible */}
-                    <button
-                        onClick={handleFavoriteClick}
-                        className={`p-2 rounded-full backdrop-blur-sm transition-colors shadow-sm ${
-                            isFavorite 
-                                ? 'bg-red-50 hover:bg-red-100' 
-                                : 'bg-white/90 hover:bg-white'
-                        }`}
-                    >
-                        <Heart
-                            className={`w-4 h-4 transition-colors ${
-                                isFavorite
-                                    ? 'fill-accent-coral text-accent-coral'
-                                    : 'text-text-muted hover:text-accent-coral'
+                    {/* Favorite Button - only show if callback provided */}
+                    {onToggleFavorite && (
+                        <button
+                            onClick={handleFavoriteClick}
+                            className={`p-2 rounded-full backdrop-blur-sm transition-colors shadow-sm ${
+                                isFavorite 
+                                    ? 'bg-red-50 hover:bg-red-100' 
+                                    : 'bg-white/90 hover:bg-white'
                             }`}
-                        />
-                    </button>
+                        >
+                            <Heart
+                                className={`w-4 h-4 transition-colors ${
+                                    isFavorite
+                                        ? 'fill-accent-coral text-accent-coral'
+                                        : 'text-text-muted hover:text-accent-coral'
+                                }`}
+                            />
+                        </button>
+                    )}
                 </div>
             </div>
 

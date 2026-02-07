@@ -156,8 +156,9 @@ service cloud.firestore {
         allow update: if isAuthenticated() &&
           get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
         
-        // Generation jobs should generally not be deleted by users
-        allow delete: if false;
+        // Owner can delete generation jobs (for book cleanup)
+        allow delete: if isAuthenticated() &&
+          get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
         
         // Persisted book images subcollection
         match /images/{imageId} {
@@ -167,7 +168,9 @@ service cloud.firestore {
           allow create, update: if isAuthenticated() &&
             get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
           
-          allow delete: if false;
+          // Owner can delete images (for book cleanup)
+          allow delete: if isAuthenticated() &&
+            get(/databases/$(database)/documents/memoryBooks/$(bookId)).data.ownerId == request.auth.uid;
         }
       }
     }

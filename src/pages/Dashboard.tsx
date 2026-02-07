@@ -4,10 +4,12 @@ import { DashboardFooter } from '../components/layout/DashboardFooter';
 import { MemoryStoryCard } from '../components/ui/MemoryStoryCard';
 import { SuccessNotification } from '../components/ui/SuccessNotification';
 import { DeleteConfirmModal } from '../components/ui/DeleteConfirmModal';
+import { PdfDownloadModal } from '../components/ui/PdfDownloadModal';
+import type { PdfModalState } from '../components/ui/PdfDownloadModal';
 import { CreateMemoryBookModal } from '../components/wizard';
-import { BookViewer, BookEditor } from '../components/book';
+import { BookViewer } from '../components/book';
 import type { BookPage } from '../components/book';
-import { Plus, Loader2, BookOpen, Search } from 'lucide-react';
+import { Plus, Loader2, BookOpen, Search, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -16,11 +18,14 @@ import {
     deleteMemoryBook,
     getGenerationJobs,
     getPersistedImages,
+    completeGenerationJob,
 } from '../lib/firebase/firestore';
 import type { MemoryBookDocument } from '../lib/firebase/types';
 import { getJobResult, getAssetUrl } from '../lib/api';
 import type { FinalBookPackage, BookPage as APIBookPage } from '../lib/api';
-import { getSampleBookPages, getSampleBookDisplay } from '../data/sampleBook';
+import { downloadBookImages, deleteGeneratedImages } from '../lib/firebase/storage';
+import { ADDITIONAL_SAMPLE_BOOKS, getAdditionalBookPages, getAdditionalBookDisplay } from '../data/sampleBooks';
+import type { SampleBookConfig } from '../data/sampleBooks';
 
 // Interface for display format
 interface MemoryBookDisplay {
@@ -210,15 +215,31 @@ export const Dashboard = () => {
     const { t, language } = useLanguage();
     const db = t.dashboard;
 
-    // Sample book adapts to the selected language
-    const sampleBookPages = getSampleBookPages(language);
-    const sampleBookDisplay = getSampleBookDisplay(language);
+    // 4 sample books (Firebase Storage)
+    const sampleBooks: MemoryBookDisplay[] = ADDITIONAL_SAMPLE_BOOKS.map((book: SampleBookConfig) => {
+        const display = getAdditionalBookDisplay(book, language);
+        const pages = getAdditionalBookPages(book, language);
+        return {
+            id: display.id,
+            title: display.title,
+            date: display.date,
+            description: display.description,
+            imageUrl: display.imageUrl,
+            pageImages: display.pageImages,
+            isFavorite: true,
+            pageCount: display.pageCount,
+            status: 'completed',
+            pages,
+            imageStyle: display.imageStyle,
+            isSample: true,
+        };
+    });
     const [showNotification, setShowNotification] = useState(false);
     const [notificationData, setNotificationData] = useState({ title: '', message: '' });
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isQuickTestOpen, setIsQuickTestOpen] = useState(false);
     const [selectedBook, setSelectedBook] = useState<MemoryBookDisplay | null>(null);
     const [isViewerOpen, setIsViewerOpen] = useState(false);
-    const [isEditorOpen, setIsEditorOpen] = useState(false);
     const [bookPages, setBookPages] = useState<BookPage[]>([]);
     
     // Firebase state
@@ -229,6 +250,10 @@ export const Dashboard = () => {
     // Delete confirmation state
     const [bookToDelete, setBookToDelete] = useState<MemoryBookDisplay | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
+
+    // Minimized generation state
+    const [isGenerationMinimized, setIsGenerationMinimized] = useState(false);
+    const [minimizedProgress, setMinimizedProgress] = useState(0);
 
     // Fetch books with their backend job IDs and real images
     const fetchBooksWithJobs = useCallback(async () => {
@@ -270,6 +295,28 @@ export const Dashboard = () => {
 
                                 try {
                                     const result = await getJobResult(backendJobId);
+                                    
+                                    // If backend is available and no persisted images, try downloading now
+                                    if (!persistedImages || persistedImages.size === 0) {
+                                        console.log('[Dashboard] No persisted images, attempting download from backend...');
+                                        try {
+                                            const downloaded = await downloadBookImages(
+                                                result as unknown as Record<string, unknown>,
+                                                (filename: string) => getAssetUrl(backendJobId!, 'outputs', filename),
+                                            );
+                                            if (downloaded.size > 0) {
+                                                console.log(`[Dashboard] Downloaded ${downloaded.size} images, saving to Firestore...`);
+                                                persistedImages = downloaded;
+                                                // Save for future loads (fire and forget)
+                                                completeGenerationJob(doc.id || '', jobDocId, undefined, downloaded)
+                                                    .then(() => console.log('[Dashboard] Images persisted to Firestore'))
+                                                    .catch(err => console.warn('[Dashboard] Failed to persist images:', err));
+                                            }
+                                        } catch (dlErr) {
+                                            console.warn('[Dashboard] Failed to download images:', dlErr);
+                                        }
+                                    }
+                                    
                                     const realPages = convertBookPackageToPages(result, backendJobId, persistedImages);
                                     pageImages = realPages
                                         .map(page => page.imageUrl)
@@ -318,39 +365,24 @@ export const Dashboard = () => {
         }
     }, [user]);
 
-    // Create sample book as MemoryBookDisplay (language-aware)
-    const sampleBookAsDisplay: MemoryBookDisplay = {
-        id: sampleBookDisplay.id,
-        title: sampleBookDisplay.title,
-        date: sampleBookDisplay.date,
-        description: sampleBookDisplay.description,
-        imageUrl: sampleBookDisplay.imageUrl,
-        pageImages: sampleBookDisplay.pageImages,
-        isFavorite: true,
-        pageCount: sampleBookDisplay.pageCount,
-        status: 'completed',
-        pages: sampleBookPages,
-        imageStyle: 'watercolor',
-        isSample: true,
-    };
-
     // Search state
     const [searchQuery, setSearchQuery] = useState('');
 
-    // All books including the sample
-    const allBooksUnfiltered = [...memoryBooks, sampleBookAsDisplay];
-    
-    // Filter books by search query
-    const allBooks = searchQuery.trim() === '' 
-        ? allBooksUnfiltered 
-        : allBooksUnfiltered.filter(book => {
-            const query = searchQuery.toLowerCase().trim();
-            return (
-                book.title.toLowerCase().includes(query) ||
-                book.description.toLowerCase().includes(query) ||
-                book.date.toLowerCase().includes(query)
-            );
-        });
+    // Filter function
+    const filterBySearch = (book: MemoryBookDisplay) => {
+        if (searchQuery.trim() === '') return true;
+        const query = searchQuery.toLowerCase().trim();
+        return (
+            book.title.toLowerCase().includes(query) ||
+            book.description.toLowerCase().includes(query) ||
+            book.date.toLowerCase().includes(query)
+        );
+    };
+
+    // Separate user books from sample books, both filtered
+    const userBooksFiltered = memoryBooks.filter(filterBySearch);
+    const sampleBooksFiltered = sampleBooks.filter(filterBySearch);
+    const allBooks = [...userBooksFiltered, ...sampleBooksFiltered];
 
     // Fetch books from Firebase
     useEffect(() => {
@@ -370,7 +402,7 @@ export const Dashboard = () => {
         
         // Sample book uses its own static pages
         if (book.isSample) {
-            setBookPages(sampleBookPages);
+            setBookPages(book.pages);
             setIsViewerOpen(true);
             return;
         }
@@ -416,45 +448,103 @@ export const Dashboard = () => {
         setIsViewerOpen(true);
     }, []);
 
-    const handleEditBook = useCallback(async (book: MemoryBookDisplay) => {
-        setSelectedBook(book);
-        
-        // If book has backendJobId and is completed, try to load real pages
-        if (book.backendJobId && (book.status === 'completed' || book.status === 'ready')) {
-            try {
-                const result = await getJobResult(book.backendJobId);
-                const realPages = convertBookPackageToPages(result, book.backendJobId);
-                setBookPages(realPages);
-            } catch (err) {
-                console.warn('Backend unavailable for edit, trying cache:', err);
-                
-                let loaded = false;
-                try {
-                    const jobs = await getGenerationJobs(book.id);
-                    if (jobs.length > 0 && jobs[0].resultSnapshot) {
-                        const savedResult = jobs[0].resultSnapshot as unknown as FinalBookPackage;
-                        const savedPages = convertBookPackageToPages(savedResult, book.backendJobId!);
-                        setBookPages(savedPages);
-                        loaded = true;
-                    }
-                } catch (cacheErr) {
-                    console.warn('Cache fallback failed:', cacheErr);
-                }
-                
-                if (!loaded) {
-                    setBookPages(book.pages);
-                }
-            }
-        } else {
-            setBookPages(book.pages);
-        }
-        
-        setIsEditorOpen(true);
+
+    // PDF generation state
+    const [pdfModal, setPdfModal] = useState<PdfModalState>({
+        isOpen: false,
+        bookTitle: '',
+        percent: 0,
+        currentStep: '',
+        status: 'preparing',
+    });
+
+    const closePdfModal = useCallback(() => {
+        setPdfModal(prev => ({ ...prev, isOpen: false }));
     }, []);
 
-    const handlePrintBook = (book: MemoryBookDisplay) => {
-        console.log('Printing book:', book.title);
-        alert(`Downloading "${book.title}" as PDF...`);
+    const handlePrintBook = async (book: MemoryBookDisplay) => {
+        if (pdfModal.isOpen) return;
+
+        // Open modal immediately
+        setPdfModal({
+            isOpen: true,
+            bookTitle: book.title,
+            percent: 0,
+            currentStep: db?.generatingPdf || 'Preparando...',
+            status: 'preparing',
+        });
+
+        try {
+            const { downloadBookAsPdf } = await import('../lib/generatePdf');
+
+            // Step 1: Preparing — determine best source of pages with images
+            setPdfModal(prev => ({ ...prev, percent: 10, status: 'preparing', currentStep: 'Preparando páginas...' }));
+
+            let pagesToPrint = book.pages;
+
+            // Check if book.pages already has real images loaded (base64 data URLs or valid URLs)
+            const hasLoadedImages = book.pages.length > 0 &&
+                book.pages.some(p => p.imageUrl && (
+                    p.imageUrl.startsWith('data:') ||
+                    p.imageUrl.startsWith('https://firebasestorage.googleapis.com') ||
+                    p.imageUrl.startsWith('https://storage.googleapis.com')
+                ));
+
+            if (hasLoadedImages) {
+                // Pages already have images (from Firestore persistence or Firebase Storage URLs)
+                console.log('[PDF] Using already-loaded pages with images:', book.pages.length);
+                pagesToPrint = book.pages;
+            } else if (book.backendJobId && (book.status === 'completed' || book.status === 'ready')) {
+                // Fallback: try to fetch from backend
+                console.log('[PDF] No loaded images, trying backend for:', book.backendJobId);
+                try {
+                    const result = await getJobResult(book.backendJobId);
+                    const realPages = convertBookPackageToPages(result, book.backendJobId);
+                    if (realPages.length > 0) pagesToPrint = realPages;
+                } catch {
+                    console.warn('[PDF] Backend unavailable, using cached pages for book:', book.id);
+                }
+            }
+
+            console.log('[PDF] Pages to print:', pagesToPrint.length, 'Sample URL:', pagesToPrint[0]?.imageUrl?.substring(0, 80));
+
+            setPdfModal(prev => ({ ...prev, percent: 20, status: 'loading_images', currentStep: 'Carregando imagens...' }));
+
+            // Step 2-3: Generate PDF with progress
+            await downloadBookAsPdf(book.title, pagesToPrint, (progress) => {
+                const basePercent = 20;
+                const remaining = 75;
+                const stepPercent = basePercent + (progress.current / progress.total) * remaining;
+
+                const newStatus = progress.current < progress.total * 0.3
+                    ? 'loading_images' as const
+                    : 'building_pdf' as const;
+
+                setPdfModal(prev => ({
+                    ...prev,
+                    percent: Math.min(stepPercent, 95),
+                    currentStep: progress.label,
+                    status: newStatus,
+                }));
+            });
+
+            // Done!
+            setPdfModal(prev => ({
+                ...prev,
+                percent: 100,
+                currentStep: db?.pdfReady || 'PDF Gerado!',
+                status: 'done',
+            }));
+
+        } catch (err) {
+            console.error('[PDF] Failed to generate PDF:', err);
+            setPdfModal(prev => ({
+                ...prev,
+                status: 'error',
+                currentStep: 'Erro ao gerar PDF',
+                errorMessage: 'Não foi possível gerar o PDF. Tente novamente.',
+            }));
+        }
     };
 
     const handleDeleteBook = (book: MemoryBookDisplay) => {
@@ -466,7 +556,14 @@ export const Dashboard = () => {
         
         setIsDeleting(true);
         try {
-            await deleteMemoryBook(bookToDelete.id);
+            // deleteMemoryBook now returns backendJobIds for Storage cleanup
+            const backendJobIds = await deleteMemoryBook(bookToDelete.id);
+            // Clean up generated images from Firebase Storage
+            if (backendJobIds.length > 0) {
+                deleteGeneratedImages(backendJobIds).catch(err =>
+                    console.warn('Failed to clean Storage images:', err)
+                );
+            }
             setMemoryBooks(prev => prev.filter(b => b.id !== bookToDelete.id));
             setNotificationData({ 
                 title: db?.bookDeleted || 'Memory Book excluído', 
@@ -500,10 +597,6 @@ export const Dashboard = () => {
         // Note: isFavorite is not stored in Firebase yet, only local state
     };
 
-    const handleSavePages = (pages: BookPage[]) => {
-        setBookPages(pages);
-        console.log('Saved pages:', pages);
-    };
 
     const userName = user?.displayName || 'Guest';
     const userEmail = user?.email || 'guest@guest.com';
@@ -536,7 +629,7 @@ export const Dashboard = () => {
                     </p>
                 </div>
 
-                {/* Recent Stories Section */}
+                {/* My Books Section */}
                 <section>
                     <h2 className="text-2xl font-bold text-text-main mb-6">{db?.myMemoryBooks || 'My Memory Books'}</h2>
 
@@ -561,7 +654,7 @@ export const Dashboard = () => {
                         </div>
                     )}
 
-                    {/* Empty State - only when no user books (sample always shows) */}
+                    {/* Empty State */}
                     {!isLoading && !error && memoryBooks.length === 0 && (
                         <div className="bg-gray-50 rounded-2xl p-8 text-center mb-6">
                             <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -571,15 +664,25 @@ export const Dashboard = () => {
                                 {db?.createFirst || 'Crie seu primeiro Memory Book'}
                             </h3>
                             <p className="text-gray-500 mb-4 max-w-md mx-auto text-sm">
-                                {db?.createFirstDesc || 'Veja o exemplo abaixo para inspiração e depois crie o seu!'}
+                                {db?.createFirstDesc || 'Veja os exemplos abaixo para inspiração e depois crie o seu!'}
                             </p>
-                            <button 
-                                onClick={() => setIsCreateModalOpen(true)}
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-teal to-teal-400 text-white rounded-xl font-semibold hover:from-teal-500 hover:to-teal-400 transition-all shadow-lg shadow-primary-teal/20"
-                            >
-                                <Plus className="w-5 h-5" />
-                                {db?.createMemoryBook || 'Criar Memory Book'}
-                            </button>
+                            <div className="flex items-center gap-3 justify-center flex-wrap">
+                                <button 
+                                    onClick={() => setIsCreateModalOpen(true)}
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-teal to-teal-400 text-white rounded-xl font-semibold hover:from-teal-500 hover:to-teal-400 transition-all shadow-lg shadow-primary-teal/20"
+                                >
+                                    <Plus className="w-5 h-5" />
+                                    {db?.createMemoryBook || 'Criar Memory Book'}
+                                </button>
+                                <button 
+                                    onClick={() => setIsQuickTestOpen(true)}
+                                    className="inline-flex items-center gap-2 px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold transition-all shadow-lg shadow-amber-500/20 text-sm"
+                                    title="Gera um livro mock com dados pré-preenchidos para teste rápido"
+                                >
+                                    <Zap className="w-4 h-4" />
+                                    Teste Rápido
+                                </button>
+                            </div>
                         </div>
                     )}
 
@@ -598,15 +701,15 @@ export const Dashboard = () => {
                         </div>
                     )}
 
-                    {/* Books Grid - always shows (includes sample book) */}
-                    {!isLoading && !error && allBooks.length > 0 && (
+                    {/* User Books Grid */}
+                    {!isLoading && !error && userBooksFiltered.length > 0 && (
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.5 }}
                             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                         >
-                            {allBooks.map((book, index) => (
+                            {userBooksFiltered.map((book, index) => (
                                 <motion.div
                                     key={book.id}
                                     initial={{ opacity: 0, y: 20 }}
@@ -614,12 +717,6 @@ export const Dashboard = () => {
                                     transition={{ duration: 0.3, delay: index * 0.1 }}
                                     className="relative"
                                 >
-                                    {/* Sample Badge */}
-                                    {book.isSample && (
-                                        <div className="absolute -top-2 -right-2 z-30 px-3 py-1 bg-accent-coral text-white text-xs font-bold rounded-full shadow-lg">
-                                            {db?.example || 'Exemplo'}
-                                        </div>
-                                    )}
                                     <MemoryStoryCard
                                         id={book.id}
                                         title={book.title}
@@ -630,13 +727,12 @@ export const Dashboard = () => {
                                         isFavorite={book.isFavorite}
                                         pageCount={book.pageCount}
                                         onClick={() => handleOpenBook(book)}
-                                        onEdit={book.isSample ? undefined : () => handleEditBook(book)}
-                                        onPrint={book.isSample ? undefined : () => handlePrintBook(book)}
-                                        onDelete={book.isSample ? undefined : () => handleDeleteBook(book)}
-                                        onToggleFavorite={book.isSample ? undefined : () => handleToggleFavorite(book.id)}
+                                        onPrint={() => handlePrintBook(book)}
+                                        onDelete={() => handleDeleteBook(book)}
+                                        onToggleFavorite={() => handleToggleFavorite(book.id)}
                                     />
                                     {/* Status Badge */}
-                                    {!book.isSample && book.status !== 'completed' && book.status !== 'ready' && (
+                                    {book.status !== 'completed' && book.status !== 'ready' && (
                                         <div className={`mt-2 text-center text-sm font-medium px-3 py-1 rounded-full ${
                                             book.status === 'generating' 
                                                 ? 'bg-yellow-100 text-yellow-700' 
@@ -655,6 +751,51 @@ export const Dashboard = () => {
                     )}
                 </section>
 
+                {/* Examples Section - separate from user books */}
+                <section className="mt-12">
+                    <div className="flex items-center gap-3 mb-6">
+                        <h2 className="text-2xl font-bold text-text-main">{db?.example || 'Exemplos'}</h2>
+                        <span className="px-3 py-1 bg-accent-coral/10 text-accent-coral text-xs font-bold rounded-full">
+                            {sampleBooks.length}
+                        </span>
+                    </div>
+                    <p className="text-text-muted text-sm mb-6">
+                        Explore livros de memórias de exemplo para se inspirar antes de criar o seu.
+                    </p>
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5"
+                    >
+                        {sampleBooksFiltered.map((book, index) => (
+                            <motion.div
+                                key={book.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.3, delay: index * 0.08 }}
+                                className="relative"
+                            >
+                                <div className="absolute -top-2 -right-2 z-30 px-2.5 py-0.5 bg-accent-coral text-white text-xs font-bold rounded-full shadow-lg">
+                                    {db?.example || 'Exemplo'}
+                                </div>
+                                <MemoryStoryCard
+                                    id={book.id}
+                                    title={book.title}
+                                    date={book.date}
+                                    description={book.description}
+                                    imageUrl={book.imageUrl}
+                                    pageImages={book.pageImages}
+                                    isFavorite={book.isFavorite}
+                                    pageCount={book.pageCount}
+                                    onPrint={() => handlePrintBook(book)}
+                                    onClick={() => handleOpenBook(book)}
+                                />
+                            </motion.div>
+                        ))}
+                    </motion.div>
+                </section>
+
                 {/* Create New Book CTA - Only show if there are books */}
                 {!isLoading && memoryBooks.length > 0 && (
                     <section className="mt-16 mb-8">
@@ -669,13 +810,23 @@ export const Dashboard = () => {
                                 <p className="text-text-muted mb-8">
                                     {db?.createNewBookDesc || 'Start a new collection of precious moments. Perfect for special occasions, family milestones, or everyday treasures.'}
                                 </p>
-                                <button 
-                                    onClick={() => setIsCreateModalOpen(true)}
-                                    className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#00E5E5] to-[#FF9E91] text-white rounded-xl font-semibold hover:from-[#00d4d4] hover:to-[#ff8f80] transition-all shadow-lg shadow-primary-teal/20 hover:shadow-xl hover:shadow-primary-teal/30"
-                                >
-                                    <Plus className="w-5 h-5" />
-                                    {db?.createNewBook || 'Create New Memory Book'}
-                                </button>
+                                <div className="flex items-center gap-3 justify-center flex-wrap">
+                                    <button 
+                                        onClick={() => setIsCreateModalOpen(true)}
+                                        className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#00E5E5] to-[#FF9E91] text-white rounded-xl font-semibold hover:from-[#00d4d4] hover:to-[#ff8f80] transition-all shadow-lg shadow-primary-teal/20 hover:shadow-xl hover:shadow-primary-teal/30"
+                                    >
+                                        <Plus className="w-5 h-5" />
+                                        {db?.createNewBook || 'Create New Memory Book'}
+                                    </button>
+                                    <button 
+                                        onClick={() => setIsQuickTestOpen(true)}
+                                        className="inline-flex items-center gap-2 px-5 py-4 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold transition-all shadow-lg shadow-amber-500/20 text-sm"
+                                        title="Gera um livro mock com dados pré-preenchidos para teste rápido"
+                                    >
+                                        <Zap className="w-4 h-4" />
+                                        Teste Rápido
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -686,8 +837,17 @@ export const Dashboard = () => {
 
             {/* Create Memory Book Modal */}
             <CreateMemoryBookModal
-                isOpen={isCreateModalOpen}
-                onClose={() => setIsCreateModalOpen(false)}
+                isOpen={isCreateModalOpen || isGenerationMinimized}
+                isMinimized={isGenerationMinimized}
+                onMinimize={() => {
+                    setIsGenerationMinimized(true);
+                    setIsCreateModalOpen(false);
+                }}
+                onProgressUpdate={(p) => setMinimizedProgress(p)}
+                onClose={() => {
+                    setIsCreateModalOpen(false);
+                    setIsGenerationMinimized(false);
+                }}
                 onComplete={() => {
                     // Refresh books list when wizard completes
                     refreshBooks();
@@ -699,7 +859,26 @@ export const Dashboard = () => {
                         message: `${db?.bookGeneratedMsg || 'Seu Memory Book foi criado com sucesso!'} "${bookTitle}"` 
                     });
                     setShowNotification(true);
+                    setIsGenerationMinimized(false);
                     // Refresh books list
+                    refreshBooks();
+                }}
+            />
+
+            {/* Quick Test Modal */}
+            <CreateMemoryBookModal
+                isOpen={isQuickTestOpen}
+                onClose={() => setIsQuickTestOpen(false)}
+                quickTest={true}
+                onComplete={() => {
+                    refreshBooks();
+                }}
+                onSuccess={(bookTitle) => {
+                    setNotificationData({ 
+                        title: 'Teste concluído!', 
+                        message: `Livro de teste gerado: "${bookTitle}"` 
+                    });
+                    setShowNotification(true);
                     refreshBooks();
                 }}
             />
@@ -712,39 +891,16 @@ export const Dashboard = () => {
                         setIsViewerOpen(false);
                         setSelectedBook(null);
                     }}
-                    title={selectedBook.isSample ? sampleBookDisplay.title : selectedBook.title}
-                    pages={selectedBook.isSample ? sampleBookPages : bookPages}
+                    title={selectedBook.title}
+                    pages={selectedBook.isSample ? selectedBook.pages : bookPages}
                     isFavorite={selectedBook.isSample ? true : (memoryBooks.find(b => b.id === selectedBook.id)?.isFavorite ?? false)}
                     onToggleFavorite={selectedBook.isSample ? undefined : () => handleToggleFavorite(selectedBook.id)}
-                    onEdit={selectedBook.isSample ? undefined : () => {
-                        setIsViewerOpen(false);
-                        setIsEditorOpen(true);
-                    }}
-                    onPrint={selectedBook.isSample ? undefined : () => handlePrintBook(selectedBook)}
+                    onPrint={() => handlePrintBook(selectedBook)}
                     onDelete={selectedBook.isSample ? undefined : () => {
                         handleDeleteBook(selectedBook);
                         setIsViewerOpen(false);
                         setSelectedBook(null);
                     }}
-                    onPageEdit={selectedBook.isSample ? undefined : (pageIndex) => {
-                        console.log('Edit page:', pageIndex);
-                        setIsViewerOpen(false);
-                        setIsEditorOpen(true);
-                    }}
-                />
-            )}
-
-            {/* Book Editor */}
-            {selectedBook && (
-                <BookEditor
-                    isOpen={isEditorOpen}
-                    onClose={() => {
-                        setIsEditorOpen(false);
-                        setSelectedBook(null);
-                    }}
-                    title={selectedBook.title}
-                    pages={bookPages}
-                    onSave={handleSavePages}
                 />
             )}
 
@@ -757,6 +913,53 @@ export const Dashboard = () => {
                 bookTitle={bookToDelete?.title || ''}
                 isDeleting={isDeleting}
             />
+
+            {/* PDF Download Modal */}
+            <PdfDownloadModal state={pdfModal} onClose={closePdfModal} />
+
+            {/* Floating Generation Widget (shown when modal is minimized) */}
+            {isGenerationMinimized && (
+                <motion.button
+                    initial={{ opacity: 0, y: 40, scale: 0.8 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 40, scale: 0.8 }}
+                    onClick={() => {
+                        setIsGenerationMinimized(false);
+                        setIsCreateModalOpen(true);
+                    }}
+                    className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-white rounded-2xl shadow-2xl border border-gray-200 px-4 py-3 hover:shadow-xl transition-shadow cursor-pointer"
+                >
+                    <div className="relative">
+                        <motion.div
+                            animate={{ rotate: [0, 5, -5, 0] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-teal to-teal-400 flex items-center justify-center"
+                        >
+                            <BookOpen className="w-5 h-5 text-white" />
+                        </motion.div>
+                        <motion.div
+                            className="absolute -top-1 -right-1 w-3 h-3 bg-primary-teal rounded-full"
+                            animate={{ scale: [1, 1.3, 1] }}
+                            transition={{ duration: 1.5, repeat: Infinity }}
+                        />
+                    </div>
+                    <div className="flex flex-col items-start">
+                        <span className="text-xs font-semibold text-gray-800">
+                            {db?.generating || 'Gerando livro...'}
+                        </span>
+                        <div className="flex items-center gap-2 mt-0.5">
+                            <div className="w-24 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                <motion.div
+                                    className="h-full bg-gradient-to-r from-primary-teal to-teal-400 rounded-full"
+                                    animate={{ width: `${Math.min(minimizedProgress, 100)}%` }}
+                                    transition={{ duration: 0.5 }}
+                                />
+                            </div>
+                            <span className="text-xs text-gray-500 font-medium min-w-[32px]">{Math.round(minimizedProgress)}%</span>
+                        </div>
+                    </div>
+                </motion.button>
+            )}
         </div>
     );
 };
