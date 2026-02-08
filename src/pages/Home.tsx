@@ -291,7 +291,7 @@ export const Home = () => {
                             transition={{ duration: 1, delay: 0.2 }}
                             className="relative z-10 w-full max-w-lg"
                         >
-                            <div className="liquid-glass-strong rounded-[40px] p-8 shadow-2xl relative">
+                            <div className="rounded-[32px] overflow-hidden shadow-2xl relative">
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-accent-coral/20 blur-[100px] rounded-full -z-10"></div>
                                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-teal/20 blur-[100px] rounded-full -z-10"></div>
 
@@ -300,11 +300,6 @@ export const Home = () => {
                                     descriptions={[t.images.manReading, t.images.womanReading]}
                                     interval={6000}
                                 />
-
-                                <div className="mt-6 flex flex-col gap-3">
-                                    <div className="h-4 bg-gray-200/50 rounded-full w-3/4"></div>
-                                    <div className="h-4 bg-gray-200/50 rounded-full w-1/2"></div>
-                                </div>
                             </div>
                         </motion.div>
                         {/* Decorative background blob */}

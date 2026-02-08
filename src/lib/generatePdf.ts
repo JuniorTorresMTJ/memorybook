@@ -1,95 +1,201 @@
 /**
- * PDF Generation Utility
- * 
- * Generates a printable PDF from a Memory Book's pages.
- * Uses jsPDF for PDF creation and loads images directly.
+ * PDF Generation Utility — Memory Book Style
+ *
+ * Generates a beautiful landscape PDF that looks like a real printed photo book.
+ * Uses jsPDF with custom fonts (Playfair Display + Lora) matching the site,
+ * the Memory Book logo, and the site colour palette.
  */
 
 import jsPDF from 'jspdf';
 import type { BookPage } from '../components/book/BookViewer';
 
-// A4 dimensions in mm
-const PAGE_W = 210;
-const PAGE_H = 297;
-const MARGIN = 15;
-const CONTENT_W = PAGE_W - MARGIN * 2;
+// ── Asset imports (Vite resolves these to URLs) ───────────────────────────
+import playfairBoldUrl from '../assets/fonts/PlayfairDisplay-Bold.ttf?url';
+import loraRegularUrl from '../assets/fonts/Lora-Regular.ttf?url';
+import logoUrl from '../assets/logo_round.png?url';
 
-// Fonts
-const TITLE_SIZE = 22;
+// ── Site Colour Palette (RGB) ─────────────────────────────────────────────
+const TEAL      = [0,   229, 229] as const;
+const CORAL     = [255, 138, 122] as const;
+const AMBER     = [255, 179, 71 ] as const;
+const BG_CREAM  = [253, 251, 247] as const;
+const BG_SOFT   = [247, 250, 252] as const;
+const TXT_MAIN  = [26,  32,  44 ] as const;
+const TXT_MUTED = [113, 128, 150] as const;
+const SHADOW    = [230, 228, 224] as const;
+
+// ── Landscape A4 dimensions (mm) ──────────────────────────────────────────
+const PAGE_W = 297;
+const PAGE_H = 210;
+const MARGIN = 18;
+const INNER_PAD = 12;
+
+// ── Typography sizes ──────────────────────────────────────────────────────
+const COVER_TITLE_SIZE = 32;
+const COVER_SUBTITLE_SIZE = 13;
+const PAGE_TITLE_SIZE = 18;
 const BODY_SIZE = 11;
+const BODY_LINE_H = 5.5;
 const PAGE_NUM_SIZE = 9;
-const CAPTION_SIZE = 9;
+const CAPTION_SIZE = 8;
+
+// ── Font names (registered with jsPDF) ────────────────────────────────────
+const FONT_PLAYFAIR = 'PlayfairDisplay';
+const FONT_LORA = 'Lora';
+
+// ══════════════════════════════════════════════════════════════════════════
+// ██  HELPERS
+// ══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Fetch a binary asset and return as base64 string (no data: prefix).
+ */
+async function fetchAsBase64(url: string): Promise<string> {
+    const res = await fetch(url);
+    const buf = await res.arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+}
+
+/**
+ * Load and register custom fonts + logo with jsPDF.
+ * Returns the logo as a data URL (or null).
+ */
+async function loadAssets(pdf: jsPDF): Promise<string | null> {
+    // ── Fonts ──────────────────────────────────────────────────────
+    try {
+        const [playfairB64, loraB64] = await Promise.all([
+            fetchAsBase64(playfairBoldUrl),
+            fetchAsBase64(loraRegularUrl),
+        ]);
+
+        // Playfair Display Bold
+        pdf.addFileToVFS('PlayfairDisplay-Bold.ttf', playfairB64);
+        pdf.addFont('PlayfairDisplay-Bold.ttf', FONT_PLAYFAIR, 'bold');
+
+        // Lora Regular
+        pdf.addFileToVFS('Lora-Regular.ttf', loraB64);
+        pdf.addFont('Lora-Regular.ttf', FONT_LORA, 'normal');
+
+        console.log('[PDF] Custom fonts registered');
+    } catch (e) {
+        console.warn('[PDF] Failed to load custom fonts, using fallbacks:', e);
+        // Fallbacks are handled by setTitleFont / setBodyFont
+    }
+
+    // ── Logo ───────────────────────────────────────────────────────
+    try {
+        return await loadImageAsDataUrl(logoUrl);
+    } catch {
+        console.warn('[PDF] Failed to load logo');
+        return null;
+    }
+}
+
+/**
+ * Safely set the title font (Playfair Display Bold, fallback to Times Bold).
+ */
+function setTitleFont(pdf: jsPDF) {
+    try {
+        pdf.setFont(FONT_PLAYFAIR, 'bold');
+    } catch {
+        pdf.setFont('times', 'bold');
+    }
+}
+
+/**
+ * Safely set the body font (Lora Regular, fallback to Helvetica Normal).
+ */
+function setBodyFont(pdf: jsPDF, style: 'normal' | 'italic' = 'normal') {
+    try {
+        pdf.setFont(FONT_LORA, 'normal');
+    } catch {
+        pdf.setFont('helvetica', style);
+    }
+}
 
 /**
  * Load an image URL as a base64 data URL.
- * Works with: data URLs (pass-through), Firebase Storage URLs, backend URLs.
  */
 async function loadImageAsDataUrl(url: string): Promise<string | null> {
-    if (!url || url.trim() === '') {
-        console.warn('[PDF] loadImage: empty URL, skipping');
-        return null;
-    }
+    if (!url || url.trim() === '') return null;
+    if (url.startsWith('data:')) return url;
 
-    // Already a data URL — use directly (most common for persisted images)
-    if (url.startsWith('data:')) {
-        console.log('[PDF] loadImage: using existing data URL', `(${(url.length / 1024).toFixed(0)}KB)`);
-        return url;
-    }
-
-    // Remote URL — fetch with CORS
-    const shortUrl = url.length > 80 ? url.substring(0, 77) + '...' : url;
-    console.log(`[PDF] loadImage: fetching ${shortUrl}`);
-
-    // Retry up to 2 times for network issues
     for (let attempt = 1; attempt <= 2; attempt++) {
         try {
             const response = await fetch(url, { mode: 'cors' });
-            if (!response.ok) {
-                console.warn(`[PDF] loadImage: HTTP ${response.status} for ${shortUrl} (attempt ${attempt})`);
-                if (attempt < 2) continue;
-                return null;
-            }
-
+            if (!response.ok) { if (attempt < 2) continue; return null; }
             const blob = await response.blob();
-            console.log(`[PDF] loadImage: downloaded ${(blob.size / 1024).toFixed(0)}KB (${blob.type})`);
-
             return new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.onloadend = () => resolve(reader.result as string);
-                reader.onerror = () => {
-                    console.warn('[PDF] loadImage: FileReader failed for', shortUrl);
-                    resolve(null);
-                };
+                reader.onerror = () => resolve(null);
                 reader.readAsDataURL(blob);
             });
-        } catch (err) {
-            console.warn(`[PDF] loadImage: fetch failed (attempt ${attempt}):`, shortUrl, err);
-            if (attempt < 2) {
-                await new Promise(r => setTimeout(r, 500)); // wait 500ms before retry
-            }
+        } catch {
+            if (attempt < 2) await new Promise(r => setTimeout(r, 500));
         }
     }
-
-    console.error('[PDF] loadImage: all attempts failed for', shortUrl);
     return null;
 }
 
-/**
- * Detect image format from a data URL or URL string.
- * jsPDF needs 'JPEG' or 'PNG' as format hint.
- */
 function detectImageFormat(dataUrl: string): string {
     if (dataUrl.startsWith('data:image/png')) return 'PNG';
-    if (dataUrl.startsWith('data:image/webp')) return 'PNG'; // treat webp as PNG for jsPDF
-    return 'JPEG'; // default for data:image/jpeg and remote URLs
+    if (dataUrl.startsWith('data:image/webp')) return 'PNG';
+    return 'JPEG';
 }
 
-/**
- * Wraps text to fit within maxWidth and returns array of lines.
- */
 function wrapText(pdf: jsPDF, text: string, maxWidth: number): string[] {
     return pdf.splitTextToSize(text, maxWidth) as string[];
 }
+
+/** Decorative ornament: diamond + side lines. */
+function drawOrnament(pdf: jsPDF, cx: number, cy: number, width: number) {
+    const half = width / 2;
+    pdf.setDrawColor(...TEAL);
+    pdf.setLineWidth(0.4);
+    pdf.line(cx - half, cy, cx - 6, cy);
+    pdf.line(cx + 6, cy, cx + half, cy);
+    pdf.setFillColor(...TEAL);
+    const d = 2;
+    pdf.triangle(cx, cy - d, cx + d, cy, cx, cy + d, 'F');
+    pdf.triangle(cx, cy - d, cx - d, cy, cx, cy + d, 'F');
+}
+
+/** Thin decorative border inside a page. */
+function drawPageBorder(pdf: jsPDF) {
+    pdf.setDrawColor(...TEAL);
+    pdf.setLineWidth(0.25);
+    pdf.roundedRect(10, 10, PAGE_W - 20, PAGE_H - 20, 3, 3, 'S');
+}
+
+/** Soft shadow rectangle. */
+function drawSoftShadow(pdf: jsPDF, x: number, y: number, w: number, h: number) {
+    pdf.setFillColor(...SHADOW);
+    pdf.roundedRect(x + 2, y + 2, w, h, 3, 3, 'F');
+}
+
+/** Framed image with white border and shadow. */
+function drawFramedImage(pdf: jsPDF, imgData: string, x: number, y: number, w: number, h: number) {
+    drawSoftShadow(pdf, x, y, w, h);
+    pdf.setFillColor(255, 255, 255);
+    pdf.roundedRect(x - 3, y - 3, w + 6, h + 6, 4, 4, 'F');
+    pdf.addImage(imgData, detectImageFormat(imgData), x, y, w, h);
+}
+
+/** Draw the logo at a specific position. */
+function drawLogo(pdf: jsPDF, logoData: string | null, x: number, y: number, size: number) {
+    if (!logoData) return;
+    try {
+        pdf.addImage(logoData, 'PNG', x, y, size, size);
+    } catch { /* skip */ }
+}
+
+// ── Progress type ─────────────────────────────────────────────────────────
 
 export interface PdfProgress {
     current: number;
@@ -97,143 +203,279 @@ export interface PdfProgress {
     label: string;
 }
 
-/**
- * Generate a PDF from book pages.
- */
+// ══════════════════════════════════════════════════════════════════════════
+// ██  MAIN GENERATOR
+// ══════════════════════════════════════════════════════════════════════════
+
 export async function generateBookPdf(
     bookTitle: string,
     pages: BookPage[],
     onProgress?: (progress: PdfProgress) => void,
 ): Promise<Blob> {
-    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const totalSteps = pages.length + 1; // +1 for setup
+    const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    const totalSteps = pages.length + 2;
 
-    onProgress?.({ current: 0, total: totalSteps, label: 'Preparando...' });
+    onProgress?.({ current: 0, total: totalSteps, label: 'Carregando fontes...' });
 
-    // ── Cover page ──────────────────────────────────────────────
+    // Load custom fonts + logo
+    const logoData = await loadAssets(pdf);
+
+    onProgress?.({ current: 1, total: totalSteps, label: 'Preparando capa...' });
+
+    // ══════════════════════════════════════════════════════════════════════
+    // ██  COVER PAGE
+    // ══════════════════════════════════════════════════════════════════════
     const coverPage = pages[0];
     if (coverPage) {
-        // Background gradient effect (light teal)
-        pdf.setFillColor(240, 253, 253);
+        // Background
+        pdf.setFillColor(...BG_CREAM);
         pdf.rect(0, 0, PAGE_W, PAGE_H, 'F');
+        drawPageBorder(pdf);
+
+        // Teal bar top + coral bar bottom
+        pdf.setFillColor(...TEAL);
+        pdf.rect(0, 0, PAGE_W, 4, 'F');
+        pdf.setFillColor(...CORAL);
+        pdf.rect(0, PAGE_H - 4, PAGE_W, 4, 'F');
+
+        // Logo at top-left
+        drawLogo(pdf, logoData, MARGIN + 2, 14, 12);
 
         // Cover image
         const coverImg = await loadImageAsDataUrl(coverPage.imageUrl);
-        onProgress?.({ current: 1, total: totalSteps, label: 'Capa...' });
+
+        const imgW = 150;
+        const imgH = 105;
+        const imgX = (PAGE_W - imgW) / 2;
+        const imgY = 22;
 
         if (coverImg) {
-            try {
-                const imgW = CONTENT_W;
-                const imgH = imgW * 0.65; // ~16:10 aspect
-                const imgX = MARGIN;
-                const imgY = 30;
-                pdf.addImage(coverImg, detectImageFormat(coverImg), imgX, imgY, imgW, imgH);
-            } catch (e) {
-                console.warn('[PDF] Failed to add cover image:', e);
-            }
+            try { drawFramedImage(pdf, coverImg, imgX, imgY, imgW, imgH); }
+            catch (e) { console.warn('[PDF] cover image error:', e); }
         }
 
-        // Title
-        pdf.setFont('helvetica', 'bold');
-        pdf.setFontSize(TITLE_SIZE);
-        pdf.setTextColor(30, 30, 30);
-        const titleLines = wrapText(pdf, bookTitle, CONTENT_W);
-        const titleY = coverImg ? 30 + CONTENT_W * 0.65 + 15 : 80;
-        pdf.text(titleLines, PAGE_W / 2, titleY, { align: 'center' });
+        // Title — Playfair Display Bold
+        const titleStartY = imgY + imgH + 20;
+        setTitleFont(pdf);
+        pdf.setFontSize(COVER_TITLE_SIZE);
+        pdf.setTextColor(...TXT_MAIN);
+        const titleLines = wrapText(pdf, bookTitle, PAGE_W - 80);
+        pdf.text(titleLines, PAGE_W / 2, titleStartY, { align: 'center' });
 
-        // Subtitle / description
+        // Ornament
+        const ornY = titleStartY + titleLines.length * 12 + 6;
+        drawOrnament(pdf, PAGE_W / 2, ornY, 70);
+
+        // Subtitle — Lora
         if (coverPage.description) {
-            pdf.setFont('helvetica', 'normal');
-            pdf.setFontSize(BODY_SIZE);
-            pdf.setTextColor(100, 100, 100);
-            const descLines = wrapText(pdf, coverPage.description, CONTENT_W - 20);
-            pdf.text(descLines, PAGE_W / 2, titleY + titleLines.length * 8 + 5, { align: 'center' });
+            setBodyFont(pdf);
+            pdf.setFontSize(COVER_SUBTITLE_SIZE);
+            pdf.setTextColor(...TXT_MUTED);
+            const descLines = wrapText(pdf, coverPage.description, PAGE_W - 100);
+            pdf.text(descLines.slice(0, 3), PAGE_W / 2, ornY + 12, { align: 'center' });
         }
 
-        // Footer line
-        pdf.setDrawColor(0, 229, 229); // primary-teal
-        pdf.setLineWidth(0.5);
-        pdf.line(MARGIN + 30, PAGE_H - 25, PAGE_W - MARGIN - 30, PAGE_H - 25);
+        // Footer branding
+        pdf.setFont('helvetica', 'normal');
         pdf.setFontSize(CAPTION_SIZE);
-        pdf.setTextColor(150, 150, 150);
-        pdf.text('Memory Book', PAGE_W / 2, PAGE_H - 18, { align: 'center' });
+        pdf.setTextColor(...TXT_MUTED);
+        pdf.text('Memory Book', PAGE_W / 2, PAGE_H - 14, { align: 'center' });
     }
 
-    // ── Content pages ───────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════════════
+    // ██  CONTENT PAGES
+    // ══════════════════════════════════════════════════════════════════════
+    const lastIndex = pages.length - 1;
+
     for (let i = 1; i < pages.length; i++) {
         const page = pages[i];
         pdf.addPage();
-
         onProgress?.({ current: i + 1, total: totalSteps, label: `Página ${i}/${pages.length - 1}...` });
 
-        // Determine if this is the back cover
-        const isBackCover = i === pages.length - 1;
+        const isBackCover = i === lastIndex;
+        const isEven = i % 2 === 0;
 
-        // Page background
-        pdf.setFillColor(255, 255, 255);
+        // ── BACK COVER ────────────────────────────────────────────────
+        if (isBackCover) {
+            await drawBackCover(pdf, page, bookTitle, logoData);
+            continue;
+        }
+
+        // ── CONTENT PAGE ──────────────────────────────────────────────
+        pdf.setFillColor(...BG_CREAM);
         pdf.rect(0, 0, PAGE_W, PAGE_H, 'F');
+        drawPageBorder(pdf);
 
-        // Load and add image
+        // Logo watermark (top corner, opposite of image side)
+        const logoX = isEven ? MARGIN + 2 : PAGE_W - MARGIN - 10;
+        drawLogo(pdf, logoData, logoX, 12, 8);
+
         const imgData = await loadImageAsDataUrl(page.imageUrl);
-        let imageBottomY = MARGIN;
 
+        // Layout: divide page into two halves
+        const contentTop = MARGIN + 6;
+        const contentBottom = PAGE_H - MARGIN - 10;
+        const contentH = contentBottom - contentTop;
+        const halfW = (PAGE_W - MARGIN * 2 - INNER_PAD) / 2;
+
+        // Image area (alternates sides)
+        const imgAreaX = isEven ? MARGIN + halfW + INNER_PAD : MARGIN;
+        const imgAreaY = contentTop;
+        const imgAreaW = halfW;
+        const imgAreaH = contentH;
+
+        // Text area (opposite side)
+        const txtAreaX = isEven ? MARGIN : MARGIN + halfW + INNER_PAD;
+        const txtAreaW = halfW;
+
+        // ── Image ────────────────────────────────────────────────
         if (imgData) {
-            try {
-                const imgW = CONTENT_W;
-                const imgH = imgW * 0.7; // ~3:2 aspect
-                const imgX = MARGIN;
-                const imgY = MARGIN;
-                pdf.addImage(imgData, detectImageFormat(imgData), imgX, imgY, imgW, imgH);
-                imageBottomY = imgY + imgH;
-            } catch (e) {
-                console.warn(`[PDF] Failed to add image for page ${i}:`, e);
-            }
+            try { drawFramedImage(pdf, imgData, imgAreaX, imgAreaY, imgAreaW, imgAreaH); }
+            catch (e) { console.warn(`[PDF] image error page ${i}:`, e); }
         }
 
-        // Title
-        if (page.title) {
-            const titleFontSize = isBackCover ? 16 : 14;
+        // ── Text side ────────────────────────────────────────────
+        // Vertical teal accent line
+        const accentX = isEven ? txtAreaX + txtAreaW + 4 : txtAreaX - 6;
+        pdf.setDrawColor(...TEAL);
+        pdf.setLineWidth(0.8);
+        pdf.line(accentX, contentTop + 8, accentX, contentBottom - 8);
+
+        let cursorY = contentTop + 18;
+
+        // Life phase / date tag
+        if (page.date) {
             pdf.setFont('helvetica', 'bold');
-            pdf.setFontSize(titleFontSize);
-            pdf.setTextColor(30, 30, 30);
-            const pageTitleLines = wrapText(pdf, page.title, CONTENT_W);
-            pdf.text(pageTitleLines, MARGIN, imageBottomY + 10);
-            imageBottomY += 10 + pageTitleLines.length * 6;
+            pdf.setFontSize(7);
+            const tagText = page.date.toUpperCase();
+            const tagW = Math.min(pdf.getTextWidth(tagText) + 12, txtAreaW);
+            pdf.setFillColor(...TEAL);
+            pdf.roundedRect(txtAreaX, cursorY - 5, tagW, 8, 2, 2, 'F');
+            pdf.setTextColor(255, 255, 255);
+            pdf.text(tagText, txtAreaX + 6, cursorY);
+            cursorY += 16;
         }
 
-        // Description
+        // Title — Playfair Display Bold
+        if (page.title) {
+            setTitleFont(pdf);
+            pdf.setFontSize(PAGE_TITLE_SIZE);
+            pdf.setTextColor(...TXT_MAIN);
+            const titleLines = wrapText(pdf, page.title, txtAreaW - 8);
+            pdf.text(titleLines.slice(0, 3), txtAreaX, cursorY);
+            cursorY += Math.min(titleLines.length, 3) * 7.5 + 6;
+
+            // Coral divider
+            pdf.setDrawColor(...CORAL);
+            pdf.setLineWidth(0.8);
+            pdf.line(txtAreaX, cursorY, txtAreaX + Math.min(45, txtAreaW * 0.4), cursorY);
+            cursorY += 10;
+        }
+
+        // Description — Lora Regular
         if (page.description) {
-            pdf.setFont('helvetica', 'normal');
+            setBodyFont(pdf);
             pdf.setFontSize(BODY_SIZE);
-            pdf.setTextColor(60, 60, 60);
-            const textLines = wrapText(pdf, page.description, CONTENT_W);
-            const maxLines = Math.floor((PAGE_H - imageBottomY - 25) / 5);
-            const clampedLines = textLines.slice(0, maxLines);
-            pdf.text(clampedLines, MARGIN, imageBottomY + 5);
+            pdf.setTextColor(...TXT_MUTED);
+            const textLines = wrapText(pdf, page.description, txtAreaW - 8);
+            const maxLines = Math.floor((contentBottom - cursorY - 10) / BODY_LINE_H);
+            pdf.text(textLines.slice(0, Math.max(maxLines, 3)), txtAreaX, cursorY);
         }
 
-        // Page number (not on back cover)
-        if (!isBackCover) {
-            pdf.setFont('helvetica', 'normal');
-            pdf.setFontSize(PAGE_NUM_SIZE);
-            pdf.setTextColor(180, 180, 180);
-            pdf.text(`${i}`, PAGE_W / 2, PAGE_H - 12, { align: 'center' });
-        }
+        // Page number (outer corner)
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(PAGE_NUM_SIZE);
+        pdf.setTextColor(...TXT_MUTED);
+        const pnX = isEven ? PAGE_W - MARGIN - 2 : MARGIN + 2;
+        const pnAlign: 'right' | 'left' = isEven ? 'right' : 'left';
+        pdf.text(`${i}`, pnX, PAGE_H - 14, { align: pnAlign });
 
-        // Decorative line at bottom
-        pdf.setDrawColor(230, 230, 230);
-        pdf.setLineWidth(0.3);
-        pdf.line(MARGIN + 20, PAGE_H - 18, PAGE_W - MARGIN - 20, PAGE_H - 18);
+        // Bottom center dots
+        pdf.setFillColor(...AMBER);
+        const dotsY = PAGE_H - 14.5;
+        for (let d = -1; d <= 1; d++) pdf.circle(PAGE_W / 2 + d * 4, dotsY, 0.6, 'F');
     }
 
     onProgress?.({ current: totalSteps, total: totalSteps, label: 'Finalizando...' });
-
     return pdf.output('blob');
 }
 
-/**
- * Generate and download a PDF.
- */
+// ══════════════════════════════════════════════════════════════════════════
+// ██  BACK COVER
+// ══════════════════════════════════════════════════════════════════════════
+
+async function drawBackCover(
+    pdf: jsPDF, page: BookPage, bookTitle: string, logoData: string | null,
+) {
+    pdf.setFillColor(...BG_SOFT);
+    pdf.rect(0, 0, PAGE_W, PAGE_H, 'F');
+    drawPageBorder(pdf);
+
+    // Colour bars (inverted from cover)
+    pdf.setFillColor(...CORAL);
+    pdf.rect(0, 0, PAGE_W, 4, 'F');
+    pdf.setFillColor(...TEAL);
+    pdf.rect(0, PAGE_H - 4, PAGE_W, 4, 'F');
+
+    // Ornament
+    drawOrnament(pdf, PAGE_W / 2, 24, 80);
+
+    // Image
+    const imgW = 120;
+    const imgH = 85;
+    const imgX = (PAGE_W - imgW) / 2;
+    const imgY = 36;
+
+    const imgData = await loadImageAsDataUrl(page.imageUrl);
+    if (imgData) {
+        try { drawFramedImage(pdf, imgData, imgX, imgY, imgW, imgH); }
+        catch { /* skip */ }
+    }
+
+    let cursorY = imgY + imgH + 18;
+
+    // Title — Playfair
+    if (page.title) {
+        setTitleFont(pdf);
+        pdf.setFontSize(20);
+        pdf.setTextColor(...TXT_MAIN);
+        const lines = wrapText(pdf, page.title, PAGE_W - 80);
+        pdf.text(lines, PAGE_W / 2, cursorY, { align: 'center' });
+        cursorY += lines.length * 8 + 6;
+    }
+
+    // Description — Lora
+    if (page.description) {
+        setBodyFont(pdf);
+        pdf.setFontSize(BODY_SIZE);
+        pdf.setTextColor(...TXT_MUTED);
+        const lines = wrapText(pdf, page.description, PAGE_W - 100);
+        pdf.text(lines.slice(0, 5), PAGE_W / 2, cursorY, { align: 'center' });
+        cursorY += Math.min(lines.length, 5) * BODY_LINE_H + 12;
+    }
+
+    // Ornament
+    drawOrnament(pdf, PAGE_W / 2, Math.min(cursorY + 4, PAGE_H - 44), 50);
+
+    // Logo centered
+    drawLogo(pdf, logoData, PAGE_W / 2 - 6, PAGE_H - 42, 12);
+
+    // Footer
+    setTitleFont(pdf);
+    pdf.setFontSize(12);
+    pdf.setTextColor(...TXT_MAIN);
+    pdf.text(bookTitle, PAGE_W / 2, PAGE_H - 24, { align: 'center' });
+
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(CAPTION_SIZE);
+    pdf.setTextColor(...TXT_MUTED);
+    pdf.text('Made with Memory Book', PAGE_W / 2, PAGE_H - 16, { align: 'center' });
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// ██  DOWNLOAD HELPER
+// ══════════════════════════════════════════════════════════════════════════
+
 export async function downloadBookAsPdf(
     bookTitle: string,
     pages: BookPage[],
@@ -241,11 +483,10 @@ export async function downloadBookAsPdf(
 ): Promise<void> {
     const blob = await generateBookPdf(bookTitle, pages, onProgress);
 
-    // Create download link
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${bookTitle.replace(/[^a-zA-Z0-9\s-_àáâãéêíóôõúüçÀÁÂÃÉÊÍÓÔÕÚÜÇ]/g, '').trim()}.pdf`;
+    a.download = `${bookTitle.replace(/[^a-zA-Z0-9\s\-_àáâãéêíóôõúüçÀÁÂÃÉÊÍÓÔÕÚÜÇ]/g, '').trim()}.pdf`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
