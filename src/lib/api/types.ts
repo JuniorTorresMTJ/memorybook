@@ -29,11 +29,29 @@ export interface BookPreferences {
 }
 
 // ============================================================================
+// Physical Characteristics Types
+// ============================================================================
+
+export type ReferenceInputMode = 'photos' | 'characteristics';
+
+export interface PhysicalCharacteristicsPayload {
+  name: string;
+  gender: 'male' | 'female' | null;
+  skin_color: string | null;
+  hair_color: string | null;
+  hair_style: string | null;
+  has_glasses: boolean;
+  has_facial_hair: boolean;
+}
+
+// ============================================================================
 // Job Types
 // ============================================================================
 
 export interface JobPayload extends UserForm, BookPreferences {
   user_language: string;
+  reference_input_mode?: ReferenceInputMode;
+  physical_characteristics?: PhysicalCharacteristicsPayload;
 }
 
 export interface JobCreateResponse {

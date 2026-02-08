@@ -16,7 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
 
-from models.user_input import UserForm, BookPreferences, ReferenceImages, LifePhase
+from models.user_input import UserForm, BookPreferences, ReferenceImages, LifePhase, PhysicalCharacteristics
 from models.output import FinalBookPackage
 from pipeline.runner import PipelineRunner
 from clients.gemini_client import GeminiClient
@@ -44,21 +44,32 @@ app = FastAPI(
 )
 
 # Add CORS middleware
+# Using allow_credentials=False with allow_origins=["*"] to allow all origins.
+# The frontend fetch calls don't use credentials, so this is safe.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173",
-        "https://memory-book-app-1bfd7.web.app",
-        "https://memory-book-app-1bfd7.firebaseapp.com",
-        "*"  # Allow all for development
-    ],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def strip_api_prefix(request, call_next):
+    """Strip /api prefix so routes work both directly and via Firebase Hosting proxy."""
+    original_path = request.scope["path"]
+    if original_path.startswith("/api"):
+        request.scope["path"] = original_path[4:] or "/"
+    try:
+        response = await call_next(request)
+        return response
+    except Exception as e:
+        import traceback
+        print(f"[MIDDLEWARE ERROR] path={original_path} error={e}")
+        traceback.print_exc()
+        raise
 
 # Initialize configuration and logging
 config = load_config_from_env()
@@ -79,6 +90,17 @@ class LifePhaseRequest(BaseModel):
     emotions: List[str] = Field(default_factory=list)
 
 
+class PhysicalCharacteristicsRequest(BaseModel):
+    """Physical characteristics from the frontend form."""
+    name: str = ""
+    gender: Optional[str] = None
+    skin_color: Optional[str] = None
+    hair_color: Optional[str] = None
+    hair_style: Optional[str] = None
+    has_glasses: bool = False
+    has_facial_hair: bool = False
+
+
 class JobPayload(BaseModel):
     """Payload for job creation (sent as JSON string in form data)."""
     # User form data
@@ -95,6 +117,10 @@ class JobPayload(BaseModel):
     
     # Language preference
     user_language: str = Field(default="en-US")
+    
+    # Reference input mode and physical characteristics
+    reference_input_mode: Optional[str] = Field(default="photos")
+    physical_characteristics: Optional[PhysicalCharacteristicsRequest] = Field(default=None)
 
 
 class JobCreateResponse(BaseModel):
@@ -183,7 +209,24 @@ async def process_job_background(job_id: str, payload: JobPayload, reference_pat
             style=payload.style
         )
         
-        reference_images = ReferenceImages(paths=reference_paths)
+        # Build physical characteristics from payload if provided
+        phys_chars = None
+        if payload.physical_characteristics and payload.physical_characteristics.name:
+            phys_chars = PhysicalCharacteristics(
+                name=payload.physical_characteristics.name,
+                gender=payload.physical_characteristics.gender,
+                skin_color=payload.physical_characteristics.skin_color,
+                hair_color=payload.physical_characteristics.hair_color,
+                hair_style=payload.physical_characteristics.hair_style,
+                has_glasses=payload.physical_characteristics.has_glasses,
+                has_facial_hair=payload.physical_characteristics.has_facial_hair,
+            )
+        
+        reference_images = ReferenceImages(
+            paths=reference_paths,
+            physical_characteristics=phys_chars,
+            reference_input_mode=payload.reference_input_mode or "photos"
+        )
         
         # Run pipeline with progress tracking
         result = await run_pipeline_with_tracking(
@@ -263,6 +306,22 @@ async def run_pipeline_with_tracking(
         complete_step(StepName.PLANNING.value)
         complete_step(StepName.VISUAL_ANALYSIS.value)
         
+        # Phase 2.5: Character Sheet Generation (32%)
+        update_progress(StepName.CHARACTER_SHEET.value, 28)
+        character_sheet_path = await runner.character_sheet_generator.execute(
+            (visual_fingerprint, preferences, reference_images, output_dir, user_language)
+        )
+        complete_step(StepName.CHARACTER_SHEET.value)
+        
+        # Build consolidated reference images: user photos + character sheet
+        all_reference_images = list(reference_images.paths)
+        if character_sheet_path:
+            all_reference_images.append(character_sheet_path)
+            visual_fingerprint.character_sheet_path = character_sheet_path
+            logger.info(f"[{job_id}] Character sheet generated: {character_sheet_path}")
+        else:
+            logger.info(f"[{job_id}] Character sheet generation skipped or failed - continuing without it")
+        
         # Phase 3: Prompt Creation (45%)
         update_progress(StepName.PROMPT_CREATION.value, 35)
         
@@ -302,12 +361,16 @@ async def run_pipeline_with_tracking(
             output_path = os.path.join(output_dir, filename)
             
             # Generate image with retry
+            # Always pass reference images (user photos + character sheet) for consistency
+            # Only skip for back cover which typically doesn't feature the character
+            refs = all_reference_images if (all_reference_images and prompt.prompt_type != "back_cover") else None
+            
             max_attempts = 3
             result = None
             for attempt in range(max_attempts):
                 result = await runner.image_client.generate_image(
                     prompt=prompt.get_full_prompt(),
-                    reference_images=reference_images.paths if prompt.render_params.use_reference_images else None,
+                    reference_images=refs,
                     render_params=prompt.render_params.model_dump(),
                     output_path=output_path
                 )

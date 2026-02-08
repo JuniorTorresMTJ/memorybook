@@ -9,6 +9,7 @@ import { getInitialMemoryBookData, getInitialPhysicalCharacteristics, getInitial
 const STORAGE_KEY = 'memorybook_wizard_draft';
 const STEP_KEY = 'memorybook_wizard_step';
 const COMPLETED_STEPS_KEY = 'memorybook_wizard_completed';
+const MODE_KEY = 'memorybook_wizard_mode';
 
 interface StoredBookSetup {
     pageCount: MemoryBookData['bookSetup']['pageCount'];
@@ -108,11 +109,13 @@ export function useWizardPersistence() {
         data: MemoryBookData;
         step: WizardStep;
         completedSteps: Set<WizardStep>;
+        wizardMode: 'brief' | 'detailed' | null;
     } | null => {
         try {
             const storedJson = localStorage.getItem(STORAGE_KEY);
             const storedStep = localStorage.getItem(STEP_KEY);
             const storedCompleted = localStorage.getItem(COMPLETED_STEPS_KEY);
+            const storedMode = localStorage.getItem(MODE_KEY);
 
             if (!storedJson) return null;
 
@@ -128,8 +131,9 @@ export function useWizardPersistence() {
             const completedSteps = new Set<WizardStep>(
                 storedCompleted ? JSON.parse(storedCompleted) : []
             );
+            const wizardMode = (storedMode === 'brief' || storedMode === 'detailed') ? storedMode : null;
 
-            return { data, step, completedSteps };
+            return { data, step, completedSteps, wizardMode };
         } catch (error) {
             console.error('Failed to load wizard data:', error);
             return null;
@@ -142,7 +146,8 @@ export function useWizardPersistence() {
     const saveData = useCallback((
         data: MemoryBookData,
         step: WizardStep,
-        completedSteps: Set<WizardStep>
+        completedSteps: Set<WizardStep>,
+        wizardMode?: 'brief' | 'detailed' | null
     ) => {
         try {
             const stored: StoredData = {
@@ -153,6 +158,9 @@ export function useWizardPersistence() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
             localStorage.setItem(STEP_KEY, step.toString());
             localStorage.setItem(COMPLETED_STEPS_KEY, JSON.stringify([...completedSteps]));
+            if (wizardMode) {
+                localStorage.setItem(MODE_KEY, wizardMode);
+            }
         } catch (error) {
             console.error('Failed to save wizard data:', error);
         }
@@ -166,6 +174,7 @@ export function useWizardPersistence() {
             localStorage.removeItem(STORAGE_KEY);
             localStorage.removeItem(STEP_KEY);
             localStorage.removeItem(COMPLETED_STEPS_KEY);
+            localStorage.removeItem(MODE_KEY);
         } catch (error) {
             console.error('Failed to clear wizard data:', error);
         }

@@ -26,6 +26,7 @@ from models.output import FinalBookPackage, BookPage
 from agents.normalizer import NormalizerAgent
 from agents.narrative_planner import NarrativePlannerAgent
 from agents.visual_analyzer import VisualAnalyzerAgent
+from agents.character_sheet_generator import CharacterSheetGeneratorAgent
 from agents.cover_creator import CoverCreatorAgent
 from agents.back_cover_creator import BackCoverCreatorAgent
 from agents.prompt_writer import PromptWriterAgent
@@ -106,6 +107,7 @@ class PipelineRunner:
         self.normalizer = NormalizerAgent(self.gemini, self.logger)
         self.narrative_planner = NarrativePlannerAgent(self.gemini, self.logger)
         self.visual_analyzer = VisualAnalyzerAgent(self.gemini, self.logger)
+        self.character_sheet_generator = CharacterSheetGeneratorAgent(self.gemini, self.logger)
         self.cover_creator = CoverCreatorAgent(self.gemini, self.logger)
         self.back_cover_creator = BackCoverCreatorAgent(self.gemini, self.logger)
         self.prompt_writer = PromptWriterAgent(self.gemini, self.logger)
@@ -162,6 +164,24 @@ class PipelineRunner:
             )
             pipeline_logger.end_step("Planning & Visual Analysis")
             
+            # Phase 2.5: Generate character reference sheet
+            # This creates a visual anchor for maintaining character consistency
+            pipeline_logger.start_step("Character Sheet Generation")
+            character_sheet_path = await self.character_sheet_generator.execute(
+                (visual_fingerprint, preferences, reference_images, output_dir, user_language)
+            )
+            
+            # Build the consolidated reference images list:
+            # original user photos + character sheet
+            all_reference_images = list(reference_images.paths)
+            if character_sheet_path:
+                all_reference_images.append(character_sheet_path)
+                visual_fingerprint.character_sheet_path = character_sheet_path
+                pipeline_logger.log_progress(f"Character sheet generated: {character_sheet_path}")
+            else:
+                pipeline_logger.log_progress("Character sheet generation skipped or failed - continuing without it")
+            pipeline_logger.end_step("Character Sheet Generation")
+            
             # Phase 3: Create prompts (parallel)
             pipeline_logger.start_step("Prompt Creation")
             cover_prompt, back_cover_prompt, page_prompts = await asyncio.gather(
@@ -179,11 +199,11 @@ class PipelineRunner:
             reviewed_prompts = await self.prompt_reviewer.execute((all_prompts, user_language))
             pipeline_logger.end_step("Prompt Review")
             
-            # Phase 5: Generate images
+            # Phase 5: Generate images (always pass all reference images)
             pipeline_logger.start_step("Image Generation")
             generation_results = await self._generate_all_images(
                 reviewed_prompts,
-                reference_images.paths,
+                all_reference_images,
                 output_dir
             )
             pipeline_logger.end_step("Image Generation")
@@ -208,7 +228,7 @@ class PipelineRunner:
                 generation_results,
                 reviewed_prompts,
                 visual_fingerprint,
-                reference_images.paths,
+                all_reference_images,
                 output_dir,
                 user_language,
                 max_retries
@@ -248,10 +268,14 @@ class PipelineRunner:
         reference_images: list[str],
         output_dir: str
     ) -> list[GenerationResult]:
-        """Generate all images from prompts with retry on failure."""
+        """Generate all images from prompts with retry on failure.
+        
+        Always passes reference images (user photos + character sheet) to ensure
+        character consistency across all pages.
+        """
         
         async def generate_single(prompt: PromptItem) -> GenerationResult:
-            """Generate a single image with up to 2 retries."""
+            """Generate a single image with up to 3 retries."""
             if prompt.prompt_type == "cover":
                 filename = "cover.jpg"
             elif prompt.prompt_type == "back_cover":
@@ -261,11 +285,15 @@ class PipelineRunner:
             
             output_path = f"{output_dir}/{filename}"
             
+            # Always pass reference images for character consistency
+            # Only skip for back cover which typically doesn't feature the character
+            refs = reference_images if (reference_images and prompt.prompt_type != "back_cover") else None
+            
             max_attempts = 3
             for attempt in range(max_attempts):
                 result = await self.image_client.generate_image(
                     prompt=prompt.get_full_prompt(),
-                    reference_images=reference_images if prompt.render_params.use_reference_images else None,
+                    reference_images=refs,
                     render_params=prompt.render_params.model_dump(),
                     output_path=output_path
                 )

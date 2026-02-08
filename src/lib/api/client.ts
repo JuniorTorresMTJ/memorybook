@@ -14,8 +14,16 @@ import type {
   JobsListResponse,
 } from './types';
 
-// API Base URL - can be configured via environment variable
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// API Base URL - In production, use same-origin /api proxy (Firebase Hosting rewrite)
+// to avoid CORS issues. In development, use the direct backend URL.
+const API_BASE_URL = import.meta.env.DEV
+  ? (import.meta.env.VITE_API_URL || 'http://localhost:8000')
+  : '/api';
+
+// Direct Cloud Run URL for large uploads (images).
+// Firebase Hosting proxy has a ~10MB body size limit, so file uploads
+// must bypass it and go directly to Cloud Run.
+const DIRECT_API_URL = import.meta.env.VITE_API_URL || API_BASE_URL;
 
 /**
  * Custom error class for API errors
@@ -39,10 +47,16 @@ async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     let detail = '';
     try {
-      const errorData = await response.json();
-      detail = errorData.detail || JSON.stringify(errorData);
+      // Read body as text first (can only be read once), then try parsing as JSON
+      const text = await response.text();
+      try {
+        const errorData = JSON.parse(text);
+        detail = errorData.detail || JSON.stringify(errorData);
+      } catch {
+        detail = text || `HTTP ${response.status}`;
+      }
     } catch {
-      detail = await response.text();
+      detail = `HTTP ${response.status} ${response.statusText}`;
     }
     throw new APIError(
       `API Error: ${response.status} ${response.statusText}`,
@@ -51,6 +65,57 @@ async function handleResponse<T>(response: Response): Promise<T> {
     );
   }
   return response.json();
+}
+
+/**
+ * Compress an image file using canvas.
+ * Resizes to max 1600px on longest side and converts to JPEG at 80% quality.
+ * This keeps reference images under ~300KB each, well within upload limits.
+ */
+async function compressImage(file: File, maxSize = 1600, quality = 0.8): Promise<File> {
+  // Skip non-image files
+  if (!file.type.startsWith('image/')) return file;
+  
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      let { width, height } = img;
+      
+      // Only resize if larger than maxSize
+      if (width > maxSize || height > maxSize) {
+        if (width > height) {
+          height = Math.round((height / width) * maxSize);
+          width = maxSize;
+        } else {
+          width = Math.round((width / height) * maxSize);
+          height = maxSize;
+        }
+      }
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) { resolve(file); return; }
+      
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) { resolve(file); return; }
+          const compressed = new File([blob], file.name.replace(/\.\w+$/, '.jpg'), {
+            type: 'image/jpeg',
+            lastModified: Date.now(),
+          });
+          console.log(`[compressImage] ${file.name}: ${(file.size/1024).toFixed(0)}KB → ${(compressed.size/1024).toFixed(0)}KB`);
+          resolve(compressed);
+        },
+        'image/jpeg',
+        quality
+      );
+    };
+    img.onerror = () => reject(new Error(`Failed to load image: ${file.name}`));
+    img.src = URL.createObjectURL(file);
+  });
 }
 
 /**
@@ -69,12 +134,21 @@ export async function createJob(
   // Add payload as JSON string
   formData.append('payload', JSON.stringify(payload));
   
-  // Add reference images
-  referenceImages.forEach((file) => {
-    formData.append('reference_images', file);
-  });
+  // Compress reference images before upload to stay within size limits
+  // (Firebase Hosting proxy ~10MB, Cloud Run 32MB)
+  if (referenceImages.length > 0) {
+    const compressed = await Promise.all(referenceImages.map(f => compressImage(f)));
+    compressed.forEach((file) => {
+      formData.append('reference_images', file);
+    });
+  }
   
-  const response = await fetch(`${API_BASE_URL}/jobs`, {
+  // Use direct Cloud Run URL when uploading images to bypass
+  // Firebase Hosting proxy's ~10MB body size limit.
+  // For requests without images, use the same-origin proxy.
+  const url = referenceImages.length > 0 ? DIRECT_API_URL : API_BASE_URL;
+  
+  const response = await fetch(`${url}/jobs`, {
     method: 'POST',
     body: formData,
   });

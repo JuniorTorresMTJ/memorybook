@@ -75,6 +75,10 @@ class PromptItem(BaseModel):
         default="",
         description="Description of the main character for consistency"
     )
+    character_identity_block: str = Field(
+        default="",
+        description="Strong character identity enforcement block from VisualFingerprint"
+    )
     scene_description: str = Field(
         default="",
         description="Description of the scene"
@@ -106,20 +110,35 @@ class PromptItem(BaseModel):
     )
     
     def get_full_prompt(self) -> str:
-        """Combine all prompt components into a single string."""
-        parts = [self.main_prompt]
+        """Combine all prompt components into a single string with strong character identity enforcement."""
+        parts = []
         
-        if self.character_description:
-            parts.append(f"Character: {self.character_description}")
+        # CHARACTER IDENTITY comes FIRST for maximum influence on generation
+        if self.character_identity_block:
+            parts.append(self.character_identity_block)
+        elif self.character_description:
+            parts.append(
+                f"CHARACTER IDENTITY (MUST MATCH EXACTLY): {self.character_description}. "
+                f"This character must be recognizable as the SAME person across all illustrations"
+            )
         
+        # Main prompt
+        parts.append(self.main_prompt)
+        
+        # Scene description
         if self.scene_description:
             parts.append(f"Scene: {self.scene_description}")
         
+        # Style
         if self.style_prompt:
             parts.append(self.style_prompt)
         
         # CRITICAL: Always append no-text instruction to prevent misspelled words in images
-        parts.append("IMPORTANT: Do NOT include any text, letters, words, numbers, captions, titles, labels, signs, or typography anywhere in the image. The image must be purely visual with zero written content")
+        parts.append(
+            "IMPORTANT: Do NOT include any text, letters, words, numbers, captions, "
+            "titles, labels, signs, or typography anywhere in the image. "
+            "The image must be purely visual with zero written content"
+        )
         
         return ". ".join(parts)
     
@@ -143,6 +162,8 @@ class PromptItem(BaseModel):
             "labels",
             "signs",
             "written content",
+            "different character",
+            "inconsistent features",
         ]
         all_negatives = default_negatives + self.negative_constraints
         return ", ".join(all_negatives)

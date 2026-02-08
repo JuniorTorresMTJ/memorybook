@@ -8,6 +8,94 @@ Memory Book is a full-stack web application that turns family memories and refer
 
 ---
 
+## Screenshots
+
+### Landing Page
+
+<p align="center">
+  <img src="src/assets/ui/memorybook-ui%20(3).png" alt="Landing Page — Hero section with language selector" width="100%">
+</p>
+<p align="center"><em>Hero section — "Keep their story close, always" with multi-language support</em></p>
+
+<p align="center">
+  <img src="src/assets/ui/memorybook-ui%20(1).png" alt="Landing Page — Statistics section" width="100%">
+</p>
+<p align="center"><em>Impact statistics — Why memory preservation matters</em></p>
+
+<p align="center">
+  <img src="src/assets/ui/memorybook-ui%20(2).png" alt="Landing Page — How it Works" width="100%">
+</p>
+<p align="center"><em>How it Works — 3-step process overview</em></p>
+
+<p align="center">
+  <img src="src/assets/ui/memorybook-ui%20(4).png" alt="Landing Page — Sample book showcase" width="100%">
+</p>
+<p align="center"><em>Sample book showcase with multiple art styles (Watercolor, Cartoon, Anime, Coloring)</em></p>
+
+<p align="center">
+  <img src="src/assets/ui/memorybook-ui%20(5).png" alt="Landing Page — CTA and footer" width="100%">
+</p>
+<p align="center"><em>Call-to-action section and footer</em></p>
+
+### Authentication
+
+<p align="center">
+  <img src="src/assets/ui/memorybook-ui%20(6).png" alt="Sign In modal" width="60%">
+</p>
+<p align="center"><em>Sign In modal — Google OAuth and email/password authentication</em></p>
+
+### Dashboard
+
+<p align="center">
+  <img src="src/assets/ui/memorybook-ui%20(7).png" alt="Dashboard — Book library" width="100%">
+</p>
+<p align="center"><em>Dashboard — Personal library with example books in different art styles</em></p>
+
+### Settings
+
+<p align="center">
+  <img src="src/assets/ui/memorybook-ui%20(8).png" alt="Profile Settings" width="60%">
+  &nbsp;&nbsp;
+  <img src="src/assets/ui/memorybook-ui%20(9).png" alt="Language Selection" width="35%">
+</p>
+<p align="center"><em>Profile settings panel and language selection (PT, ES, EN, DE, FR)</em></p>
+
+### Book Creation Wizard
+
+<p align="center">
+  <img src="src/assets/ui/memorybook-ui%20(10).png" alt="Creation mode selection" width="60%">
+</p>
+<p align="center"><em>Choose how to create your book — Detailed story, brief version, or audio (coming soon)</em></p>
+
+<p align="center">
+  <img src="src/assets/ui/memorybook-ui%20(11).png" alt="Wizard Step 1 — Book Setup" width="100%">
+</p>
+<p align="center"><em>Step 1: Book Setup — Page count, visual reference upload</em></p>
+
+<p align="center">
+  <img src="src/assets/ui/memorybook-ui%20(12).png" alt="Wizard Step 1 — Character description" width="100%">
+</p>
+<p align="center"><em>Step 1: Character description — Gender, skin color, hair color, hair style, accessories</em></p>
+
+<p align="center">
+  <img src="src/assets/ui/memorybook-ui%20(13).png" alt="Wizard Step 1 — Art style selection" width="100%">
+</p>
+<p align="center"><em>Step 1: Art style selection — Coloring Page, Cartoon, Anime, Watercolor</em></p>
+
+<p align="center">
+  <img src="src/assets/ui/memorybook-ui%20(14).png" alt="Wizard Step 3 — Review & Generate" width="100%">
+</p>
+<p align="center"><em>Step 3: Review & Generate — Final review with reading level and tone settings</em></p>
+
+### Generation Progress
+
+<p align="center">
+  <img src="src/assets/ui/memorybook-ui%20(15).png" alt="Book generation progress" width="70%">
+</p>
+<p align="center"><em>Real-time generation progress — Step-by-step status updates</em></p>
+
+---
+
 ## The Problem
 
 Over **55 million people** worldwide live with Alzheimer's or dementia. Every 3 seconds, someone loses a memory. As the disease progresses, the stories that define a person's life — their childhood adventures, first love, proudest moments — begin to fade irreversibly.

@@ -87,13 +87,25 @@ class PromptWriterAgent(AgentBase[Tuple[NarrativePlan, VisualFingerprint, BookPr
         """Build the user prompt for a single page."""
         character_desc = fingerprint.get_prompt_description()
         
-        # Get age-appropriate description if available
-        age_desc = fingerprint.age_variations.get(page_plan.life_phase, character_desc)
+        # Get age-appropriate description using the enhanced method
+        age_desc = fingerprint.get_age_adjusted_description(page_plan.life_phase)
+        
+        # Build character identity block
+        identity_block = fingerprint.get_character_identity_block()
+        
+        # Build do_not_change instructions
+        do_not_change_section = ""
+        if fingerprint.do_not_change:
+            do_not_change_section = "\nFEATURES THAT MUST NOT CHANGE:\n" + "\n".join(
+                f"- {feature}" for feature in fingerprint.do_not_change
+            )
         
         return f"""User Language: {user_language}
 Create an image generation prompt for page {page_plan.page_number}.
 
 Illustration Style: {preferences.style}
+
+{identity_block}
 
 Page Plan:
 - Life Phase: {page_plan.life_phase}
@@ -107,6 +119,7 @@ Page Plan:
 
 Character Description (for {page_plan.life_phase} phase):
 {age_desc}
+{do_not_change_section}
 
 Style Attributes:
 - Color Palette: {', '.join(fingerprint.style_attributes.color_palette) or 'Default'}
@@ -115,16 +128,19 @@ Style Attributes:
 
 IMPORTANT:
 - All descriptive text MUST be in {user_language}
+- The character MUST be the SAME person across ALL pages - maintain exact visual identity
+- Include the character_identity_block field in the output to enforce consistency
 - Capture the essence of: {page_plan.memory_reference}
 - Convey {page_plan.emotional_tone} emotional tone
 - Use {preferences.style} illustration style
 - Show the character at the appropriate age for {page_plan.life_phase}
+- Reference images of the character will be provided during generation
 
 Generate a detailed prompt with negative constraints."""
     
     def _create_fallback_prompt(self, page_plan: PagePlanItem, fingerprint: VisualFingerprint, 
                                preferences: BookPreferences, user_language: str) -> PromptItem:
-        """Create a fallback prompt for a page."""
+        """Create a fallback prompt for a page with strong character identity."""
         style_keywords = {
             "coloring": "coloring book style, black and white line art, clean outlines",
             "cartoon": "cartoon style, bright colors, bold outlines, expressive",
@@ -132,35 +148,32 @@ Generate a detailed prompt with negative constraints."""
             "watercolor": "watercolor painting, soft edges, dreamy, artistic"
         }
         
-        age_descriptions = {
-            "young": "as a child",
-            "adolescent": "as a teenager",
-            "adult": "as an adult",
-            "elderly": "in later years"
-        }
-        
+        # Use the enhanced age-adjusted description
+        age_desc = fingerprint.get_age_adjusted_description(page_plan.life_phase)
         character_desc = fingerprint.get_prompt_description()
+        identity_block = fingerprint.get_character_identity_block()
         style_kw = style_keywords.get(preferences.style, "illustrated")
-        age_desc = age_descriptions.get(page_plan.life_phase, "")
         
         main_prompt = f"""Illustration for memory book, {style_kw}, 
-{character_desc} {age_desc}, 
+{age_desc}, 
 {page_plan.scene_description}, 
 {page_plan.emotional_tone} mood, 
 {page_plan.setting if page_plan.setting else 'appropriate setting'}, 
 {', '.join(page_plan.key_elements) if page_plan.key_elements else 'meaningful details'}, 
-high quality, heartwarming illustration"""
+high quality, heartwarming illustration, same character as reference images"""
         
         return PromptItem(
             page_number=page_plan.page_number,
             prompt_type="page",
             main_prompt=main_prompt.replace('\n', ' '),
-            character_description=f"{character_desc} {age_desc}",
+            character_description=age_desc,
+            character_identity_block=identity_block,
             scene_description=page_plan.scene_description,
             style_prompt=style_kw,
             negative_constraints=[
                 "blurry", "distorted", "ugly",
                 "wrong age", "inconsistent features",
+                "different character", "wrong person",
                 "cluttered", "confusing composition",
                 "text", "words", "letters", "numbers", "typography", "captions", "labels", "signs", "written content"
             ],

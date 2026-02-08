@@ -170,9 +170,9 @@ export const CreateMemoryBookModal = ({
     // Auto-save data when it changes
     useEffect(() => {
         if (isOpen && modalState === 'wizard' && !showRestoreDialog) {
-            saveData(data, currentStep, completedSteps);
+            saveData(data, currentStep, completedSteps, wizardMode);
         }
-    }, [data, currentStep, completedSteps, isOpen, modalState, showRestoreDialog, saveData]);
+    }, [data, currentStep, completedSteps, wizardMode, isOpen, modalState, showRestoreDialog, saveData]);
 
     // Propagate progress to parent (for floating widget)
     useEffect(() => {
@@ -195,6 +195,10 @@ export const CreateMemoryBookModal = ({
             setData(saved.data);
             setCurrentStep(saved.step);
             setCompletedSteps(saved.completedSteps);
+            // Restore wizard mode so the user doesn't have to pick it again
+            if (saved.wizardMode) {
+                setWizardMode(saved.wizardMode);
+            }
         }
         setShowRestoreDialog(false);
     }, [loadSavedData]);

@@ -9,6 +9,7 @@ from .orchestrator import OrchestratorAgent
 from .normalizer import NormalizerAgent
 from .narrative_planner import NarrativePlannerAgent
 from .visual_analyzer import VisualAnalyzerAgent
+from .character_sheet_generator import CharacterSheetGeneratorAgent
 from .cover_creator import CoverCreatorAgent
 from .back_cover_creator import BackCoverCreatorAgent
 from .prompt_writer import PromptWriterAgent
@@ -24,6 +25,7 @@ __all__ = [
     "NormalizerAgent",
     "NarrativePlannerAgent",
     "VisualAnalyzerAgent",
+    "CharacterSheetGeneratorAgent",
     "CoverCreatorAgent",
     "BackCoverCreatorAgent",
     "PromptWriterAgent",

@@ -12,6 +12,25 @@ dist
 dist-ssr
 *.local
 
+# Environment variables
+.env
+backend/.env
+
+# Firebase
+.firebase/
+
+# Python
+__pycache__/
+*.pyc
+backend/__pycache__/
+backend/**/__pycache__/
+backend/output/
+backend/test_output_*
+
+# Generated files
+generated-book/
+COMMIT_MSG.txt
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

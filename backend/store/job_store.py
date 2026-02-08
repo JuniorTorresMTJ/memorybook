@@ -28,6 +28,7 @@ class StepName(str, Enum):
     NORMALIZATION = "normalization"
     PLANNING = "planning"
     VISUAL_ANALYSIS = "visual_analysis"
+    CHARACTER_SHEET = "character_sheet"
     PROMPT_CREATION = "prompt_creation"
     PROMPT_REVIEW = "prompt_review"
     IMAGE_GENERATION = "image_generation"

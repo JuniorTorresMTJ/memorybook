@@ -9,7 +9,7 @@ import type { PdfModalState } from '../components/ui/PdfDownloadModal';
 import { CreateMemoryBookModal } from '../components/wizard';
 import { BookViewer } from '../components/book';
 import type { BookPage } from '../components/book';
-import { Plus, Loader2, BookOpen, Search, Zap } from 'lucide-react';
+import { Plus, Loader2, BookOpen, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -237,7 +237,7 @@ export const Dashboard = () => {
     const [showNotification, setShowNotification] = useState(false);
     const [notificationData, setNotificationData] = useState({ title: '', message: '' });
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-    const [isQuickTestOpen, setIsQuickTestOpen] = useState(false);
+
     const [selectedBook, setSelectedBook] = useState<MemoryBookDisplay | null>(null);
     const [isViewerOpen, setIsViewerOpen] = useState(false);
     const [bookPages, setBookPages] = useState<BookPage[]>([]);
@@ -674,14 +674,6 @@ export const Dashboard = () => {
                                     <Plus className="w-5 h-5" />
                                     {db?.createMemoryBook || 'Criar Memory Book'}
                                 </button>
-                                <button 
-                                    onClick={() => setIsQuickTestOpen(true)}
-                                    className="inline-flex items-center gap-2 px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold transition-all shadow-lg shadow-amber-500/20 text-sm"
-                                    title="Gera um livro mock com dados pré-preenchidos para teste rápido"
-                                >
-                                    <Zap className="w-4 h-4" />
-                                    Teste Rápido
-                                </button>
                             </div>
                         </div>
                     )}
@@ -818,14 +810,6 @@ export const Dashboard = () => {
                                         <Plus className="w-5 h-5" />
                                         {db?.createNewBook || 'Create New Memory Book'}
                                     </button>
-                                    <button 
-                                        onClick={() => setIsQuickTestOpen(true)}
-                                        className="inline-flex items-center gap-2 px-5 py-4 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold transition-all shadow-lg shadow-amber-500/20 text-sm"
-                                        title="Gera um livro mock com dados pré-preenchidos para teste rápido"
-                                    >
-                                        <Zap className="w-4 h-4" />
-                                        Teste Rápido
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -865,23 +849,6 @@ export const Dashboard = () => {
                 }}
             />
 
-            {/* Quick Test Modal */}
-            <CreateMemoryBookModal
-                isOpen={isQuickTestOpen}
-                onClose={() => setIsQuickTestOpen(false)}
-                quickTest={true}
-                onComplete={() => {
-                    refreshBooks();
-                }}
-                onSuccess={(bookTitle) => {
-                    setNotificationData({ 
-                        title: 'Teste concluído!', 
-                        message: `Livro de teste gerado: "${bookTitle}"` 
-                    });
-                    setShowNotification(true);
-                    refreshBooks();
-                }}
-            />
 
             {/* Book Viewer */}
             {selectedBook && (

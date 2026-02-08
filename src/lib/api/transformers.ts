@@ -4,10 +4,11 @@
  * Functions to transform wizard data to API payload format.
  */
 
-import type { JobPayload, LifePhase } from './types';
+import type { JobPayload, LifePhase, PhysicalCharacteristicsPayload } from './types';
 import type { 
   MemoryBookData, 
-  UploadedImage 
+  UploadedImage,
+  PhysicalCharacteristicsData
 } from '../../components/wizard/types';
 
 /**
@@ -30,9 +31,28 @@ function transformMemoryText(text: string): LifePhase {
 }
 
 /**
+ * Transform physical characteristics from wizard format to API format
+ */
+function transformPhysicalCharacteristics(
+  chars: PhysicalCharacteristicsData
+): PhysicalCharacteristicsPayload {
+  return {
+    name: chars.name,
+    gender: chars.gender,
+    skin_color: chars.skinColor,
+    hair_color: chars.hairColor,
+    hair_style: chars.hairStyle,
+    has_glasses: chars.hasGlasses,
+    has_facial_hair: chars.hasFacialHair,
+  };
+}
+
+/**
  * Transform wizard data to API job payload
  * 
  * Uses the simplified memories fields (one free-text per life phase).
+ * Includes physical characteristics and reference input mode for
+ * character consistency across all book pages.
  * 
  * @param data - Memory book data from wizard
  * @param userLanguage - User's preferred language
@@ -42,7 +62,7 @@ export function transformWizardDataToPayload(
   data: MemoryBookData,
   userLanguage: string = 'en-US'
 ): JobPayload {
-  return {
+  const payload: JobPayload = {
     // Book preferences
     title: data.bookSetup.title || 'My Memory Book',
     date: data.bookSetup.date || new Date().toISOString().split('T')[0],
@@ -50,12 +70,24 @@ export function transformWizardDataToPayload(
     style: data.bookSetup.illustrationStyle,
     user_language: userLanguage,
     
+    // Reference input mode
+    reference_input_mode: data.bookSetup.referenceInputMode,
+    
     // Life phases from simplified memories
     young: transformMemoryText(data.memories?.childhood || ''),
     adolescent: transformMemoryText(data.memories?.teenage || ''),
     adult: transformMemoryText(data.memories?.adultLife || ''),
-    elderly: transformMemoryText(data.memories?.laterLife || '')
+    elderly: transformMemoryText(data.memories?.laterLife || ''),
   };
+
+  // Include physical characteristics when available
+  if (data.bookSetup.physicalCharacteristics?.name) {
+    payload.physical_characteristics = transformPhysicalCharacteristics(
+      data.bookSetup.physicalCharacteristics
+    );
+  }
+
+  return payload;
 }
 
 /**
