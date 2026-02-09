@@ -274,12 +274,17 @@ export const Home = () => {
                                 >
                                     {t.hero.cta_primary}
                                 </Button>
-                                <button className="flex items-center gap-3 text-text-main font-semibold hover:text-primary-teal transition-colors group">
+                                <a
+                                    href="https://www.youtube.com/watch?v=ZAXGlsDajm0"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 text-text-main font-semibold hover:text-primary-teal transition-colors group"
+                                >
                                     <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
                                         <Play className="w-4 h-4 text-primary-teal fill-current ml-0.5" />
                                     </div>
                                     {t.hero.cta_secondary}
-                                </button>
+                                </a>
                             </motion.div>
                         </motion.div>
                     </div>

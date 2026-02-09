@@ -6,6 +6,15 @@ Memory Book is a full-stack web application that turns family memories and refer
 
 **Live Demo:** [memory-book-app-1bfd7.web.app](https://memory-book-app-1bfd7.web.app)
 
+### See how it works
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=ZAXGlsDajm0">
+    <img src="https://img.youtube.com/vi/ZAXGlsDajm0/maxresdefault.jpg" alt="Memory Book — See how it works" width="80%">
+  </a>
+</p>
+<p align="center"><em>Click the image above to watch the full demo on YouTube</em></p>
+
 ---
 
 ## Screenshots
